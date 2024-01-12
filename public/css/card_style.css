@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css?family=poppins:100,200,300,400,500,600,700,800,900');*
+
+body {
+  background-color: #f0f0f0;
+}
+
+.card {
+  border: 3px solid #afafaf;
+  border-radius: 10px;
+  width: 95%;
+  height: 300px;
+  background-color: #fff;
+  margin: auto;
+}
+
+.card-wrapper {
+  border: 1px solid #ccc; /* assumed 1px as you had missed the numeric value */
+  border-radius: 10px;
+  height: 100%;
+  overflow: hidden;
+  background-color: #f0f0f0;
+}
+
+.card-content {
+  display: flex;
+  height: 100%;
+}
+
+.card-text {
+  padding: 20px;
+  width: 60%;
+  font-size: 25px;
+  background-color: #fff;
+}
+
+.card-image {
+  width: 35%;
+  background-color: #ffffff;
+  padding: 5px;
+}
+
+.card-text h3 {
+  font-size: 60px;
+  margin: 0;
+  color: black;
+  text-decoration: none;
+}
+
+.card-text p {
+  font-size: 50px;
+  margin: 10px 0 0;
+}
+
+.card-image {
+  display: flex;
+  justify-content: center;  /* Centers content along the horizontal line */
+  align-items: center;  /* Centers content along the vertical line */
+}
+
+.card-image img {
+  width: 60%;             /* size of image */
+  height: 60%;
+  object-fit: cover;
+}
+
+.card:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Media query for screens smaller than 600px */
+
+
+@media screen and (max-width: 600px) {
+  .card {
+    width: 100%;
+  }
+  .card-text {
+    font-size: 18px;
+  }
+  .card-text h3 {
+    font-size: 22px;
+  }
+  .card-text p {
+    font-size: 18px;
+  }
+}

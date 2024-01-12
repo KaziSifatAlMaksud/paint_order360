@@ -1,0 +1,480 @@
+/* fonts link */
+@font-face {
+    font-family: 'CFMedium';
+    src: url('fonts/VisbyRoundCFMedium.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'CFBold';
+    src: url('fonts/VisbyRoundCFBold.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'CFLight';
+    src: url('fonts/VisbyRoundCFLight.ttf') format('truetype');
+}
+
+/*
+========================
+Header area start
+========================
+*/
+* {
+    box-sizing:border-box;
+    margin:0;
+}
+body {	
+    font-family:'CFMedium';
+    font-size: 16px;
+    font-weight: 400;    
+	background:#EAEAEA;
+	color:#000000;	
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+
+/*
+========================
+main area start
+========================
+*/
+/*
+========================
+main area start
+========================
+*/
+.hero-card-area {
+    margin-top: 15px;
+}
+
+.hero-card-row {
+    margin: 0 10px;
+    background-color: #ffffff;
+    border: 2px solid #728DEF;
+    border-radius: 10px;
+    padding: 5px 10px 20px 10px;
+}
+
+.hero-card-item h3 {
+    color: #051EFF;
+ 
+    font-size: 23px;
+    margin-bottom: 15px;
+}
+
+.hero-card-item label {
+    display: block;
+    font-size: 18px;
+
+}
+
+.hero-card-item label span {
+
+    color: #051EFF;
+}
+
+.mt10 {
+    margin-top: 10px;
+}
+
+.hero-card-area {
+    margin-bottom: 15px;
+}
+
+.card-row {
+    margin: 0 10px;
+    background-color: #ffffff;
+    border: 2px solid #BEB5B5;
+    border-radius: 10px;
+    border-radius: 10px;
+}
+
+.card-body {
+    padding: 0 10px;
+}
+
+.card-header {
+    background-color: #7694FF;
+    display: flex;
+    justify-content: space-between;
+    min-height: 40px;
+    border-radius: 10px;
+}
+
+.card-header .card-part2 {
+    width: 55%;
+    background-color: #ACBEFD;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.card-header .card-part3 {
+    background-color: #DDE2F2;
+    width: 50%;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-header>h3 {
+ 
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
+
+.card-part2>span {
+ 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    width: 50%;
+}
+
+.card-part3>span {
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    width: 50%;
+}
+
+.card-body {
+    margin-top: 10px;
+}
+
+.card-body label {
+    font-size: 15px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.card-area {
+    margin-bottom: 15px;
+}
+
+.card-header-inside {
+    background-color: #6DF656;
+    color: #343434;
+}
+
+.card-part2-inside {
+    background-color: #ABFF9D !important;
+    color: #343434;
+}
+
+.card-part3-inside {
+    background-color: #E4FFDF !important;
+    color: #343434;
+}
+
+.space-bottom {
+    margin-bottom: 80px;
+}
+
+.mobile-nav-area {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    box-shadow: 0px -4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.mobile-nav-row {
+    margin: 0 10px;
+}
+
+.mobile-nav-row ul {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.mobile-nav-row ul li a {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #000000;
+    font-size: 14px;
+    gap: 2px;
+    transition: 0.3s;
+}
+
+.mobile-nav-row ul li a:hover {
+    color: #FF9416;
+}
+
+.active {
+    color: #FF9416 !important;
+}
+
+.mobile-nav-row ul li a i {
+    font-size: 20px;
+}
+/*===================== page-2 start ========================*/
+.body_font2 {
+    font-family: 'Inter', sans-serif;
+}
+
+.header_item2 .left_arrow {
+    color: #000;
+    opacity: 0;
+}
+
+.docs_area {
+    padding: 30px 10px;
+}
+
+.docs_part {
+    background: #FFFFFF;
+    padding: 10px 10px;
+    border-radius: 13px; 
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.docs_prt1 {
+    border: 3px solid #E8E6E6;
+    border-radius: 15px;
+}
+
+.docs_right img {
+    max-width: 100px;
+    display: block;
+    margin-left: auto;
+}
+
+
+.docs_left {
+    max-width: 245px;
+    width: 100%;
+}
+
+.docs_left h4 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #000; 
+    margin-bottom: 6px;
+}
+
+.docs_left p {
+    font-size: 16px;
+    font-weight: 400;
+    color: #252525; 
+    margin-bottom: 0;
+} 
+
+.docs_cnt2 h4 {
+    margin-bottom: 32px;
+}
+
+.docs_cnt2 {
+    padding-bottom: 10px;
+}
+
+.docs_cnt3 {
+    padding: 10px 0;
+}
+
+.docs_cnt3 h4 {
+    margin-bottom: 20px;
+}
+
+/*=================== page-4 start ====================*/
+.header_item2 .left_arrow2 {
+    opacity: 1;
+    color: #000;
+}
+
+.jobs_area {
+    padding-top: 10px;
+}
+
+.jobs_house img {
+    width: 100%;
+    border-radius: 15px; 
+}
+
+.jobs_house {
+    margin-bottom: 12px;
+}
+
+.jobs_area .docs_part {
+    margin-bottom: 20px;
+}
+
+.jobs_right {
+    margin-right: -8px;
+}
+
+.jobs_right a {
+    font-family: 'Inria Serif', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #FFF; 
+    background: #0367FD;
+    width: 115px;
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    padding: 4px 5px 8px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: 0.2s all ease;
+    margin-right: -8.5px;
+}
+
+.jobs_right a:hover {
+    opacity: 0.85;
+}
+
+.jobs_cnt ul li {
+    font-size: 15px;
+    font-weight: 400;
+    color: #000; 
+}
+
+.jobs_cnt ul li strong {
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.jobs_cnt ul .comp_name {
+    margin-bottom: 10px;
+}
+
+.jobs_cnt ul .address_text {
+    font-size: 21px;
+    font-weight: 600;
+    color: #000; 
+    margin-bottom: 8px;
+    width: 300px;
+}
+
+.jobs_part2 {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.jobs_part2 .jobs_cnt h4 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #000; 
+    margin-bottom: 10px;
+}
+
+.jobs_cnt {
+    max-width: 260px;
+}
+
+.jobs_cnt ul .price_cnt22 {
+    margin-top: 22px;
+}
+
+.jobs_prtn1 {
+    position: relative;
+}
+
+.jobs_right .map_btn {
+    margin-top: -27px;
+    position: absolute;
+    right: 1px;
+}
+
+/*=================== page-5 start ====================*/
+.job2_area {
+    padding: 15px 10px;
+}
+
+.job2_area h3 {
+    font-size: 32px;
+    font-weight: 500;
+    color: #000; 
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.job2main_box {
+    background: #FFF;
+    border: 3px solid #D9D3D3;
+    border-radius: 15px;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));   
+    margin-bottom: 40px;
+}
+
+.job2uper_item img {
+    width: 100%;
+    min-height: 92px;
+    object-fit: cover;
+    border-radius: 12px 12px 0px 0px;
+}
+
+.job2uper_item h4 {
+    font-size: 32px;
+    font-weight: 500;
+    color: #000; 
+    margin: 0;
+    position: absolute;
+    top: 10px;
+    left: 15px;
+}
+
+.job2main_item {
+    padding: 15px 10px 0;
+}
+
+.job2main_item ul li a {
+    max-width: 310px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    color: #000; 
+    background: #C1FFB2;
+    padding: 6px 5px;
+    padding-left: 16px;
+    border-radius: 50px;
+    text-decoration: none;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+    margin-bottom: 14px;
+    transition: 0.2s all ease;
+}
+
+.job2main_item ul li a:hover {
+    opacity: 0.8;
+}
+
+.jobitm2_cnt ul li a {
+    background: #FA7F29; 
+    padding-left: 10px;
+}
+
+.job3main_box .job2uper_item h4 {
+    color: #FFF; 
+}
+
+.job3main_box .job2main_item ul li a {
+    background: #2EB8FD; 
+}
+
