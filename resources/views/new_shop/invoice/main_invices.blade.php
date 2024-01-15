@@ -73,7 +73,7 @@
                     <h5 class="text-left ml-2 mt-1 showinline" style="width: 70%" id="expandable-title">{{ $invoice->address}}</h5>
                     <button type="button" class="invoiceReadynotification-button">Ready</button>
                 </div>
-                        <p class="text-center mt-2">This invoice is ready to send to cuestomer</p>
+                        <p class="text-center mt-2">This invoice is ready to send to Customer</p>
       
                         <div class="row p-1">
                             <div class="col-6 reduced-line-height">
@@ -97,7 +97,7 @@
                  <button type="button" class="invoiceReadynotification-unpaid">Unpaid</button>
                 </div>
    
-                <p class="text-center mt-2">waiting or payment, i paid click receaved</p>
+                <p class="text-center mt-2">Waiting for payment, I paid click received</p>
                            
                      <div class="row p-1">
 

@@ -677,7 +677,8 @@ require  public_path() . '/painter/header.php';
                                              <div class="col-lg-8 col-md-8 col-sm-12 col-12 m-auto mb-5 p-2" style="margin-bottom: 20px!important;">
                                                 <div class="row order-lines align-items-center " value='1'>
                                                     <div class="col-0"></div>
-                                                    <div class="col-md-6 col-sm-6 col-7 ps-0 px-2 la_single-first ">
+                                                    {{-- <div class="col-md-6 col-sm-6 col-7 ps-0 px-2 la_single-first inside-data-cst "> --}}
+                                                        <div class="col-md-6 col-sm-6 col-7 ps-0 px-2 la_single-first inside-data-cst ">
                                                      <div class="outside-collapse-cst outside-data-cst">
                                                         <div class="jobs_controll_buttons">
                                                             <div class="decoration-none inside-area-cst mt-2 mb-2 d_i_b"><a class="area-heading" href="#{{$item->id}}collapseExample" data-bs-toggle="collapse" aria-expanded="false" role="button" aria-controls="{{$item->id}}collapseExample"><strong style="font-size: 20px">{{$item->key}} : </strong> <br></a></div>
@@ -708,7 +709,8 @@ require  public_path() . '/painter/header.php';
                                                                     <option value="102" data-item_id-cst=<?php echo $item->size ?> {{$item->size==102? 'selected' :''}}>Call Me</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="col-lg-5 col-sm-5 px-sm-2  px-col-2 col-4 pb-3 select-col">
+                                                            {{-- <div class="col-lg-5 col-sm-5 px-sm-2  px-col-2 col-4 pb-3 select-col"> --}}
+                                                                  <div class="col-lg-5 col-sm-5 px-sm-2  px-col-2 col-4 p-0 select-col">
                                                                 <select data-current_value="{{$item->qty}}" name="inside[{{$item->key}}][qty]" class="la_qty la_qty-inside la_hide_qty form-control padding s_h clickget "  style="height: 50px !important;">
                                                                     @for ($i = 0; $i <= 20; $i++) <?php
                                                                                                     if ($item->qty == '' || $item->qty == NULL) {

@@ -3,6 +3,21 @@ require  public_path() . '/painter/header.php';
 require  public_path() . '/painter/sidebar.php';
 
 ?>
+<style>
+/* CSS for larger screens */
+.table {
+    width: 100%;
+    /* Other styling */
+}
+
+/* CSS for mobile screens */
+@media screen and (max-width: 600px) {
+    .responsive-table {
+        font-size: smaller;
+        margin: 5px;
+    }
+}
+</style>
 <!-- Page Content -->
 <div id="page-content-wrapper">
     <div class="header-hide">
@@ -66,7 +81,7 @@ require  public_path() . '/painter/sidebar.php';
                                     <a style="margin-bottom: 10px;" class="btn btn-orange outer rounded pull-right" href="<?php echo PUBLIC_PATH . '/add_builder' ?>">Add New Builder</a>
                                 </div>
                                 <div class="col-md-12" style="overflow-x: auto;">
-                                    <table class="table table-bordered table-inverse" id="builder_table" style="margin-left: 0px;">
+                                    <table class="table table-bordered table-inverse responsive-table" id="builder_table" style="margin-left: 0px;">
                                         <thead>
                                             <tr>
                                                 <!-- <th>Account number</th>    -->

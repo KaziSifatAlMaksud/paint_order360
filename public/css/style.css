@@ -1025,7 +1025,7 @@
 
             .input-field label {
                 font-size: 15px;
-                font-weight: 400;
+                /* font-weight: 400; */
             }
 
             .input-field label.active:not(.label-icon) {
@@ -1544,14 +1544,14 @@
                 position: relative;
             }
 
-            .select-style::before {
+            /* .select-style::before {
                 content: "\f107";
                 font-family: FontAwesome;
                 font-size: 16px;
                 color: #9e9e9e;
                 position: absolute;
                 right: -10px;
-            }
+            } */
 
             .select-style select {
                 padding: 0;
@@ -2480,20 +2480,25 @@
             }
 
             .number_span {
+                display: flex;
                 float: left;
-                width: 100%;
+                /* width: 100%; */
                 border: 1px solid #ec971f;
-                padding: 5px 20px 0px;
+                padding: 5px 20px;
                 margin-top: 10px;
                 font-size: 26px;
                 color: #ec971f;
+                align-items: center;
+                justify-content: center;
             }
 
             .spa_input {
                 /*margin-top: 13px;*/
+                display: flex;
                 padding-left: 9px;
                 width: 44px !important;
                 text-align: center;
+                justify-content: center;
             }
 
             .bnt_te {
@@ -2587,6 +2592,7 @@
             }
 
             input.quantity {
+                margin: 0px !important;
                 font-size: 24px !important;
                 font-weight: 600;
                 border: none !important;

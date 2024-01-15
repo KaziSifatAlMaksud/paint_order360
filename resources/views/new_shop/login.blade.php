@@ -7,8 +7,8 @@
 
 <style>
     .container {
-        max-width: 1050px;
-
+        max-width: 1050px!important;
+        padding: 0px!important;
     }
 
     .logo {

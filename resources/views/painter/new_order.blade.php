@@ -61,6 +61,7 @@ require  public_path() . '/painter/header.php';
 		transition: transform .2s ease-in-out;
 		transition: transform .2s ease-in-out, -webkit-transform .2s ease-in-out;
 		position: relative;
+		font-size: 30px;
 	}
 
 	.pn-ProductNav_Contents-no-transition {
@@ -190,6 +191,9 @@ require  public_path() . '/painter/header.php';
 		color: #313131;
 		font-weight: 400;
 	}
+	.input-field{
+		margin-top: 0px!important;
+	}
 </style>
 
 	<header>
@@ -214,8 +218,8 @@ require  public_path() . '/painter/header.php';
 		@endif
 	   
 
-		<div class=" mt-5" style="padding-left: 3%;">
-			<label  class="form-label col-12">Choose Colour Brand<span style="color: red;">*</span> : </label>
+		<div class="ml-4" >
+			<p  class="col-12" style="color: #333333;">Choose Colour Brand<span style="color: red;"> *</span> : </p>
 			<div class="pn-ProductNav_Wrapper">
 				
 				<div id="pnProductNav" class="pn-ProductNav dragscroll">
@@ -259,7 +263,7 @@ require  public_path() . '/painter/header.php';
                 <tbody class="step_2">
                     <tr>
                         <td class="full_td step_2" colspan="2">
-							  <label class="form-label pl-5" style="margin-top: 50%;"> Color Name<span style="color: red;">*</span> : </label>
+							  <label class="pl-5" style="margin-top: 5%;"> Color Name<span style="color: red;"> *</span> : </label>
                             <div class="input-field col s12">
                               
                                 <input id="color" name="color" type="text" value="{{$garagePaint ? old('color', $garagePaint->color) : ''}}" class=" form-control validate">
@@ -268,7 +272,7 @@ require  public_path() . '/painter/header.php';
                     </tr>
                     <tr>
                         <td class="full_td step_2" colspan="2">
-							<label class="form-label pl-5"> Product Name<span style="color: red;">*</span> : </label>
+							<label class="form-label pl-5"> Product Name<span style="color: red;"> *</span> : </label>
                             <div class="input-field col s12">
                                 
                                 <input name="product" id="product" type="text" class=" form-control" value="{{$garagePaint ? old('product', $garagePaint->product) : ''}}">
@@ -277,7 +281,7 @@ require  public_path() . '/painter/header.php';
                     </tr>
                     <tr >
                         <td class="full_td step_2"  colspan="2" style="padding-left: 5%;">
-                            <label> Choose Size<span style="color: red;">*</span> :</label>
+                            <label  class="pl-4" > Choose Size <span style="color: red;"> *</span> :</label>
                             <div class="select-style">
                                 <ul class="size_selct size-cst">
                                      <li class="size_li{{ $garagePaint && $garagePaint->size == 15 ? ' active_l' : '' }}" rel="15">15 L</li>
@@ -294,16 +298,16 @@ require  public_path() . '/painter/header.php';
 
 
                         <td data-title="" class="half_td full_td step_2" style="padding-left: 5%;">
-                            <label>{{__('message.quantity')}}<span style="color: red;">*</span> :</label>
+                            <label class="pl-4">{{__('message.quantity')}}<span style="color: red;"> *</span> :</label>
                             <div class="center">
-                                <div class="input-group" style="width: 20% !important;">
+                                <div class="input-group" style="display:inline-block;">
                                     <p class="number_span">
                                         <span class=" sp1">
                                             <button type="button" class="quantity-left-minus bnt_te " data-type="minus" data-field="">
                                                 <span class="glyphicon glyphicon-minus"></span>
                                             </button>
                                         </span>
-                                        <span class="spa_input" style="width: 30px;text-align: center;">
+                                        <span class="spa_input" >
                                             <input type="text" class="quantity" name="quantity" class="form-control input-number"  min="1" max="100" value="{{$garagePaint ? old('quantity', $garagePaint->quantity) : '0'}}">
                                         </span>
                                         <span class=" sp2">
@@ -319,7 +323,7 @@ require  public_path() . '/painter/header.php';
 
                     <tr>
                         <td class="full_td step_2" colspan="2" >
-                            <label class="pl-5">{{__('message.notes')}} </label>
+                            <label class="pl-5">{{__('message.notes')}} :</label>
                             <div class="input-field col s12">
                                 <input id="notes" name="notes" type="text" class=" form-control validate"value="{{$garagePaint ? old('notes', $garagePaint->notes) : ''}}">
                             </div>

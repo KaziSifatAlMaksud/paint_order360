@@ -9,6 +9,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/style77.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style8.css') }}">
+    <style>
+        /* CSS for larger screens */
+    .table {
+    width: 100%;
+ 
+    }
+
+        @media screen and (max-width: 600px) {
+    .responsive-table {
+        /* Adjustments for smaller screens */
+        font-size: smaller;
+        margin: 5px;
+        }
+    }
+
+    </style>
 </head>
 <body> 
   
@@ -26,12 +42,10 @@
 		</header>	
 
         @include('layouts.partials.footer')  
-       <div class="container">
-
-
+       <div class="container" >
    
         <div class="newInvoice-bar">
-            <a href="<?php echo '/customer/create' ?>" class="newInvoice-link" id="newInvoice-link">Add New Customer <i class="fa-solid fa-plus ml-3"></i></a>
+            <a href="<?php echo '/customer/create' ?>" class="newInvoice-link" id="newInvoice-link" >Add New Customer <i class="fa-solid fa-plus ml-3"></i></a>
         </div>
 
          @if(session('success'))
@@ -40,7 +54,7 @@
         </div>
         @endif
   
-        <table class="table">
+        <table class="table responsive-table">
         <thead>
             <tr>
             <th scope="col" colspan="4"> All Customers</th>
