@@ -420,47 +420,7 @@
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-{{-- <script>
-$(document).ready(function() {
-    $('#amountNotesForm').on('submit', function(e) {
-        e.preventDefault();
 
-        var formData = new FormData(this);
-
-        // Store email and customer name in local storage for later use
-        // localStorage.setItem('customer_email', formData.get('email'));
-        // localStorage.setItem('customerSelect', formData.get('companyName'));
-
-        $.ajax({
-            url: '{{ route("invoicePayment.store") }}',
-            method: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-            },
-            data: formData,
-            contentType: false,
-            processData: false,
-           success: function(data) {
-            if (data.success) {
-                alert('Success: Payment saved successfully!');
-                $('#amountNotesForm')[0].reset();
-                 var modal = document.getElementById('amountNotesModal'); // Replace 'yourModalId' with the actual ID of your modal
-                    modal.style.display = "none";
-
-            } else {
-                alert('Error: ' + data.error); // Handle any custom error message from the server
-            }
-        },
-
-            error: function(error) {
-                console.error('Error:', error);
-                alert('Error: An error occurred while saving the customer.');
-            }
-        });
-    });
-});
-</script> --}}
 <script>
 $(document).ready(function() {
     $('#amountNotesForm').on('submit', function(e) {
