@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+      <meta name="csrf-token" content="{{ csrf_token() }}"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Customer</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -40,9 +42,8 @@
     @endif
 
 
-       
      
-      <form action="{{ route('customer.store') }}" method="POST">
+      <form id="customerForm" action="{{ route('customer.store') }}" method="POST">
         @csrf
 
         <fieldset class="m-3">
@@ -82,7 +83,7 @@
     
             <div class="mt-3">
                 <label for="billingAddress" class="form-label">Address: <span class="text-danger " style="font-size: 1.2em">*</span></label>
-                <input type="text" class="custom-input" id="billingAddress"  value=" {{ isset($customer) ? $customer -> billingAddress : '' }} "  required   name="billingAddress">
+                <input type="text" class="custom-input" id="billingAddress"  value=" {{ isset($customer) ? $customer -> billingAddress : '' }} "     name="billingAddress" required>
             </div>
 
             <div class=" mt-3">
@@ -103,6 +104,7 @@
                 <!-- Add more options as needed -->
             </select>
         </div>
+            <input type="hidden" name="action" id="formAction" value="save">
 
     
      
@@ -136,5 +138,47 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<script>
+document.getElementById('customerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var formData = new FormData(this);
+
+    // Check if you are updating or saving a new customer
+    if (formData.has('id') && formData.get('id') !== '') {
+        formData.set('action', 'update');
+    } else {
+        formData.set('action', 'save');
+    }
+
+    fetch('{{ route("customer.store") }}', {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Please fill all the required fields!');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            alert('Customer operation successful!');
+            // Redirect or update UI as necessary
+        } else {
+            alert('An error occurred: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Error: ' + error.message);
+    });
+});
+</script>
+
 
 </html>

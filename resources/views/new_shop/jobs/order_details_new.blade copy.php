@@ -70,7 +70,7 @@ require  public_path() . '/painter/header.php';
         left: 0;
         width: 100%;
         max-width: 1020px;
-        /* margin: 0 0 30px 300px; */
+        margin: 0 0 30px 300px;
         right: 0;
         box-shadow: 0 0 7px #888;
         top: 30px;
@@ -86,6 +86,7 @@ require  public_path() . '/painter/header.php';
         height: 26px;
         padding: 0;
         font-size: 16px;
+        border-radius: 5px!important; 
     }
 
     body {
@@ -110,6 +111,7 @@ require  public_path() . '/painter/header.php';
     .custom-checkbox.form-group {
         display: block;
         margin-bottom: 0px;
+         height: calc(3.25rem + 2px);
     }
 
     .outside-order-wrap span {
@@ -120,11 +122,11 @@ require  public_path() . '/painter/header.php';
 
     .custom-checkbox.form-group input {
         padding: 0;
-        height: initial;
         width: initial;
         margin-bottom: 0;
         display: none;
         cursor: pointer;
+         
     }
 
     .custom-checkbox.form-group label {
@@ -149,7 +151,7 @@ require  public_path() . '/painter/header.php';
         top: 0;
         left: 0px !important;
         width: 30px;
-        height: 27px;
+       
 
     }
 
@@ -206,7 +208,7 @@ require  public_path() . '/painter/header.php';
 
     .outside-data .form-control,
     .inside-data .form-control {
-        /* padding: 5px 5px !important; */
+        padding: 5px 5px !important;
         height: unset;
     }
 
@@ -264,8 +266,21 @@ require  public_path() . '/painter/header.php';
         display: none !important;
     }
 
+    a.logo img.logo-img {
+        width: 100%;
+        height: 100%;
+        max-width: 80px;
+        max-height: 80px;
+        object-fit: cover;
+        object-position: center;
+        margin-right: 0px;
+    }
 
-
+    a.logo {
+        color: #000;
+        font-size: 20px;
+        text-decoration: none;
+    }
 
     .deliver-method.la_buttons div.form-group label {
         font-size: 14px;
@@ -308,7 +323,16 @@ require  public_path() . '/painter/header.php';
         line-height: 27px;
     }
 
-
+    span.company-name {
+        font-size: 30px;
+        line-height: 50px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 1);
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+        font-family: arial;
+    }
 
     .outside-new {}
 
@@ -326,7 +350,7 @@ require  public_path() . '/painter/header.php';
 
     @media(min-width:991px) {
         .intro_main_wrap_cstm {
-            max-width: 100%;
+            max-width: 67%;
         }
     }
 
@@ -352,7 +376,7 @@ require  public_path() . '/painter/header.php';
             justify-content: center;
         }
     }
-
+ 
     @media only screen and (max-width:767px) {
 
         .header_circle.la_buttons {
@@ -420,7 +444,8 @@ require  public_path() . '/painter/header.php';
         }
 
         .form-control {
-            padding-left: 5px;
+            padding-left: 10px;
+            border-radius: 5px!important; 
         }
 
         .header_circle.la_buttons {
@@ -469,13 +494,25 @@ require  public_path() . '/painter/header.php';
         }
     }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="{{ asset('css/style77.css') }}">
+<header>
+			<div class="header-row">
+				<div class="header-item">
+				 <a href="{{ url()->previous() }}"> <i class="fa-solid fa-arrow-left"></i> </a>	
+					<span> Order </span>
+					<a href="<?php echo '/main' ?>">   <img src="/image/logo-phone.png" alt="Logo"> </a>   
+				</div>
+			</div>
+</header>	
 
-<div>
-    <div id="intro">
-        <div class="main_wrap intro_main_wrap_cstm main_login">
+<div class="container">
+    <div id="intro ">
+        <div class="main_wrap intro_main_wrap_cstm main_login " style="margin-top: 100px">
             <div id="page-content-wrapper==">
                 <div class="container-fluid">
-             
+                    {{-- @include('painter_order.orderdetailheader') --}}
                     <div class="la_buttons header_circle mb-2 deliver-method">
                         <div class="form-group la_button la_button_1 ">
                             <div class="la-form-group">
@@ -496,6 +533,8 @@ require  public_path() . '/painter/header.php';
                             </div>
                         </div>
                     </div>
+
+                 
                     <div class="row detail-selection ">
                         <div class="col p-0">
                             <div class="main-section">
@@ -517,16 +556,18 @@ require  public_path() . '/painter/header.php';
                                         @foreach ($outside as $key=> $item)
                                         <input type="hidden" value='<?php echo $item->id ?>' id='input_<?php echo $item->id ?>' class="item-cst">
                                         <div class="row">
-                                            <div class="col-lg-8 col-md-8 col-sm-12 col-12 m-auto mb-4 p-2">
+                                            <div class="col-lg-8 col-md-8 col-sm-12 col-12 m-auto mb-5 p-2" style="margin-bottom: 20px!important;">
                                                 <div class="row order-lines align-items-center" value='1'>
                                                     <div class="col-0"></div>
-                                                    <div class="col-md-6 col-sm-6 col-7 ps-0 px-2 la_single-first">
+                                                    <div class="col-md-6 col-sm-6 col-7 ps-0 px-2 la_single-first inside-data-cst">
                                                         <div class="outside-collapse-cst outside-data-cst">
                                                             <div class="jobs_controll_buttons">
                                                                 <div class="decoration-none outside-area-cst  mt-2 mb-2 d_i_b"><a class='area-heading' href="#{{$item->id}}collapseExample" data-bs-toggle="collapse" aria-expanded="false" role="button" aria-controls="{{$item->id}}collapseExample"><strong style="font-size: 20px">{{$item->area}} : </strong> <br></a></div>
                                                             </div>
-                                                            <div class="collapse main-cst" id="{{$item->id}}collapseExample">
-                                                                <div class="single_file " style="font-size: 16px;">
+                                                           
+                                                            <div class="collapse main-cst show" id="{{$item->id}}collapseExample">
+                                                                <div class="single_file" style="font-size: 16px;">
+                                                                    
                                                                     {{$item->brand? $item->brand->name :''}} - {{$item->color}} <br>
                                                                     {{$item->product}} <br>
                                                                     {{$item->note}}
@@ -538,8 +579,8 @@ require  public_path() . '/painter/header.php';
                                                         <div class="row mb-2 mt-2 order-select-box">
                                                             <!-- <div class="col-sm-0 col-2 p-0 blank-col"></div> -->
                                                             <div class="col-lg-5 md- col-sm-5 col-7 px-sm-2  px-xs-4 p-0 select-left-col ">
-                                                                <select data-current_value="{{$item->size}}" data-item_id=<?php echo $item->id ?> id='item_<?php echo $item->id ?>' name="outside[{{$item->key}}][size]" class="la_size la_size_filter la_size-outside form-control padding s_h clickget ">
-                                                                    <!--<option value="100" {{$item->size==100? 'selected':'' }}>Select</option>  -->
+                                                                <select data-current_value="{{$item->size}}" data-item_id=<?php echo $item->id ?> id='item_<?php echo $item->id ?>' name="outside[{{$item->key}}][size]" class="la_size la_size_filter la_size-outside form-control padding s_h clickget "  style="height: 50px !important;">
+                                                                    <!--<option value="100" {{$item->size==0? 'selected':'' }}>Select</option>  -->
                                                                     <option value="15" data-item_id-cst=<?php echo $item->size ?> {{$item->size==15? 'selected=selected':'' }}>15 L</option>
                                                                     <option value="10" data-item_id-cst=<?php echo $item->size ?> {{$item->size==10? 'selected=selected':'' }}>10 L</option>
                                                                     <option value="4" data-item_id-cst=<?php echo $item->size ?> {{$item->size==4? 'selected=selected':'' }}>4 L</option>
@@ -550,7 +591,7 @@ require  public_path() . '/painter/header.php';
                                                                 </select>
                                                             </div>
                                                             <div class="col-lg-5 col-sm-5 px-sm-2  px-col-2 col-4 p-0 select-col">
-                                                                <select data-current_value="{{$item->qty}}" name="outside[{{$item->key}}][qty]" class="la_qty la_qty-outside la_hide_qty form-control padding s_h clickget ">
+                                                                <select data-current_value="{{$item->qty}}" name="outside[{{$item->key}}][qty]" class="la_qty la_qty-outside la_hide_qty form-control padding s_h clickget "  style="height: 50px !important;">
 
                                                                     @for ($i = 0; $i <= 20; $i++) <?php
                                                                                                     if ($item->qty == '' || $item->qty == NULL) {
@@ -562,11 +603,56 @@ require  public_path() . '/painter/header.php';
                                                                         @endfor
                                                                 </select>
                                                             </div>
+                                                           
                                                         </div>
+                                                       
+                                                        
                                                     </div>
                                                 </div>
-                                            </div>
+                                               
+                                                @foreach($garagePaints as $garagePaint)
+                                                    @if (strtolower(trim($item->product)) == strtolower(trim($garagePaint->product)) && $item->brand != null && $item->brand->id == $garagePaint->brand_id && strtolower(trim($item->color)) == strtolower(trim($garagePaint->color)))
+                                                        {{-- @if(strtolower(trim($item->product)) == strtolower(trim($garagePaint->product)) && $item->brand->id == $garagePaint->brand_id ) --}}
+
+                                                       <div  id="card-{{ $garagePaint->id }}" class="row bg-success text-white justify-content-center align-items-center " style="border-radius: 5px; margin-top: 50px;" >
+                                                           
+                                                            <div class="col-6 text-left">
+                                                                <h3>Use Your Garage Paint</h3>      
+                                                            </div>
+                                                            <div class="col-6 pt-3" >
+                                                               <div class="row d-flex justify-content-center align-items-center">
+                                                                <div class="col-7 text-center">
+                                                                    <input type="text" id="inputFieldSize" class="form-control text-light" readonly style="border: 1px solid #fff; border-radius: 5px;" value="{{$garagePaint->size}}L" />
+                                                                </div>
+                                                                <div class="col-5 text-center">
+                                                                         <form action="{{ route('garage-paints.destroy', $garagePaint->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                       <!-- Button with larger icon -->
+                                                                        <button type="button" onclick="confirmDelete({{ $garagePaint->id }})" style="position: absolute; color:red; right: -10px; top: -25px; border-radius: 50%;border:0px solid #fff !important; font-size:100%">
+                                                                            <i class="fas fa-times-circle fa-2x"></i>
+                                                                        </button>
+
+                                                                    </form>
+
+                                                                   
+                                                                    <input type="text" id="inputFieldQuantity" class="form-control text-light" readonly style="border: 1px solid #fff; border-radius: 5px;" value="{{$garagePaint->quantity}}"/>
+                                                                </div>
+                                                             
+                                                            </div>
+
+                                                            </div>
+                                                        </div>                                                                                                               
+
+                                                          
+                                                    @endif
+                                                  
+                                                @endforeach
+                                                 
+                                            </div>                                                     
+
                                         </div>
+                                        
                                         <?php
                                         ?>
                                         @endforeach
@@ -577,7 +663,8 @@ require  public_path() . '/painter/header.php';
                                         <div class="col-lg-8 col-md-8 col-sm-12 col-12 m-auto mb-4 p-2">
                                             <div class="outside-order-wrap inside-wrap">
                                                 <span>Tick here to order Inside </span>
-                                                <div class="custom-checkbox form-group tick-cst inside-tick">
+                                                  <div class="custom-checkbox form-group tick-cst inside-tick custom-checkbox-outside">
+                                                {{-- <div class="custom-checkbox form-group tick-cst inside-tick"> --}}
                                                     <input type="checkbox" id="inside" class="checkbox-inside">
                                                     <label for="inside"></label>
                                                 </div>
@@ -587,26 +674,31 @@ require  public_path() . '/painter/header.php';
                                     <div class="inside-data">
                                         @foreach ($inside as $item)
                                         <div class="row ">
-                                            <div class="col-lg-8 col-md-8 col-sm-12 col-12 m-auto mb-4 p-2">
-                                                <div class="row order-lines align-items-center">
+                                             <div class="col-lg-8 col-md-8 col-sm-12 col-12 m-auto mb-5 p-2" style="margin-bottom: 20px!important;">
+                                                <div class="row order-lines align-items-center " value='1'>
                                                     <div class="col-0"></div>
-                                                    <div class="col-md-6 col-sm-6 col-7 ps-0 px-2 la_single-first inside-data-cst">
+                                                    {{-- <div class="col-md-6 col-sm-6 col-7 ps-0 px-2 la_single-first inside-data-cst "> --}}
+                                                        <div class="col-md-6 col-sm-6 col-7 ps-0 px-2 la_single-first inside-data-cst ">
+                                                     <div class="outside-collapse-cst outside-data-cst">
                                                         <div class="jobs_controll_buttons">
                                                             <div class="decoration-none inside-area-cst mt-2 mb-2 d_i_b"><a class="area-heading" href="#{{$item->id}}collapseExample" data-bs-toggle="collapse" aria-expanded="false" role="button" aria-controls="{{$item->id}}collapseExample"><strong style="font-size: 20px">{{$item->key}} : </strong> <br></a></div>
                                                         </div>
-                                                        <div class="collapse inside-data-cst-main" id="{{$item->id}}collapseExample">
+                                                        <div class="collapse inside-data-cst-main show" id="{{$item->id}}collapseExample">
                                                             <div class="single_file " style="font-size: 16px;">
                                                                 {{$item->brand? $item->brand->name :''}} - {{$item->color}} <br>
                                                                 {{$item->product}} <br>
                                                                 {{$item->note}}
                                                             </div>
                                                         </div>
+                                                     </div>
                                                     </div>
-                                                    <div class="col-md-6 col-sm-6 col-5 la_single_item p-0 inside-main-data">
+                                                     <div class="col-md-6 col-sm-6 col-5 la_single_item p-0 outside-main-data" value='m'>
+                                                    {{-- <div class="col-md-6 col-sm-6 col-5 la_single_item p-0 inside-main-data"> --}}
                                                         <div class="row mb-2 mt-2 order-select-box">
-                                                            <div class="col-sm-0 col-0 p-0 blank-col"></div>
-                                                            <div class="col-lg-5 md- col-sm-5 col-7 px-sm-2  px-xs-4 p-0 select-left-col">
-                                                                <select data-current_value="{{$item->size}}" name="inside[{{$item->key}}][size]" class="la_size la_size-inside form-control padding s_h clickget ">
+                                                            {{-- <div class="col-sm-0 col-0 p-0 blank-col"></div> --}}
+                                                        
+                                                            <div class="col-lg-5 md- col-sm-5 col-7 px-sm-2  px-xs-4 p-0 select-left-col ">
+                                                                <select data-current_value="{{$item->size}}" name="inside[{{$item->key}}][size]" class="la_size la_size-inside form-control padding s_h clickget " style="height: 50px !important;">
                                                                     <!--<option value="100" {{$item->size==100? 'selected':'' }}>Select</option>  -->
                                                                     <option value="15" data-item_id-cst=<?php echo $item->size ?> {{$item->size==15? 'selected':'' }}>15 L</option>
                                                                     <option value="10" data-item_id-cst=<?php echo $item->size ?> {{$item->size==10? 'selected':'' }}>10 L</option>
@@ -617,8 +709,9 @@ require  public_path() . '/painter/header.php';
                                                                     <option value="102" data-item_id-cst=<?php echo $item->size ?> {{$item->size==102? 'selected' :''}}>Call Me</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="col-lg-5 col-sm-5 px-sm-2  px-col-2 col-4 p-0 select-col">
-                                                                <select data-current_value="{{$item->qty}}" name="inside[{{$item->key}}][qty]" class="la_qty la_qty-inside la_hide_qty form-control padding s_h clickget ">
+                                                            {{-- <div class="col-lg-5 col-sm-5 px-sm-2  px-col-2 col-4 pb-3 select-col"> --}}
+                                                                  <div class="col-lg-5 col-sm-5 px-sm-2  px-col-2 col-4 p-0 select-col">
+                                                                <select data-current_value="{{$item->qty}}" name="inside[{{$item->key}}][qty]" class="la_qty la_qty-inside la_hide_qty form-control padding s_h clickget "  style="height: 50px !important;">
                                                                     @for ($i = 0; $i <= 20; $i++) <?php
                                                                                                     if ($item->qty == '' || $item->qty == NULL) {
                                                                                                         $select = '';
@@ -630,8 +723,46 @@ require  public_path() . '/painter/header.php';
                                                                 </select>
                                                             </div>
                                                         </div>
+
                                                     </div>
                                                 </div>
+
+                                         @foreach($garagePaints as $garagePaint)
+
+                                                  @if (strtolower(trim($item->product)) == strtolower(trim($garagePaint->product)) && $item->brand != null && $item->brand->id == $garagePaint->brand_id && strtolower(trim($item->color)) == strtolower(trim($garagePaint->color)))
+                                                    
+                                                   {{-- @if($item->product === $garagePaint->product || ($item->brand && $item->brand->id === $garagePaint->brand_id)) --}}
+                                                       <div id="card-{{ $garagePaint->id }}"  class="row bg-success text-white justify-content-center align-items-center mt-5" style="border-radius: 5px;" >
+                                                            <div class="col-6 text-left">
+                                                                <h3>Use Your Garage Paint</h3>      
+                                                            </div>
+                                                            <div class="col-6 pt-3" >
+                                                               <div class="row d-flex justify-content-center align-items-center">
+                                                                <div class="col-7 text-center">
+                                                                    <input type="text" id="inputFieldSize" class="form-control text-light" readonly style="border: 1px solid #fff; border-radius: 5px;" value="{{$garagePaint->size}}L" />
+                                                                </div>
+                                                                <div class="col-5 text-center">
+                                                                     <form action="{{ route('garage-paints.destroy', $garagePaint->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                       <!-- Button with larger icon -->
+                                                                        <button type="button" onclick="confirmDelete({{ $garagePaint->id }})" style="position: absolute; color:red; right: -10px; top: -25px; border-radius: 50%;border:0px solid #fff !important; font-size:100%">
+                                                                            <i class="fas fa-times-circle fa-2x"></i>
+                                                                        </button>
+
+                                                                    </form>
+                                                                    <input type="text" id="inputFieldQuantity" class="form-control text-light" readonly style="border: 1px solid #fff; border-radius: 5px;" value="{{$garagePaint->quantity}}"/>
+                                                                </div>
+                                                            </div>
+
+                                                            </div>
+                                                        </div>                                                                                                                
+
+                                                       @endif   
+                                                    
+                                                  
+                                                @endforeach
+                                               
                                             </div>
                                         </div>
                                         @endforeach
@@ -649,8 +780,37 @@ require  public_path() . '/painter/header.php';
 </div>
 @endsection
 @section('js')
+
 <script src="{{ asset('/assets/vendor/jquery/jquery.js')}}"></script>
+
 <script>
+
+
+function confirmDelete(itemId) {
+    if(confirm('Are add your item, if you not add items please add?')) {
+        $.ajax({
+            url: '/add_gerag/' + itemId, // Update the URL as per your route
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                _method: 'DELETE'
+            },
+            success: function(response) {
+                // Handle success (e.g., show a success message, remove the item from the page)
+                  $('#card-' + itemId).remove();
+                alert('Item deleted successfully');
+            },
+            error: function(xhr) {
+                // Handle error
+                alert('Error deleting item');
+            }
+        });
+    }
+}
+
+
+
+
     $(document).ready(function() {
         a = $(location).attr('href');
         var part = a.substring(a.lastIndexOf('=') + 1);
@@ -809,7 +969,38 @@ require  public_path() . '/painter/header.php';
                 $(this).parents('.la_single_item').find('.la_save').addClass('la_hide_save');
             }
         });
-      
+        // $('.finish-btn').on('click', function(e) {
+        //     e.preventDefault();
+        //     $(this).addClass('la_hide_save');
+        //     //return false;
+        //     _this = $(this).parents('.la_single_item');
+        //     _id = _this.data('id');
+        //     _la_size = _this.find('.la_size').val();
+        //     _la_qty = _this.find('.la_qty').val();
+        //     key_val_ = _this.find('.keynew').val();
+        //     new_val_ = _this.find('.new').val();
+
+        //     $.ajax({
+        //         url: "{{route('updateJobData')}}",
+        //         cache: false,
+        //         headers: {
+        //             'X-CSRF-Token': "<?php echo csrf_token() ?>"
+        //         },
+        //         type: "POST",
+        //         data: {
+        //             'id': _id,
+        //             'la_size': _la_size,
+        //             'la_qty': _la_qty,
+        //             'key_val': key_val_,
+        //             'new_val': new_val_
+        //         }
+        //     }).done(function() {
+        //         _this.find('.la_size').data('current_value', _la_size);
+        //         _this.find('.la_qty').data('current_value', _la_qty);
+        //         _this.find('.keynew').data('current_value', key_val_);
+        //         _this.find('.new').data('current_value', new_val_);
+        //     });
+        // });
     });
 </script>
 @endsection

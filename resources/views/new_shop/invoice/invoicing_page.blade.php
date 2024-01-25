@@ -77,8 +77,14 @@
                 <a href="{{ url('/invoiceing/' . $jobs->id . '/' . $poItem->id . '/'. $poItem->batch.'/create') }}">                         
                     <div class="row" style="padding: 10px 10px 0px 10px;">
                         <div class="col-8">    
-                            <p class="text-left showinline">{{ $poItem->description }}</p>                     
-                            <p class="text-left showinline"><b>Price:</b> ${{ $poItem->price }}</p>
+                            <p class="text-left showinline">{{ $poItem->description }}</p>  
+                            @php
+                                $priceIncludingGST = $poItem->price * 1.10; // Adding 10%
+                            @endphp
+
+                            <p class="text-left showinline"><b>Price inc gst:</b> ${{ number_format($priceIncludingGST, 2) }}</p>
+                   
+                            {{-- <p class="text-left showinline"><b>Price inc gst:</b> ${{ $poItem->price }}</p> --}}
                         </div>
                         <div class="col-4 text-right font-weight-bold mt-2">
                

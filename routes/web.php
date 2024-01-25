@@ -33,9 +33,7 @@ Route::get('/shop', function () {
 
 /*
 	Painter Routes
- */
-
-
+*/
 
 Route::GET('/login', array('uses' => 'HomeController@login'))->middleware('guest')->name('login');
 Route::post('login_post', array('uses' => 'HomeController@loginPost'))->name('shop.loginPost');
@@ -70,6 +68,8 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 
 
 	Route::get('/invoiceing/{jobs_id}/{poItem_id}/{batch}/create', [InvoiceController::class, 'invoice_send'])->name('invoice_send');
+
+
 	// Route::get('/invoiceing/{jobs_id}/create', [InvoiceController::class, 'invoice_send2'])->name('invoice_send2');
 	Route::get('/invoiceing/{jobs_id}/create', [HomeController::class, 'invoice_create2'])->name('invoice_create2');
 
@@ -150,6 +150,10 @@ Route::group(['middleware' => ['auth']], function () {
 	//Previous jobs..
 	Route::get('/previous_jobs/{id}', array('uses' => 'PainterController@expireJobs'));
 	//nearest_Shop ...
+	Route::post('/invoice', [CustomerController::class, 'popsotre'])->name('customer.popsotre');
+	Route::post('/manual_invoice', [InvoiceController::class, 'invoicePayment'])->name('invoicePayment.store');
+
+
 	// Route::post('/send_invoice', [InvoiceController::class, 'sendInvoicePdf'])->name('invoices.send');
 	Route::get('/edit_builder/{id}/delete', 'PainterController@deletebuilder')->name('edit_builder.delete');
 	Route::get('/find_shops', array('uses' => 'PainterController@find_shops'));
@@ -161,6 +165,7 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::get('/subcontractors/{id}/create', [SubcustomerController::class, 'update'])->name('subcustomers.update');
 	Route::get('/subcontractors/{id}/delete', [SubcustomerController::class, 'delete'])->name('subcustomers.delete');
 	Route::post('/customer/store', [CustomerController::class, 'store'])->name('customer.store');
+
 	// Route::delete('/jobs/{id}', 'PainterJobController@destroy')->name('painterjob.destroy');
 	Route::delete('/jobs/{id}', 'PainterJobController@delete')->name('painterjob.delete');
 	Route::delete('/jobs/{id}/finishe', 'PainterJobController@finishjob')->name('painterjob.finishejob');

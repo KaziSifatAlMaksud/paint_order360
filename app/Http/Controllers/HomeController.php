@@ -126,11 +126,12 @@ class HomeController extends Controller
             ->where('id', $jobs_id)
             ->where('user_id', $request->user()->id)
             ->whereNull('parent_id')
-            ->get();
+            ->get()->first();
         $job_number = $jobs_id;
         $inv_numbers = Invoice::max('id') ?? 0;
 
-        return view('new_shop.invoice.add_invices', compact('customers', 'jobs', 'admin_buliders', 'inv_numbers', 'job_number'));
+        // return view('new_shop.invoice.add_invices', compact('customers', 'jobs', 'admin_buliders', 'inv_numbers', 'job_number'));
+        return view('new_shop.invoice.send_invices2', compact('customers', 'jobs', 'admin_buliders', 'inv_numbers', 'job_number'));
     }
 
 

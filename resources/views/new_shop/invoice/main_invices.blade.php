@@ -83,7 +83,7 @@
                             <div class="col-6 reduced-line-height">
                                 {{-- <p class="text-right"><b>Start:</b> <br>  <?php echo (new DateTime($invoice->date))->format('d-m-Y'); ?> </p> --}}
                                 <p class="text-right">{{$invoice->inv_number}} </p>
-                                <p class="text-right font-weight-bold">${{$invoice->total_due}}</p>
+                                <p class="text-right font-weight-bold">${{number_format( $invoice->total_due, 2)}}</p>
                             </div>
                         </div>
                 
@@ -109,7 +109,7 @@
                          <div class="col-6 reduced-line-height">
                              {{-- <p class="text-right"><b>Start:</b> <br><?php echo (new DateTime($invoice->date))->format('d-m-Y'); ?> </p> --}}
                              <p class="text-right"> {{$invoice->inv_number}}</p>
-                             <p class="text-right font-weight-bold">${{$invoice->total_due}}</p>
+                             <p class="text-right font-weight-bold">${{number_format( $invoice->total_due, 2)}}</p>
                          </div>
                      </div>
                  </a>   
@@ -133,7 +133,7 @@
                          </div>
                          <div class="col-6 reduced-line-height">
                              <p class="text-right">  {{$invoice->inv_number}}</p>
-                             <p class="text-right font-weight-bold">${{$invoice->total_due}}</p>
+                             <p class="text-right font-weight-bold">${{ number_format( $invoice->total_due, 2)}}</p>
                          </div>
                      </div>
                       </a>  

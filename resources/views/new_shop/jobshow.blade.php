@@ -76,7 +76,7 @@
            <ul class="p-2">
             <li><h3><b> {{ $job->address }} </b> </h3> </li> 
              {{-- <li class="custom-list-item2"> <img class="cardicon2" src="{{asset('/image/icon1/Painter.png') }}" alt=""> Painter Name ..   <br></li>        --}}
-            <li class="custom-list-item2"> <img class="cardicon2" src="{{asset('/image/icon1/price.png') }}" alt=""> $ {{ $job->price }}  inc gst<br></li>
+            <li class="custom-list-item2"> <img class="cardicon2" src="{{asset('/image/icon1/price.png') }}" alt=""> $ {{ number_format( $job->price , 2)  }}  inc gst<br></li>
             <li class="custom-list-item2">  <img class="cardicon2" src="{{asset('/image/icon1/calander.png') }}" alt=""> {{date('j M, Y', strtotime( $job->start_date))}}  <br></li>
             <li class="custom-list-item2">   <img class="cardicon2" src="{{asset('/image/icon1/area.png') }}" alt="">    {{$job->house_size}} m²</li>
             <li class="custom-list-item2 pt-3">    @if (!$job->builder_company_name)
@@ -125,7 +125,7 @@
             </div>
         </div> --}}
 
-      <a href="{{ route('show_on_map',['id'=> $job->id]) }}">
+      {{-- <a href="{{ route('show_on_map',['id'=> $job->id]) }}">
         <div class="docs_part docs_prt1 jobs_part2">
             <div class="docs_left jobs_cnt">
                 <h4> <b> Maps </b> </h4>
@@ -135,7 +135,7 @@
                 <img src="/image/icon1/Maps.png" alt="" height="70" width="70" >
             </div>
         </div>
-    </a>
+    </a> --}}
 
     {{-- <a href="#" id="card">
         <div class="docs_part docs_prt1 jobs_part2">

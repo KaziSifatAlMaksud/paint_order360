@@ -37,9 +37,7 @@
                  }, 1000);
             </script>
         @endif
-        
-{{-- {{$jobs}} --}}
-       
+               
             <form action="{{ route('invoice_savesend', ['jobs_id' => $poItem->job_id, 'poItem_id' => $poItem->id, 'batch' => $poItem->batch]) }}" method="POST" enctype="multipart/form-data">
                 @csrf 
                 <fieldset class="m-3">

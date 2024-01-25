@@ -55,7 +55,7 @@ $Painter_user = Session::get('Painter_user');
             <section>
                 <div class="hero-card-area" style="margin-bottom: 5px">
                     <div class="hero-card-row">
-                        <div class="hero-card-item">
+                        <div class="hero-card-item" >
                             <h3>See the individual orders </h3>
                             <table class="table table-inverse" id="order_table">
                                 <thead>
@@ -142,7 +142,7 @@ $Painter_user = Session::get('Painter_user');
 				<div class="hero-card-row">
 					<div class="hero-card-item">
 						<h3>{{$value -> address}}</h3>
-                        <label>Job Id :  <span><?php echo $value-> parent_id ?></span></label>
+                        {{-- <label>Job Id :  <span><?php echo $value-> parent_id ?></span></label> --}}
 						<label>Start date :  <span><?php echo $value->start_date ? $value->start_date : $user->start_date; ?></span></label> 
 						<label class="mt10">Order at : <span>{{$order -> customer_name}}</span></label>
 						<label>Date Ordered : <span>{{ $value->created_at ? \Carbon\Carbon::parse($value->created_at)->format('d/m/Y') : '' }}</span></label>

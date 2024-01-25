@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SubcustomerController;
 use App\Http\Controllers\PainterJobPlanController;
+use App\Models\InvoicePayment;
 use Illuminate\Support\Facades\DB;
 
 
@@ -504,31 +505,20 @@ class InvoiceController extends Controller
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public function manual_invoice(Request $request, $id)
     {
         $customers = Customer::all()->where('user_id', $request->user()->id);
         $admin_builders = BuilderModel::all();
+
         $invoice = Invoice::where('id', $id)->first();
-        return view('new_shop.invoice.send_manual_invoices', compact('customers', 'admin_builders', 'invoice'));
+        $invoicePaymentHistorys = InvoicePayment::where('invoice_id', $id)->orderBy('id', 'asc')->get();
+        $totalAmountMain = InvoicePayment::where('invoice_id', $id)->sum('amount_main');
+
+
+
+
+
+        return view('new_shop.invoice.send_manual_invoices', compact('customers', 'admin_builders', 'invoice', 'invoicePaymentHistorys', 'totalAmountMain'));
     }
 
 
@@ -657,7 +647,7 @@ class InvoiceController extends Controller
             if ($invoice) {
                 $invoice->update($validatedData);
             }
-            return redirect()->route('invoices_all')->with('go_back', true)->with('success', 'Customer Pa Successfully .');
+            return redirect()->route('invoices_all')->with('go_back', true)->with('success', 'Customer Paid Successfully .');
         }
 
         if ($request->input('action') == 'delete') {
@@ -735,5 +725,32 @@ class InvoiceController extends Controller
             ->orderBy('updated_at', 'desc')
             ->count();
         return view('new_shop.invoice.main_invices', compact('invoices', 'due_invoice', 'inv_numbers'));
+    }
+
+    public function invoicePayment(Request $request)
+    {
+
+        $amountMain = floatval($request->input('amount_main', 0));
+        $parentAmount = floatval($request->input('parent_amount', 0));
+        $remainingAmount = max(0,  $parentAmount - $amountMain);
+        $user_id = $request->user()->id;
+        $currentDateTime = now();
+        $invoicePayment = new InvoicePayment();
+        $invoicePayment->user_id = $user_id;
+        $invoicePayment->invoice_id = $request->invoice_id;
+        $invoicePayment->amount_main = $request->amount_main;
+        $invoicePayment->parent_amount = $request->parent_amount;
+        $invoicePayment->remaning_amount = $remainingAmount;
+        $invoicePayment->notes = $request->notes;
+        $invoicePayment->date = $currentDateTime;
+        $invoicePayment->save();
+
+        return response()->json([
+            'success' => true,
+            'invoiceId' => $invoicePayment->id,
+            'amount' => $invoicePayment->amount,
+            'notes' => $invoicePayment->notes,
+            'message' => 'Customer added successfully!'
+        ]);
     }
 }

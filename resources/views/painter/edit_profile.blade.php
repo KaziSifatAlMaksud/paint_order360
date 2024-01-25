@@ -25,40 +25,41 @@ require  public_path() . '/painter/header.php';
 			</div>
 		</header>	
 <!-- Page Content -->
-<center id="page-content">
-    
     
     <div class="container-fluid edit-detail">
         <div class="row">
             <div class="col-lg-12">
-                <div class="topbar pt-5">
-                    <h1>Up date your Detalis Page</h1>
+                <div class="topbar pt-5" style="margin-top:90px;">
+                    <h1>Update your Detalis Page</h1>
                     <p class="color-gray">Here you can update your presonal detalis.</p>
                         </div>    
                     <div class="bottombar mt-70">
                         <!-- Left-aligned -->
-                        <div class="media">
+                        <div>
                             <form class="col s12" method="post" enctype="multipart/form-data">
                                 @csrf
-                                <div class="media-left">
+                                <div>
                                     <label for="file-input">
                                         <h4>Click here to upload your photo</h4>
                                         <center class="b-shadow big-profile" id="profile_img_bg" style="background-image: url( <?php echo ($user->photo != '') ? PUBLIC_PATH . '/uploads/' . $user->photo : 'image/no_img.png' ?>);"></center>
                                     </label>
                                     <input type="file" style="display:none" accept="image/*" class="select" id="file-input" name="user_image">
                                 </div>
-                                <div class="media-body">
-                                    <div class="mb-0">
+                                <div >
+                                    <div class="mt-5">
                                         <div class="row">
                                             <div class="input-field col-12">
                                                 <input id="first_name" name="first_name" type="text" value="<?php echo $user->first_name; ?>" class="validate">
                                                 <label for="first_name">First Name</label>
                                             </div>
+                                        </div>
+                                        <div class="row">
                                             <div class="input-field col-12">
                                                 <input id="last_name" name="last_name" type="text" value="<?php echo $user->last_name; ?>" class="validate">
                                                 <label for="last_name">Last Name</label>
                                             </div>
                                         </div>
+                        
                                         <div class="row">
                                             <div class="input-field col-12">
                                                 <div class="input-search">
@@ -68,38 +69,59 @@ require  public_path() . '/painter/header.php';
                                                     <input type="hidden" name="longitude" id="longitude" value="<?php echo !empty($user->longitude) ? $user->longitude : ''; ?>">
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                        </div>
+                                        <div class="row">
                                                 <div class="input-field col-12">
+                                                    <label   for="icon_telephone">Phone Number</label>
                                                     <input id="icon_telephone" name="phone" value="<?php echo $user->phone; ?>" type="tel" class="validate">
-                                                    <label for="icon_telephone">Phone Number</label>
+                                                   
                                                 </div>
-                                                <div class="input-field col-12">
-                                                    <input id="email" type="email" name="email" value="<?php echo $user->email; ?>" class="validate">
+                                               
+                                        </div>
+                                        <div class="row">
+                                                 <div class="input-field col-12">
+                                                    <input id="email" type="email"  name="email" value="<?php echo $user->email; ?>" class="validate">
                                                     <label for="email" data-error="wrong" data-success="right">Email</label>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="input-field col-12">
-                                                    <textarea id="company_name" name="company_name" class="materialize-textarea"><?php echo $user->company_name; ?></textarea>
+                                        </div>
+                                        <div class="row">
+                                                                                             
+                                                 <div class="input-field col-12">
+                                                    <input id="company_name" name="company_name" type="text" value="<?php echo $user->company_name; ?>">
                                                     <label for="company_name">Company Name</label>
                                                 </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                                 
                                                  <div class="input-field col-12">
-                                                    <textarea id="abn" name="abn" class="materialize-textarea"><?php echo $user->abn; ?></textarea>
-                                                    <label for="company_name">ABN</label>
+                                                    <input id="abn" name="abn" type="text" value="<?php echo $user->abn; ?>">
+                                                    <label for="abn">ABN</label>
                                                 </div>
-                                            </div>
-                                          
-                                            <button type="sumbit" class="btn-orange large btn w-100">Update</button>
+                                        </div>
+
+                                           
+                                               
+                                          <div style="text-align: center;">
+                                            <button type="submit" class="btn-success btn w-50">Update</button>
+                                          </div>
+
+                                    </div>    
                             </form>
+                             <div style="margin: 20px 0px 200px 0px;"> 
                         </div>
                     </div>
                 </div>
             </div>
+
+             
         </div>
     </div>
-</center>
 </div>
 <!-- /#page-content-wrapper -->
 <?php
 require  public_path() . '/painter/footer.php';
 ?>
+
+
+

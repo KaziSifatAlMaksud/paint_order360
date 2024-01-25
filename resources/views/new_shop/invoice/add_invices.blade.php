@@ -8,6 +8,51 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
      <link rel="stylesheet" href="{{ asset('css/style8.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style77.css') }}">
+    <style>
+    /* Modal Style */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    backdrop-filter: blur(5px); /* Applying blur to background */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: red;
+  margin: 15px; 
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 20%;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+}
+
+</style>
 </head>
 <body>   
 		<header>
@@ -42,98 +87,109 @@
                  }, 1000);
             </script>
         @endif
-
         
-        <form action="{{ route('invoices.store') }}" method="POST" enctype="multipart/form-data">
+            <!-- Modal Structure -->
+        <div id="myModal" class="modal mt-4 pt-4">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            
+            <!-- Laravel Form Starts Here -->
+            <form id="customerForm" action="{{ route('customer.popsotre') }}" method="POST" >
+                @csrf <!-- CSRF Token for security -->
+
+                     <div>
+                        <label for="companyName" class="form-label">Customer Company Name: <span class="text-danger " style="font-size: 1.2em">*</span></label>
+                        <input type="text" class="custom-input" id="companyName" required value=" {{ isset($customer) ? $customer->companyName : '' }}"  required name="companyName">
+                    </div>
+            
+                    <div class="mt-3">
+                        <label for="name" class="form-label">Customer Name: <span class="text-danger " style="font-size: 1.2em">*</span> </label>
+                        <input type="text" class="custom-input" id="name" required  value="{{ isset($customer) ? $customer -> name : '' }} " required  name="name">
+                    </div>
+            
+                    <div class="mt-3">
+                        <label for="email" class="form-label">Customer Email Address : <span class="text-danger " style="font-size: 1.2em">*</span></label>
+                        <input type="email" class="custom-input" id="email" required  value=" {{ isset($customer) ? $customer -> email : '' }} " required name="email">
+                    </div>
+            
+                    <div class=" mt-3">
+                        <label for="mobile" class="form-label">Mobile Number:<span class="text-danger " style="font-size: 1.2em">*</span> </label>
+                        <input type="text" class="custom-input" id="mobile"   value=" {{ isset($customer) ? $customer -> mobile : ' ' }}" required name="mobile">
+                    </div>
+            
+                
+                    <div class="mt-3">
+                        <label for="abn" class="form-label">ABN: <span class="text-danger " style="font-size: 1.2em">*</span> </label>
+                        <input type="text" class="custom-input" id="abn"  value=" {{ isset($customer) ? $customer -> abn : ' ' }} " required name="abn">
+                    </div>
+
+                     <div class="mt-3">
+                        <label for="schedule" class="form-label">Payment Schedule:</label>
+                        <select class="custom-input" id="schedule" name="schedule">
+
+                            <option value="5" {{ isset($customer) && $customer->schedule == '5' ? 'selected' : '' }}>5 days</option>
+                            <option value="7" {{ isset($customer) && $customer->schedule == '7' ? 'selected' : '' }}>1 week</option>
+                            <option value="14" {{ isset($customer) && $customer->schedule == '14' ? 'selected' : '' }}>2 weeks</option>
+                            <option value="14" {{ isset($customer) && $customer->schedule == '21' ? 'selected' : '' }}>3 weeks</option>
+                            <option value="14" {{ isset($customer) && $customer->schedule == '30' ? 'selected' : '' }}>1 Month</option>
+
+                            <!-- Add more options as needed -->
+                        </select>
+                    </div>
+                    <center>
+                    <button type="submit" class="btn btn-primary w-50 mt-4 align-center" name="action" value="save"> Submit</button>
+                    </center>
+            
+            </form>
+            <!-- Laravel Form Ends Here -->
+
+        </div>
+        </div>
+        
+        <form action="{{ route('invoices.store') }}" method="POST" enctype="multipart/form-data" >
              @csrf 
             <fieldset class="m-3">
                <div class="row mb-3 mt-3">
                     <div class="col-2 d-flex align-items-center justify-content-center">
-                        <label class="form-label"> To<span style="color:red;">*</span> : </label>
-                    </div>
-                    {{-- <div class="col-7">
-                        <input type="hidden" name="selected_type" id="selectedType" value="">
-                        <select name="customer_id" class="custom-input" id="customerSelect">
-                            <option value="" disabled selected>Select a Customer</option>
-                            @if($jobs)
-                            @foreach($admin_builders as $key => $admin_builder)
-                                @if($admin_builder->id === $jobs->builder_id)
-                                    {{ $admin_builder->company_name }}
-                                @endif
-                            @endforeach
-                        @endif
-                            @foreach($customers as $customer)
-                                  <option value="{{ $customer->companyName }}" data-email="{{ $customer->email }}">{{ $customer->companyName }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                     --}}
-
-                     <div class="col-7">
-                        <select name="customer_id" class="custom-input" id="customerSelect">
-                            <option value="">Select a Customer</option>
-                            @php
-                                $selectedCompanyName = null;
-                                if($jobs) {
-                                    foreach($admin_buliders as $admin_builder) {
-                                        if($admin_builder->id === $jobs->first()->builder_id) {
-                                            $selectedCompanyName = $admin_builder->company_name;
-                                            break;
-                                        }
-                                    }
-                                }
-                            @endphp
-
-                            @foreach($customers as $customer)
-                                <option value="{{ $customer->companyName }}" data-email="{{ $customer->email }}"
-                                    {{ $selectedCompanyName === $customer->companyName ? 'selected' : '' }}>
-                                    {{ $customer->companyName }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <label class="form-label"> To <span style="color: red;">*</span> </label>
                     </div>
 
-                
-
-                
-              
-
-
-                    <div class="col-3 d-flex align-items-center justify-content-center">
-                        <a href="<?php echo '/customer/create' ?>" class="form-label">
-                            <i class="fas fa-user-plus"></i> ADD
-                        </a>
-                    </div>
-                    
+                  <div class="col-7">
+                    <select name="customer_id" class="custom-input" id="customerSelect">
+                        <option value="" selected >Select a Customer</option>
+                        @foreach ($customers as $customer)
+                            <option value="{{ $customer->companyName }}" data-email="{{ $customer->email }}">
+                                {{ $customer->companyName }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
-               <div class="row mb-3">
+
+
+                   <div class="col-3 d-flex align-items-center justify-content-center">
+                        <p href="" id="addCustomerButton" class="form-label" style="cursor: pointer;">
+                            <i class="fas fa-user-plus"></i> ADD
+                        </p>
+                    </div>                    
+                </div>
+
+
+                <div class="row mb-3">
                     <div class="col-2 d-flex align-items-center justify-content-center">
                         <label class="form-label"><i class="fa-solid fa-envelope"></i> <span style="color:red;">*</span> </label>
                     </div>
                      <div class="col-10">
-                   
-                     <input type="email" class="custom-input editable" id="customer_email" value="@if($jobs )
-                        @if($jobs instanceof \Illuminate\Support\Collection)
-                            @foreach($admin_buliders as $key => $admin_builder)
-                                @if($admin_builder->id == $jobs->first()->builder_id)
-                                    {{ $admin_builder->builder_email }}
-                                @endif
-                            @endforeach
-                        @else
-                            {{ $admin_builders->where('id', $jobs->builder_id)->first()->company_name }}
-                        @endif
-                    @endif"
-                    name="send_email" placeholder="Enter Email" required>
+                    <input type="email" class="custom-input editable" id="customer_email" name="send_email" placeholder="Enter Email" required>
 
                       <span id="email-error" class="error-message text-danger"></span>
                     </div>  
                 </div>
-          
+
                  <!-- Invoice Number -->
                  <div class="row mb-3">
                     <div class="col-2 d-flex align-items-center justify-content-center">
-                        <label class="form-label"><i class="fas fa-file-invoice"> </i> <span style="color:red;">*</span> </label>
+                        <label class="form-label"><i class="fas fa-file-invoice"> </i> <span style="color: red;">*</span></label>
                     </div>
                     <div class="col-10">
                         <input type="text" class="custom-input" value="INV: {{ isset($inv_numbers) ? str_pad($inv_numbers + 1, 5, '0', STR_PAD_LEFT) : 'Default Value' }}" id="invoiceNumber" name="inv_number" readonly> 
@@ -144,7 +200,7 @@
                 <div class="row mb-3">
                     <div class="col-2 d-flex align-items-center justify-content-center">
                         <label class="form-label text-center">
-                            <i class="fas fa-calendar-alt"></i> <span style="color:red;">*</span>
+                            <i class="fas fa-calendar-alt"></i> <span style="color: red;">*</span>
                         </label>
                     </div>
                     
@@ -156,7 +212,7 @@
                 <!-- Due Date -->
                 <div class="row mb-3">
                     <div class="col-2 d-flex align-items-center justify-content-center">
-                        <label class="form-label"><i class="far fa-clock"></i> <span style="color:red;"> </span> </label>
+                        <label class="form-label"><i class="far fa-clock"></i></label>
                     </div>
                     <div class="col-10">
                         <input type="text" class="custom-input editable" placeholder="Purchase Order Number" name="purchase_order">
@@ -167,10 +223,12 @@
                 <!-- Address -->
                 <div class="row mb-3">
                     <div class="col-2 d-flex align-items-center justify-content-center">
-                        <label class="form-label"><i class="fas fa-map-marker-alt"></i> <span style="color:red;">*</span> </label>
+                        <label class="form-label"><i class="fas fa-map-marker-alt"></i> <span style="color: red;">*</span></label>
                     </div>   
                     <div class="col-10">                        
-                                 <textarea class="custom-input editable" id="searchTextField" name="address" id="address" rows="1" placeholder="Job Address" name="job_selection" required></textarea>
+                                 <textarea class="custom-input editable"  name="address"  rows="1" placeholder="Job Address" name="job_selection" required></textarea>
+                                  <!--id="searchTextField" id="address" -->
+                                 
                                  <input type="hidden" name="latitude" id="Lat" value="">
                                  <input type="hidden" name="longitude" id="Lng" value="">                            
               
@@ -182,10 +240,10 @@
                 <!-- Description -->
                 <div class="row mb-3">
                     <div class="col-2 d-flex align-items-center justify-content-center">
-                        <label class="form-label"><i class="fa-regular fa-bookmark"></i> <span style="color:red;">*</span> </label>
+                        <label class="form-label"><i class="fa-regular fa-bookmark"></i> <span style="color: red;">*</span></label>
                     </div>
                  <div class="col-10">
-                        <input type="text" class="custom-input editable" placeholder="Short description of work " name="description" required>
+                        <input type="text" class="custom-input editable" placeholder="Short description of work " name="description" >
                     </div>
                 </div>   
 
@@ -208,7 +266,7 @@
                  <!-- Total Due -->
                  <div class="row mb-3">
                     <div class="col-12">
-                        <label class="form-label">Job Details :</label>
+                        <label class="form-label">Job Details  :</label>
                     </div>
                     <div class="col-12">
                         <input type="text" class="custom-input editable" class="form-control" placeholder="Extra description (Optional)" name="job_details" >
@@ -228,7 +286,7 @@
             <div class="col-6">
                 <div class="input-group">
                     <span class="input-group-text no-background"><i class="fas fa-dollar-sign"></i></span>
-                    <input type="text" id="amountInput" required class="custom-input form-control text-right editable" name="amount" placeholder="Enter Amount" required>
+                    <input type="text" id="amountInput" required class="custom-input form-control text-right editable" name="amount" placeholder="Enter Amount">
                 </div>
             </div>
 
@@ -289,60 +347,8 @@
     
 </body>
 
-
-
-<script type="text/javascript">
-
-
-
-
-
-    $('.brand').on('change', function(e) {
-        var val = $(this).val();
-        $('.brand-cst').val(val)
-    });
-    $('#builder_company').on('change', function(e) {
-
-        var val = $(this).attr('data-brand');;
-        var selectedOption = $(this).find('option:selected');
-        var dataBrandValue = selectedOption.data('brand');
-        $('#brand_id').val(dataBrandValue).change();
-    });
-
-
-    function initialize() {
-        var input = document.getElementById('searchTextField');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-            var place = autocomplete.getPlace();
-            document.getElementById('Lat').value = place.geometry.location.lat();
-            document.getElementById('Lng').value = place.geometry.location.lng();
-        });
-    }
-    google.maps.event.addDomListener(window, 'load', initialize);
-
-    $('#supervisor option').hide();
-    var selectedOptionValue = $('#builder_company').val();
-    if (selectedOptionValue != '') {
-        $('.empty_supervisor').show()
-        $('.supervisor_' + selectedOptionValue).show()
-    }
-    $('#builder_company').change(function() {
-        builder_id = this.value;
-        if (builder_id === '') {
-            $('#supervisor').val(builder_id);
-            $('#supervisor option').hide();
-        } else {
-            $('#supervisor option').hide();
-            $('.empty_supervisor').show().prop('selected', true);
-            $('.supervisor_' + builder_id).show();
-        }
-    })
-</script>
-
-
 <script src="{{ asset('js/script.js') }}"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
@@ -351,18 +357,87 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCb7MpXPNGT9y6LKzg_bi8R1Q_hwmLKMgk&libraries=places&callback=initialize" async defer></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
+<script>
+$(document).ready(function() {
+    $('#customerForm').on('submit', function(e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        // Store email and customer name in local storage for later use
+        localStorage.setItem('customer_email', formData.get('email'));
+        localStorage.setItem('customerSelect', formData.get('companyName'));
+
+        $.ajax({
+            url: '{{ route("customer.popsotre") }}',
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            },
+            data: formData,
+            contentType: false,
+            processData: false,
+           success: function(data) {
+            if (data.success) {
+                alert('Success: Customer saved successfully!');
+
+                // Assuming `data.customerId` and `data.customerName` are returned from the server
+                $('#customerSelect').append($('<option>', {
+                    value: data.customerName,
+                    text: data.customerName
+                }));
+
+                // Set the email in the customer_email input
+                $('#customer_email').val(data.customerEmail);
+
+                // Optionally, select the newly added customer in the dropdown
+                $('#customerSelect').val(data.customerName);
+                $('#customerForm')[0].reset();
+                 var modal = document.getElementById('myModal'); // Replace 'yourModalId' with the actual ID of your modal
+                    modal.style.display = "none";
+
+            } else {
+                alert('Error: ' + data.error); // Handle any custom error message from the server
+            }
+        },
+
+            error: function(error) {
+                console.error('Error:', error);
+                alert('Error: An error occurred while saving the customer.');
+            }
+        });
+    });
+});
+</script>
+
+
 
 <script>
+ // Get the modal
+var modal = document.getElementById("myModal");
+var btn = document.getElementById("addCustomerButton");
+var span = document.getElementsByClassName("close")[0];
+btn.onclick = function() {
+  modal.style.display = "block";
+}
 
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}   
 
 
   const emailInput = document.getElementById('customer_email');
   const emailError = document.getElementById('email-error');
-
   emailInput.addEventListener('input', function() {
     const email = emailInput.value;
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
     if (!emailPattern.test(email)) {
       emailError.textContent = 'Invalid email format';
     } else {
@@ -382,10 +457,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// //for invoice Random Number
-//     var invoiceNumberInput = document.getElementById("invoiceNumber");
-//     var randomNumber = Math.floor(Math.random() * 1000000) + 1;
-//     invoiceNumberInput.value = "INV- "+ randomNumber;
 
 //Defult todays date..
 
@@ -393,8 +464,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Create a new Date object to get the current date
     var currentDate = new Date();
-
-    // Format the current date as YYYY-MM-DD
     var year = currentDate.getFullYear();
     var month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
     var day = currentDate.getDate().toString().padStart(2, "0");
@@ -409,14 +478,11 @@ var selectedTypeInput = document.getElementById("selectedType");
 customerSelect.addEventListener("change", function() {
     var selectedOption = this.options[this.selectedIndex];
     var optionType = selectedOption.getAttribute("data-type");
-
-    // Set the selected type in the hidden input field
     selectedTypeInput.value = optionType;
 });
 
 
 </script>
-
 
 
 </html>

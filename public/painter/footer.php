@@ -257,7 +257,7 @@
 
     });
 
-   
+
 
     $(document).ready(function() {
         $(".alert_msg").show().delay(30000).fadeOut();

@@ -123,7 +123,9 @@
             <p style="margin: 0 !important;">{{$user_name}}: {{$user_phone}}</p>
         </td>
         <td style="border: none !important; margin-top: 15px!important;">
-            <p style="margin: 0 !important;"><b>INVOICE # </b> <span style="color: #5086e6 !important;"> {{$inv_number}} </span> </p> <br>
+            <p style="margin: 0 !important;">
+                {{-- <b>INVOICE # </b>  --}}
+                <span style="color: #5086e6 !important;"> {{$inv_number}} </span> </p> <br>
             <p style="margin: 0 !important;"><b>Type Of work done:</b> <span style="color: #5086e6 !important;"> {{$description}}</span></p>
         </td>
     </tr>
