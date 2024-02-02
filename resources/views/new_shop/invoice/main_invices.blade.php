@@ -77,7 +77,7 @@
       
                         <div class="row p-1">
                             <div class="col-6 reduced-line-height">
-                                <p class="text-left showinline"> {{$invoice->customer_id}}</p>
+                                <p class="text-left showinline" id="customer-title"> {{$invoice->customer_id}}</p>
                                 <p class="text-left showinline"> {{$invoice->description}} </p>
                             </div>
                             <div class="col-6 reduced-line-height">

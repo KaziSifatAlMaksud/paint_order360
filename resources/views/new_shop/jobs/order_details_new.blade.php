@@ -470,9 +470,21 @@ require  public_path() . '/painter/header.php';
     }
 </style>
 
+
 <div>
+    <header>
+			<div class="header-row">
+				<div class="header-item">
+				 <a href="{{ url()->previous() }}"> <i class="fa-solid fa-arrow-left"></i> </a>	
+					<span> Create Invoice </span>
+					<a href="<?php echo '/main' ?>">   <img src="/image/logo-phone.png" alt="Logo"> </a>   
+				</div>
+			</div>
+		</header>	
+
+    {{-- @include('layouts.partials.footer')   --}}
     <div id="intro">
-        <div class="main_wrap intro_main_wrap_cstm main_login">
+        <div class="main_wrap intro_main_wrap_cstm main_login pt-5" style="margin-top: 70px;">
             <div id="page-content-wrapper==">
                 <div class="container-fluid">
              
@@ -565,6 +577,44 @@ require  public_path() . '/painter/header.php';
                                                         </div>
                                                     </div>
                                                 </div>
+                                                 @foreach($garagePaints as $garagePaint)
+                                                    @if (strtolower(trim($item->product)) == strtolower(trim($garagePaint->product)) && $item->brand != null && $item->brand->id == $garagePaint->brand_id && strtolower(trim($item->color)) == strtolower(trim($garagePaint->color)))
+                                                        {{-- @if(strtolower(trim($item->product)) == strtolower(trim($garagePaint->product)) && $item->brand->id == $garagePaint->brand_id ) --}}
+
+                                                       <div  id="card-{{ $garagePaint->id }}" class="row bg-success text-white justify-content-center align-items-center " style="border-radius: 5px; margin-top: 50px;" >
+                                                           
+                                                            <div class="col-6 text-left">
+                                                                <h3>Use Your Garage Paint</h3>      
+                                                            </div>
+                                                            <div class="col-6 pt-3" >
+                                                               <div class="row d-flex justify-content-center align-items-center">
+                                                                <div class="col-7 text-center">
+                                                                    <input type="text" id="inputFieldSize" class="form-control text-light" readonly style="border: 1px solid #fff; border-radius: 5px;" value="{{$garagePaint->size}}L" />
+                                                                </div>
+                                                                <div class="col-5 text-center">
+                                                                         <form action="{{ route('garage-paints.destroy', $garagePaint->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                       <!-- Button with larger icon -->
+                                                                        <button type="button" onclick="confirmDelete({{ $garagePaint->id }})" style="position: absolute; color:red; right: -10px; top: -25px; border-radius: 50%;border:0px solid #fff !important; font-size:100%">
+                                                                            <i class="fas fa-times-circle fa-2x"></i>
+                                                                        </button>
+
+                                                                    </form>
+
+                                                                   
+                                                                    <input type="text" id="inputFieldQuantity" class="form-control text-light" readonly style="border: 1px solid #fff; border-radius: 5px;" value="{{$garagePaint->quantity}}"/>
+                                                                </div>
+                                                             
+                                                            </div>
+
+                                                            </div>
+                                                        </div>                                                                                                               
+
+                                                          
+                                                    @endif
+                                                  
+                                                @endforeach
                                             </div>
                                         </div>
                                         <?php
@@ -632,6 +682,41 @@ require  public_path() . '/painter/header.php';
                                                         </div>
                                                     </div>
                                                 </div>
+                                                   @foreach($garagePaints as $garagePaint)
+
+                                                  @if (strtolower(trim($item->product)) == strtolower(trim($garagePaint->product)) && $item->brand != null && $item->brand->id == $garagePaint->brand_id && strtolower(trim($item->color)) == strtolower(trim($garagePaint->color)))
+                                                    
+                                                   {{-- @if($item->product === $garagePaint->product || ($item->brand && $item->brand->id === $garagePaint->brand_id)) --}}
+                                                       <div id="card-{{ $garagePaint->id }}"  class="row bg-success text-white justify-content-center align-items-center mt-5" style="border-radius: 5px;" >
+                                                            <div class="col-6 text-left">
+                                                                <h3>Use Your Garage Paint</h3>      
+                                                            </div>
+                                                            <div class="col-6 pt-3" >
+                                                               <div class="row d-flex justify-content-center align-items-center">
+                                                                <div class="col-7 text-center">
+                                                                    <input type="text" id="inputFieldSize" class="form-control text-light" readonly style="border: 1px solid #fff; border-radius: 5px;" value="{{$garagePaint->size}}L" />
+                                                                </div>
+                                                                <div class="col-5 text-center">
+                                                                     <form action="{{ route('garage-paints.destroy', $garagePaint->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                       <!-- Button with larger icon -->
+                                                                        <button type="button" onclick="confirmDelete({{ $garagePaint->id }})" style="position: absolute; color:red; right: -10px; top: -25px; border-radius: 50%;border:0px solid #fff !important; font-size:100%">
+                                                                            <i class="fas fa-times-circle fa-2x"></i>
+                                                                        </button>
+
+                                                                    </form>
+                                                                    <input type="text" id="inputFieldQuantity" class="form-control text-light" readonly style="border: 1px solid #fff; border-radius: 5px;" value="{{$garagePaint->quantity}}"/>
+                                                                </div>
+                                                            </div>
+
+                                                            </div>
+                                                        </div>                                                                                                                
+
+                                                       @endif   
+                                                    
+                                                  
+                                                @endforeach
                                             </div>
                                         </div>
                                         @endforeach
@@ -650,7 +735,32 @@ require  public_path() . '/painter/header.php';
 @endsection
 @section('js')
 <script src="{{ asset('/assets/vendor/jquery/jquery.js')}}"></script>
+
+
+
+
 <script>
+    function confirmDelete(itemId) {
+    if(confirm('Are add your item, if you not add items please add?')) {
+        $.ajax({
+            url: '/add_gerag/' + itemId, // Update the URL as per your route
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                _method: 'DELETE'
+            },
+            success: function(response) {
+                // Handle success (e.g., show a success message, remove the item from the page)
+                  $('#card-' + itemId).remove();
+                alert('Item deleted successfully');
+            },
+            error: function(xhr) {
+                // Handle error
+                alert('Error deleting item');
+            }
+        });
+    }
+}
     $(document).ready(function() {
         a = $(location).attr('href');
         var part = a.substring(a.lastIndexOf('=') + 1);

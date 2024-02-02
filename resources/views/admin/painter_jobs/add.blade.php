@@ -34,6 +34,18 @@ require  public_path() . '/admin/header.blade.php';
                         </div>
                     </div>
                 </div>
+                   <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Assinged Painter: </label>
+                        <div class="col-sm-10">
+                            <select name="assign_painter" id="assign_painter" required class="form-control painter">
+                                @foreach ($users as $user)
+                                <option class="painter-val" value="{{ $user->id }}" {{ $user->id == old('assign_painter', $painterjob->assign_painter) ? 'selected' : '' }}>{{ $user->first_name .' '. $user->last_name}} - ({{ $user->company_name}})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
                 {{-- @if($painterjob->id)
                 <div class="row">

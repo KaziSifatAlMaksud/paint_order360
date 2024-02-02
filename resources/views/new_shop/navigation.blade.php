@@ -4,10 +4,10 @@
 @section('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<link rel="stylesheet" href="{{ asset('css/style8.css') }}">
 <link rel="stylesheet" href="{{ asset('css/style77.css') }}">
+<link rel="stylesheet" href="{{ asset('css/style8.css') }}">
+
 <style>
-    /* CSS for fixed position */
     .fixed-top {
         position: fixed;
         top: 0;
@@ -15,8 +15,9 @@
         width: 100%;
         z-index: 999;
     }
-</style>
+    
 
+</style>
 
 @endsection
 @section('content')
@@ -64,33 +65,17 @@
   </div>
 
 
+  
+
 
 
     @if($jobs->count()  > 0)
-        <!-- Your HTML or Blade code to display when there are jobs -->
-        <div class="portfolio-container">
-            <!-- Card Content -->
-               
-            @foreach($jobs->sortByDesc('created_at') as $job)
+
+        <div class="portfolio-container">       
             
+            @foreach($jobs->sortByDesc('created_at') as $job)            
             <a href="{{ route('jobs.show', ['id' => $job->id]) }}">
             <div class="card portfolio-item {{ $job->status == 1 ? 'filter-new' : ($job->status == 3 ? 'filter-finished' : 'filter-started') }}">
-                {{-- @if(isset($job->GallaryPlan) && count($job->GallaryPlan) > 0)
-                     @if ($job->status == 1)
-                     <div class="col-6">                       
-                        <p class="btn1 showinline" >New Job</p>
-                    </div> 
-                     @elseif ($job->status == 3) 
-                      <div class="col-6">                       
-                        <p class="btn3 showinline" >Finished</p>
-                      </div> 
-                    @else
-                       <div class="col-6">
-                        <p class="btn2 showinline" >Started</p>
-                    </div>   
-                    @endif
-                      <img class="card-img-top d-block w-100 " src="{{asset('/gallery_images/'.$job->GallaryPlan[count($job->GallaryPlan) - 1]->img_url) }}"  alt="Card image cap">
-                 @else --}}
                     @if ($job->status == 1)
                      <div class="col-6">                       
                         <p class="btn1 showinline" >New Job</p>
@@ -110,9 +95,7 @@
                             <img class="card-img-top d-block w-100" src="{{ asset('/image/Home.png') }}" alt="Card image cap">
                         @endforelse
 
-                    
-{{--                  
-                  @endif --}}
+
                @if ($job->status == 1)
                     <div class="card-header1">
                         <h4 class="card-title text-left" id="expandable-title">{{$job->address}}</h4>
@@ -153,10 +136,7 @@
                                             
                                             @endif</span>
                                         </li>
-                                        {{-- <li class="custom-list-item">
-                                            <img class="cardicon" src="{{asset('/image/icon1/Painter.png') }}" alt="">
-                                            <span class="text">Painter Text</span>
-                                        </li> --}}
+
                                     
                                     </ul>                                
                         </div>

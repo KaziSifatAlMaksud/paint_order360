@@ -52,9 +52,14 @@ class HomeController extends Controller
 
     public function main(Request $request)
     {
+        $userId = $request->user()->id;
         $company_name = $request->user()->company_name;
         $jobs = PainterJob::with('gallaryPlan', 'admin_builders', 'superviser', 'poitem', 'users')
-            ->where('user_id', $request->user()->id)
+            // ->where('user_id', $request->user()->id)
+            ->where(function ($query) use ($userId) {
+                $query->where('user_id', $userId)
+                    ->orWhere('assign_painter', $userId);
+            })
             ->whereNull('parent_id')
             ->get();
         $admin_builders = BuilderModel::all();

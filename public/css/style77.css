@@ -20,7 +20,7 @@ a:hover {
     --bg:#f5f5f5;
     --body-bg: #ebebeb;
     --nav-colo: #fff;
-    --orang: #f47a08;
+    --orang: orangered;
     --bg-orang: #ffddaa;
     --newInvoice-bg: #66ff5b;
     --dueInvoice-bf:#ff7070;
@@ -249,26 +249,22 @@ header {
 
 }
 .navigation ul li.active a .icon{
-    transform: translateY(-42px);
-    background-color: #f47a08;
+    transform: translateY(-15px);
     padding: 0px 25px 0px 25px;
-    background: var(--orang);
     border-radius: 50%; 
     font-size: 20px;
-    box-shadow: 0px -10px 30px rgba(0, 0, 0, 0.2);  
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
-    border: 6px solid var(--body-bg);
-    transition: 0.5s;
+    color: var(--orang);
+ 
 
 }
 
 .navigation ul li a .text{
     position: absolute;
-    color: var(--clr);
+    color: var(--orang);
     font-weight: bold;
     font-size: 1em;
     letter-spacing: 0.05em;
-    transition: 0.5s;
+    /* transition: 0.5s; */
     opacity: 0;
     transform: translateY(20px);
 }

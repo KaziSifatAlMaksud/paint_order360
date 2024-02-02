@@ -24,10 +24,10 @@
 
 .modal-content {
     background-color: #fefefe;
-    padding: 40px;
+    padding: 20px;
     border: 1px solid #888;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); /* Shadow effect */
-    width: 60%; /* Taking 60% of screen width */
+    width: 80%; /* Taking 60% of screen width */
     max-width: 600px; /* For larger screens */
     position: relative; /* To position the close button */
     margin: 10% auto; /* Centering the modal */
@@ -39,12 +39,13 @@
     font-size: 28px;
     font-weight: bold;
     position: absolute;
-    top: 0;
+    top: -10px;
     right: 0;
     border-radius: 20%;
     padding: 5px;
     cursor: pointer;
     transition: color 0.3s;
+    z-index: 10;
 }
 
 .close:hover,
@@ -88,7 +89,7 @@
         @endif
 
          <!-- Modal Structure -->
-        <div id="amountNotesModal" class="modal  pt-4">
+        <div id="amountNotesModal" class="modal  mt-5 pt-4">
             <div class="modal-content">
                 <span class="close">&times;</span>
                 
@@ -126,7 +127,7 @@
 
         <form action="{{ route('manual_invoice_store', ['id' => $invoice->id]) }}" method="POST" enctype="multipart/form-data">
              @csrf 
-    <fieldset class="m-3">
+            <fieldset class="m-3">
                <div class="row mb-3 mt-2">
                     <div class="col-2 d-flex align-items-center justify-content-center">
                         <label class="form-label"> To : </label>
@@ -334,7 +335,7 @@
              <button type="submit"  name="action" class="btn btn-primary btn-block btnshow" value="send&save">Save and Send Invoice</button>
             @endif
                        
-                    </div>
+                
                 <div class="row mt-3">
                     <div class="col-4">
                         <button type="submit" name="action" class="btn btn-danger btn-block btnshow" id="deleteButton" value="delete" >Delete</button>
@@ -351,11 +352,10 @@
                      <div class="col-4">                       
                         <button type="submit" name="action" class="btn btn-warning btn-block btnshow" value="save">Save</button>
                     </div>
-                      
-                    
+
                     @endif 
-                   
-                      
+
+                </div>
                 </div>
             </fieldset>
         </form>

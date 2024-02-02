@@ -13,17 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('invoice_payments', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('invoice_id')->constrained()->onDelete('cascade');
-            $table->decimal('amount_main', 8, 2)->nullable();
-            $table->decimal('parent_amount', 8, 2)->nullable();
-            $table->decimal('remaning_amount', 8, 2)->nullable();
-            $table->text('notes')->nullable();
-            $table->timestamp('date')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('invoice_payments')) {
+            Schema::create('invoice_payments', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('user_id')->constrained()->onDelete('cascade');
+                $table->foreignId('invoice_id')->constrained()->onDelete('cascade');
+                $table->decimal('amount_main', 8, 2)->nullable();
+                $table->decimal('parent_amount', 8, 2)->nullable();
+                $table->decimal('remaning_amount', 8, 2)->nullable();
+                $table->text('notes')->nullable();
+                $table->timestamp('date')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

@@ -87,22 +87,25 @@ function filterCards() {
     });
 }
 
-
 function filterCards2() {
     const searchInput = document.getElementById("search-invoice").value.toLowerCase();
-    const cardTitles = document.querySelectorAll("#expandable-title");
+    const cards = document.querySelectorAll(".InvoicePortfolio");
 
-    cardTitles.forEach(function(cardTitle) {
-        const titleText = cardTitle.textContent.toLowerCase();
-        const card = cardTitle.closest(".InvoicePortfolio");
+    cards.forEach(function(card) {
+        const cardTitle = card.querySelector("#expandable-title");
+        const customerTitle = card.querySelector("#customer-title");
+        
+        const cardTitleText = cardTitle ? cardTitle.textContent.toLowerCase() : '';
+        const customerTitleText = customerTitle ? customerTitle.textContent.toLowerCase() : '';
 
-        if (titleText.includes(searchInput)) {
+        if (cardTitleText.includes(searchInput) || customerTitleText.includes(searchInput)) {
             card.style.display = "block";
         } else {
             card.style.display = "none";
         }
     });
 }
+
 
 
 

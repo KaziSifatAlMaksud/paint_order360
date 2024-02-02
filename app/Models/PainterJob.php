@@ -38,6 +38,7 @@ class PainterJob extends Model
         'key',
         'brand_id',
         'company_id',
+        'assign_painter',
         'supervisor_id',
         'supervisor_id',
         'colors_secound',

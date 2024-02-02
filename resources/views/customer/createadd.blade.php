@@ -33,13 +33,14 @@
                 {{ session('success') }}
             </div>
         @endif
-     @if(session('go_back'))
+   @if(session('go_back'))
     <script>
         setTimeout(function() {  
-            window.history.go(-2);
+            window.location.href = '/customers';
         }, 1000);
     </script>
-    @endif
+@endif
+
 
 
      
@@ -139,46 +140,7 @@
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-<script>
-document.getElementById('customerForm').addEventListener('submit', function(e) {
-    e.preventDefault();
 
-    var formData = new FormData(this);
-
-    // Check if you are updating or saving a new customer
-    if (formData.has('id') && formData.get('id') !== '') {
-        formData.set('action', 'update');
-    } else {
-        formData.set('action', 'save');
-    }
-
-    fetch('{{ route("customer.store") }}', {
-        method: 'POST',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: formData
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Please fill all the required fields!');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            alert('Customer operation successful!');
-            // Redirect or update UI as necessary
-        } else {
-            alert('An error occurred: ' + data.message);
-        }
-    })
-    .catch(error => {
-        alert('Error: ' + error.message);
-    });
-});
-</script>
 
 
 </html>
