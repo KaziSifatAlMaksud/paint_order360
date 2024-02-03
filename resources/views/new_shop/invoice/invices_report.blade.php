@@ -7,7 +7,7 @@
 
     <!-- Fav Icon -->
     <link rel="icon" href="images/favicon.ico" />
-s
+
     <!--icon link -->
     <link
       rel="stylesheet"
@@ -26,15 +26,155 @@ s
     />
 
     <link rel="stylesheet" href="{{ asset('css/style10.css') }}">
-    <!-- <link rel="stylesheet" href="{{ asset('css/style8.css') }}"> -->
-    <link rel="stylesheet" href="{{ asset('css/style77.css') }}">
+    <style>
+
+:root {
+    --clr: #222327;
+    --bg:#f5f5f5;
+    --body-bg: #ebebeb;
+    --nav-colo: #fff;
+    --orang: orangered;
+    --bg-orang: #ffddaa;
+    --newInvoice-bg: #66ff5b;
+    --dueInvoice-bf:#ff7070;
+    --yollo: #f9f14d;
+    --bg-yollo: #fffcb4;
+    --green: #17ff21;
+    --bg-green: #b8ffc3;
+}
+header {
+    /* position: relative; */
+    position: fixed;
+    width: 100%;
+    margin: 0;
+    background-color: #ffffff;
+    border-radius: 0px 0px 20px 20px;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+    padding: 5px 0;
+    margin-bottom: 10px;
+    z-index: 10;
+}
+
+
+.header-row {
+    margin: 0 5px;
+}
+
+.header-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 10px;
+   
+}
+
+.header-item i {
+    font-size: 30px;
+}
+
+.header-item span {
+    font-size: 25px;
+    text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+}
+
+.header-item img {
+    width: 100%;
+    max-width: 60px;
+}
+
+.header-item {
+    font-size: 25px;
+    text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+}
+
+/* Navigation Update*/
+
+   
+
+.navigation {
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    align-items: center; 
+    justify-content: end; 
+    width: 100%;
+    bottom: 0;
+    background: #fff;
+    border-radius: 20px 20px 0px 0px;
+    box-shadow: 0px 10px 36px rgba(0, 0, 0, 0.3);
+    z-index: 3;
+}
+
+.navigation ul{
+    margin-bottom: 0!important;
+    padding-left: 0rem !important;
+    display: flex;
+    width: 100%;
+    
+}
+.navigation ul li{    
+    position: relative;
+    list-style: none;
+    width: 30%;
+    height: 70px;
+    z-index: 1;
+}
+.navigation ul li a{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+ 
+    /* text-align: center; */
+    font-weight: 500;
+}
+.navigation ul li a .icon{
+    position: relative;
+    display: block;
+    line-height: 75px;
+    font-size: 1.5em;
+    text-align: center;
+    transition: 0.5s;
+    color: var(--clr);
+
+}
+.navigation ul li.active a .icon{
+    transform: translateY(-15px);
+    padding: 0px 25px 0px 25px;
+    border-radius: 50%; 
+    font-size: 20px;
+    color: var(--orang);
+ 
+
+}
+
+.navigation ul li a .text{
+    position: absolute;
+    color: var(--orang);
+    font-weight: bold;
+    font-size: 1em;
+    letter-spacing: 0.05em;
+    /* transition: 0.5s; */
+    opacity: 0;
+    transform: translateY(20px);
+}
+.navigation ul li.active a .text{
+    opacity: 1;
+    transform: translateY(10px);
+}
+
+/* Navigation End Update*/
+
+
+</style>
     
     
   </head>
 
-  <body>
+  <body >
 
-  <header>
+  <header style="margin-top: -90px!important;">
 			<div class="header-row">
 				<div class="header-item">
 				 <a href="<?php echo '/invoice' ?>"> <i class="fa-solid fa-arrow-left"></i> </a>	
@@ -46,13 +186,13 @@ s
 
     @include('layouts.partials.footer') 
     
-    <main class="vh-100 position-relative" style="margin-top:90px;">
+    <main class="vh-100 position-relative">
      
 
       <!-- card -->
-      <section class="mt-4">
-        <div class="card mx-1 shadow rounded-4">
-          <div class="card-body">
+      <section>
+        <div class="card mx-1 shadow rounded-4" style="margin-top: 90px;">
+          <div class="card-body" >
             <div
               class="cart-btn d-flex align-items-center justify-content-between toggle-card"
               style="height: 60px"
@@ -245,6 +385,7 @@ s
 
       <!-- footer nav -->
     </main>
+      <div style="margin: 20px 0px 300px 0px;"></div>
     <script src="{{ asset('js/profile.js') }}"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
