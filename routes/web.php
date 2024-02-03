@@ -117,6 +117,7 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 	Route::get('jobs/{painterjob}/complete_info', array('uses' => 'HomeController@completeJobInfo'))->name('completeJobInfo');
 	Route::get('jobs/{id}/map_view', [HomeController::class, 'showJobonMap'])->name('show_on_map');
 	Route::get('/invoices/late',	[InvoiceController::class, 'late'])->name('invoices.late');
+	Route::get('/invoices/report',	[InvoiceController::class, 'report'])->name('invoices.report');
 });
 
 

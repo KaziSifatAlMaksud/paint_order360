@@ -727,6 +727,12 @@ class InvoiceController extends Controller
         return view('new_shop.invoice.main_invices', compact('invoices', 'due_invoice', 'inv_numbers'));
     }
 
+
+    public function report(Request $request)
+    {
+        $lateInvoices = 25;
+        return view('new_shop.invoice.invices_report', compact('lateInvoices'));
+    }
     public function invoicePayment(Request $request)
     {
 

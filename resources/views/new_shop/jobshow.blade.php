@@ -420,6 +420,7 @@ header {
         </div>
         <!-- 3 -->
         <div class="service-box-single col-6 mb-3 px-0">
+         <a href="{{ route('show_on_map',['id'=> $job->id]) }}" style="text-decoration:none">
           <div class="custom-card custom-border card h-100 rounded-4">
             <div class="card-body px-1">
               <div class="d-flex align-items-center w-100 gap-3">
@@ -434,6 +435,7 @@ header {
               </div>
             </div>
           </div>
+         </a>
         </div>
         <!-- 4 -->
         <div class="service-box-single col-6 mb-3 px-0">
@@ -454,6 +456,7 @@ header {
 
         <!-- 5 -->
         <div class="service-box-single col-6 mb-3 px-0">
+             <a href="{{ route('jobs.files', ['id' => $job->id]) }}" style="text-decoration:none">
           <div class="custom-card custom-border card h-100 rounded-4">
             <div class="card-body px-1">
               <div
@@ -470,10 +473,14 @@ header {
               </div>
             </div>
           </div>
+             </a>
         </div>
 
         <!-- 6 -->
+      
         <div class="service-box-single col-6 mb-3 px-0">
+           <a href="{{ route('inside_paint_undercoat', ['painterjob'=> $job->id]) }}" style="text-decoration:none">  
+   
           <div class="custom-card custom-border card h-100 rounded-4">
             <div class="card-body px-1">
               <div
@@ -490,8 +497,11 @@ header {
             </div>
           </div>
         </div>
+          </a>
         <!-- 7 -->
+        
         <div class="service-box-single col-6 mb-3 px-0">
+          <a href="{{ url("/previous_jobs/{$job->id}") }}" style="text-decoration:none">
           <div class="custom-card custom-border card h-100 rounded-4">
             <div class="card-body px-1">
               <div
@@ -505,10 +515,13 @@ header {
               </div>
             </div>
           </div>
+             </a>
         </div>
+     
 
         <!-- 8 -->
         <div class="service-box-single col-6 mb-3 px-0">
+           <a href="{{ url("/invoiceing/{$job->id}") }}" style="text-decoration:none">
           <div class="custom-card custom-border card  h-100 rounded-4">
             <div class="card-body px-1">
               <div
@@ -522,10 +535,12 @@ header {
               </div>
             </div>
           </div>
+           </a>
         </div>
 
         <!-- 9 -->
         <div class="service-box-single col-6 mb-3 px-0">
+         <a href="{{ route('jobs.photos.add', ['id' => $job->id]) }}" style="text-decoration:none">
           <div class="custom-card custom-border card h-100 rounded-4">
             <div class="card-body px-1">
               <div
@@ -541,32 +556,63 @@ header {
               </div>
             </div>
           </div>
+         </a>
         </div>
 
         <!-- 10 -->
-        <div class="service-box-single col-6 mb-3 px-0">
-          <div class="custom-card custom-border card h-100 rounded-4">
-            <div class="card-body px-1">
-              <div
-                class="d-flex justify-content-between align-items-center w-100 gap-2"
-              >
-                <img
-                  src="/image/icon1/27880-5-green-tick-clipart 1.png"
-                  style="height: 40px"
-                />
-                <div>
-                  <h6 class="mb-0">Finished Job</h6>
-                  <p class="mb-0 pb-0">Mark this job as Finished</p>
-                </div>
-              </div>
+        <div class="service-box-single col-6 mb-3 px-0">  
+         @if($job->status == 1 ||$job->status == 0)
+            <form id="startdJob" action="{{ route('painterjob.started', $job->id) }}" method="POST"> 
+              @csrf       
+              @method('DELETE')     
+                        
+                  <div class="custom-card custom-border card h-100 rounded-4">
+                    <div class="card-body px-1 py-4">
+                      <div
+                        class="d-flex justify-content-between align-items-center w-100 gap-2">
+                        <img
+                          src="/image/icon1/27880-5-green-tick-clipart 1.png"
+                          style="height: 40px"/>
+                        <div>
+                          <h6 class="mb-0">Starting Job</h6>
+                          <p class="mb-0 pb-0">Mark this job as Finished</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+         
+              </form> 
+            @endif
+            @if($job->status == 2)
+              <form id="finishedJob" action="{{ route('painterjob.finishejob', $job->id) }}" method="POST"> 
+              @csrf       
+              @method('DELETE') 
+                       
+                  <div class="custom-card custom-border card h-100 rounded-4">
+                    <div class="card-body px-1 py-4">
+                      <div
+                        class="d-flex justify-content-between align-items-center w-100 gap-2">
+                        <img
+                          src="/image/icon1/27880-5-green-tick-clipart 1.png"
+                          style="height: 40px"/>
+                        <div>
+                          <h6 class="mb-0">Finished Job</h6>
+                          <p class="mb-0 pb-0">Mark this job as Finished</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+          
+
+              </form> 
+              @endif
             </div>
-          </div>
-        </div>
       </div>
     </section>
 
     <!-- view2 -->
     <section class="view2 mt-4">
+        <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}" style="text-decoration: none;">
       <div class="row service-box gap-2 mx-3">
         <div class="service-col col-3 mb-3 px-0">
           <div class="custom-card card custom-border rounded-4">
@@ -581,6 +627,7 @@ header {
               </div>
             </div>
           </div>
+        </a>
         </div>
         <!-- 2 -->
         <div class="service-col col-3 mb-3 px-0">
@@ -599,6 +646,7 @@ header {
         </div>
         <!-- 3 -->
         <div class="service-col col-3 mb-3 px-0">
+        <a href="{{ route('show_on_map',['id'=> $job->id]) }}" style="text-decoration:none">
           <div class="custom-card card custom-border rounded-4">
             <div class="card-body px-1 py-2 d-flex justify-content-center">
               <div
@@ -614,6 +662,7 @@ header {
               </div>
             </div>
           </div>
+        </a>
         </div>
         <!-- 4 -->
         <div class="service-col col-3 mb-3 px-0">
@@ -632,6 +681,7 @@ header {
         </div>
         <!-- 5 -->
         <div class="service-col col-3 mb-3 px-0">
+            <a href="{{ route('jobs.files', ['id' => $job->id]) }}" style="text-decoration:none">
           <div class="custom-card card custom-border rounded-4">
             <div class="card-body px-1 py-2 d-flex justify-content-center">
               <div
@@ -647,9 +697,11 @@ header {
               </div>
             </div>
           </div>
+          </a>
         </div>
         <!-- 6 -->
         <div class="service-col col-3 mb-3 px-0">
+           <a href="{{ route('inside_paint_undercoat', ['painterjob'=> $job->id]) }}" style="text-decoration:none">  
           <div class="custom-card card custom-border rounded-4">
             <div class="card-body px-1 py-2 d-flex justify-content-center">
               <div
@@ -662,9 +714,11 @@ header {
               </div>
             </div>
           </div>
+           </a>
         </div>
         <!-- 7 -->
         <div class="service-col col-3 mb-3 px-0">
+            <a href="{{ url("/previous_jobs/{$job->id}") }}" style="text-decoration:none">
           <div class="custom-card card custom-border rounded-4">
             <div class="card-body px-1 py-2 d-flex justify-content-center">
               <div
@@ -677,9 +731,11 @@ header {
               </div>
             </div>
           </div>
+         </a>
         </div>
         <!-- 8 -->
         <div class="service-col col-3 mb-3 px-0">
+         <a href="{{ url("/invoiceing/{$job->id}") }}" style="text-decoration:none">
           <div class="custom-card card custom-border rounded-4">
             <div class="card-body px-1 py-2 d-flex justify-content-center">
               <div
@@ -692,9 +748,11 @@ header {
               </div>
             </div>
           </div>
+         </a>
         </div>
         <!-- 9 -->
         <div class="service-col col-3 mb-3 px-0">
+          <a href="{{ route('jobs.photos.add', ['id' => $job->id]) }}" style="text-decoration:none">
           <div class="custom-card card custom-border rounded-4">
             <div class="card-body px-1 py-2 d-flex justify-content-center">
               <div
@@ -707,36 +765,69 @@ header {
               </div>
             </div>
           </div>
+          </a>
         </div>
         <!-- 10 -->
         <div class="service-col col-3 mb-3 px-0">
-          <div class="custom-card card custom-border rounded-4">
-            <div class="card-body px-1 py-2 d-flex justify-content-center">
-              <div
-                class="d-flex flex-column justify-content-center align-items-center gap-1"
-              >
-                <img
-                  src="/image/icon1/27880-5-green-tick-clipart 1.png"
-                  style="height: 40px"
-                />
-                <div class="text-center">
-                  <h6 class="mb-0">Finished</h6>
+            @if($job->status == 1 ||$job->status == 0)
+            <form id="startdJob" action="{{ route('painterjob.started', $job->id) }}" method="POST"> 
+              @csrf       
+              @method('DELETE') 
+              <div class="custom-card card custom-border rounded-4" onclick="confirmAndSubmit3()">
+                <div class="card-body px-1 py-2 d-flex justify-content-center">
+                  <div
+                    class="d-flex flex-column justify-content-center align-items-center gap-1"
+                  >
+                    <img
+                      src="/image/icon1/27880-5-green-tick-clipart 1.png"
+                      style="height: 40px"
+                    />
+                    <div class="text-center">
+                      <h6 class="mb-0">Starting</h6>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </form> 
+            @endif
+            @if($job->status == 2)
+                <form id="finishedJob" action="{{ route('painterjob.finishejob', $job->id) }}" method="POST"> 
+                @csrf       
+                @method('DELETE') 
+              <div class="custom-card card custom-border rounded-4" onclick="confirmAndSubmit2()">
+                <div class="card-body px-1 py-2 d-flex justify-content-center">
+                  <div
+                    class="d-flex flex-column justify-content-center align-items-center gap-1"
+                  >
+                    <img
+                      src="/image/icon1/27880-5-green-tick-clipart 1.png"
+                      style="height: 40px"
+                    />
+                    <div class="text-center">
+                      <h6 class="mb-0">Finished</h6>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </form> 
+              @endif
             </div>
-          </div>
-        </div>
+             
       </div>
     </section>
 
     <div class="px-3 d-flex flex-column align-items-center gap-3 mb-4">
-      <button
-        type="button"
-        class="btn btn-danger w-100 border-white border-2 rounded-3 shadow-sm"
-      >
+       <form id="deleteJobForm" action="{{ route('painterjob.delete', $job->id) }}" method="POST" style="width: 100%;">  
+            @csrf       
+            @method('DELETE')
+      <button type="button" class="btn btn-danger w-100 border-white border-2 rounded-3 shadow-sm" onclick="confirmAndSubmit()">
         <span class="fw-bold fs-5">Delete This Job</span>
         <p class="mb-0">Delete this entire job file</p>
       </button>
+
+
+    </form>
+
       <button
         type="button"
         class="btn btn-sm btn-light shadow-sm w-50 fw-medium"
@@ -746,260 +837,6 @@ header {
       </button>
     </div>
 
- 
-
-
-
-<div class="container" >    <!-- Card Content -->
-
-      
-  	<!-- docs_area start -->
-      <section class="docs_area jobs_area"> 
-               @if(count($job->GallaryPlan))
-            <div id="carouselExampleIndicators" class="carousel slide jobs_house" data-ride="carousel">
-    
-                <ol class="carousel-indicators">
-                    @foreach ($job->GallaryPlan as $index => $slide)
-                        <li data-target="#carouselExampleIndicators" data-slide-to="{{ $index }}" @if($index == 0) class="active" @endif></li>
-                    @endforeach
-                </ol>
-    
-                <div class="carousel-inner">
-                    @foreach ($job->GallaryPlan as $index => $slide)
-                        <div class="carousel-item @if($index == 0) active @endif">
-                            <img class="d-block w-100" src="{{asset('/gallery_images/'.$slide->img_url) }}" alt="Slide {{ $index + 1 }}">
-                        </div>
-                    @endforeach
-                </div>
-    
-                @if(count($job->GallaryPlan) > 1)
-                    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                @endif
-    
-            </div>
-        @endif
-
-
-
-
-           
-        <div class="docs_part docs_prt1 jobs_prtn1 ">
-           <ul class="p-2">
-            <li><h3><b> {{ $job->address }} </b> </h3> </li> 
-            <li class="custom-list-item2"> <img class="cardicon2" src="{{asset('/image/icon1/Painter.png') }}" alt=""> Painter Name ..   <br></li>        --}}
-           <li class="custom-list-item2"> <img class="cardicon2" src="{{asset('/image/icon1/price.png') }}" alt=""> $ {{ number_format( $job->price , 2)  }}  inc gst<br></li>
-            <li class="custom-list-item2">  <img class="cardicon2" src="{{asset('/image/icon1/calander.png') }}" alt=""> {{date('j M, Y', strtotime( $job->start_date))}}  <br></li>
-            <li class="custom-list-item2">   <img class="cardicon2" src="{{asset('/image/icon1/area.png') }}" alt="">    {{$job->house_size}} m²</li>
-            <li class="custom-list-item2 pt-3">    @if (!$job->builder_company_name)
-                                            'There Is no Discription...'
-                                        @else
-                                            {{ $job->builder_company_name }}
-                                        @endif
-            </li>
-            </ul >         
-        </div>
-
-        <div class="docs_part docs_prt1 jobs_part2">
-            <div class="docs_left jobs_cnt">
-                <p class=" mt-2 text-left"> 
-                    <b> Company: </b> {{$job->builder ? $job->builder->name : ''}}
-                    <br>
-                    <b> Supervisor: </b> 
-                    @if($job->superviser)
-                     {{ $job->superviser->name }}
-                     @elseif($job->supervisor)
-                     {{ $job->supervisor->name }}
-                    @else
-                        {{''}}
-                    
-                    @endif
-
-                    </p>
-         
-            </div>
-            <div class="docs_right jobs_right">
-                <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}">
-                    Call {{ $job->superviser ? $job->superviser->name : '' }}
-                </a>
-                
-            </div>
-        </div> 
-        {{-- <div class="docs_part docs_prt1 jobs_part2">
-            <div class="docs_left jobs_cnt">
-                <h4>Assigned painter</h4>
-                <ul>
-                    <li><strong>Assign  : </strong> Lucky painting</li>
-                </ul>
-            </div>
-            <div class="docs_right jobs_right">
-                <a href="#">Call Bruce</a>
-            </div>
-        </div> --}}
-
-      {{-- <a href="{{ route('show_on_map',['id'=> $job->id]) }}">
-        <div class="docs_part docs_prt1 jobs_part2">
-            <div class="docs_left jobs_cnt">
-                <h4> <b> Maps </b> </h4>
-                <p>Open this address in the maps to see how far way this job is</p>
-            </div>
-            <div class="docs_right">
-                <img src="/image/icon1/Maps.png" alt="" height="70" width="70" >
-            </div>
-        </div>
-    </a> --}}
-
-    {{-- <a href="#" id="card">
-        <div class="docs_part docs_prt1 jobs_part2">
-            <div class="docs_left jobs_cnt">
-                <h4>Unassign A Painter</h4>
-                <p>Remove Painter From this job.</p>
-            </div>
-            <div class="docs_right">
-                <img src="/image/icon1/painter2.png" alt=""height="70" width="70">
-            </div>
-        </div>
-    </a> --}}
-
-{{-- <div class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Save changes</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-    <a href="{{ route('jobs.files', ['id' => $job->id]) }}">
-        <div class="docs_part docs_prt1 jobs_part2">
-            <div class="docs_left jobs_cnt">
-                <h4> <b> Open File </b> </h4>
-                <p>purchase orders, plans & colours</p>
-            </div>
-            <div class="docs_right">
-                <img src="/image/icon1/Open Files.png" alt=""height="70" width="70">
-            </div>
-        </div>
-    </a>
-
-    <a href="{{ route('inside_paint_undercoat', ['painterjob'=> $job->id]) }}">
-        <div class="docs_part docs_prt1 jobs_part2">
-            <div class="docs_left jobs_cnt">
-                <h4> <b> Start Ordering </b></h4>
-                <p>Order paint for this job</p>
-            </div>
-            <div class="docs_right">
-                <img src="/image/icon1/oder_paint1.png" alt="" height="70" width="70">
-            </div>
-        </div>
-    </a>
-
-
- <a href="{{ url("/invoiceing/{$job->id}") }}">
-        <div class="docs_part docs_prt1 jobs_part2">
-            <div class="docs_left jobs_cnt">
-                <h4> <b> Make Invoice </b> </h4>
-                <p>send or make invoicefor this job</p>
-            </div>
-            <div class="docs_right">
-                <img src="/image/icon1/Invoice.png" alt="" height="70" width="70">
-            </div>
-        </div>
-  </a>
-        
-        <a href="{{ url("/previous_jobs/{$job->id}") }}">
-        <div class="docs_part docs_prt1 jobs_part2">
-            <div class="docs_left jobs_cnt">
-                <h4> <b> See Previous Order  </b></h4>
-                <p>See all the jobs for <br> builders that are finished</p>
-            </div>
-            <div class="docs_right">
-                <img src="/image/icon1/previous_order.png" alt="" height="70" width="70">
-            </div>
-        </div>
-        </a>
-
-        <a href="{{ route('jobs.photos.add', ['id' => $job->id]) }}">
-            <div class="docs_part docs_prt1 jobs_part2">
-                <div class="docs_left jobs_cnt">
-                    <h4> <b> Change Job Pic </b> </h4>
-                       <p>Snap a job photo for easy <br> reference on the main page</p>
-                </div>
-            <div class="docs_right">
-                <img src="/image/icon1/job_Photo.png" alt=""height="70" width="70">
-            </div>
-            </div>
-        </a>
-
-        {{-- {{$job}} --}}
-         {{-- @if($job->status == 1 ||$job->status == 0)
-        <form id="startdJob" action="{{ route('painterjob.started', $job->id) }}" method="POST"> 
-            @csrf       
-            @method('DELETE') 
-
-            <div class="docs_part docs_prt1 jobs_part2" onclick="confirmAndSubmit3()">
-                <div class="docs_left jobs_cnt">
-                    <h4> <b> Started Job </b></h4>
-                    <p>Mark this job as Started, you can <br> still see job on main page</p>
-                </div>
-                <div class="docs_right">
-                    <img src="/image/icon1/stated.png" alt="" height="70" width="70">
-                </div>
-            </div>
-        </form> 
-    @endif
-  @if($job->status == 2)
-        <form id="finishedJob" action="{{ route('painterjob.finishejob', $job->id) }}" method="POST"> 
-            @csrf       
-            @method('DELETE') 
-
-            <div class="docs_part docs_prt1 jobs_part2" onclick="confirmAndSubmit2()">
-                <div class="docs_left jobs_cnt">
-                    <h4> <b> Finished Job </b> </h4>
-                    <p>Mark this job as finished, you can <br> still see job on main page</p>
-                </div>
-                <div class="docs_right">
-                    <img src="/image/icon1/finished_job.png" alt="" height="70" width="70">
-                </div>
-            </div>
-        </form> 
-    @endif
-
-        <form id="deleteJobForm" action="{{ route('painterjob.delete', $job->id) }}" method="POST">  
-            @csrf       
-            @method('DELETE')
-        
-            <div class="docs_part docs_prt1 jobs_part2" onclick="confirmAndSubmit()">
-                <div class="docs_left jobs_cnt">
-                 
-                    <h4> <b> Delete Job File</b> </h4>
-                    <p>Delete this entire job file</p>
-                </div>
-                <div class="docs_right">
-                    <img src="/image/icon1/delete job.png" alt="" height="70" width="70">
-                </div>
-            </div>
-        </form>
-        
-    </section>  --}}
-       
             <div style="margin: 20px 0px 300px 0px;"></div>
 </div>
 </body>

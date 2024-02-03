@@ -101,7 +101,25 @@
                 </div>
             </div>
         </a> 
-
+        <a href="<?php echo '/invoices/report' ?>" class="dueInvoice-link" id="newInvoice-link">
+            <div class="docs_part docs_prt1">
+                <div class="docs_left jobs_cnt">
+                    <div class="row">
+                      <div class="col-10">
+                            <h3 style="text-align: left; color:black;"><b > Reports & Statements </b></h3>
+                      </div>
+                    </div>
+                     
+                 
+                    <p style="text-align: left;">See how much invome & spending cost for the year or month.</p>
+                </div>
+                
+                <div class="docs_right" style="padding: 0px!important; margin: 0px; ">
+                    <img src="/image/icon1/dfdf.png" >
+                </div>
+            </div>
+        </a> 
+           
            
             <!-- End Card Section -->   
         </div>
