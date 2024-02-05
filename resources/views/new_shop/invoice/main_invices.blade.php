@@ -1,28 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company Name</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('css/style8.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/style77.css') }}">
-    <style>
-    /* CSS for fixed position */
-    .fixed-top {
-        position: fixed;
-        top: 0;
-        margin-top: 75px; 
-        width: 100%;
-        z-index: 999;
-    }
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>| Shop</title>
+<link rel="stylesheet" href="{{ asset('css/style10.css') }}">  
+  <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+     <style>
+
+
+:root {
+    --clr: #222327;
+    --bg:#f5f5f5;
+    --body-bg: #ebebeb;
+    --nav-colo: #fff;
+    --orang: orangered;
+    --bg-orang: #ffddaa;
+    --newInvoice-bg: #66ff5b;
+    --dueInvoice-bf:#ff7070;
+    --yollo: #f9f14d;
+    --bg-yollo: #fffcb4;
+    --green: #17ff21;
+    --bg-green: #b8ffc3;
+}
+header {
+    /* position: relative; */
+    position: fixed;
+    width: 100%;
+    margin-top: 0px; 
+    background-color: #ffffff;
+    border-radius: 0px 0px 20px 20px;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+    padding: 5px 0;
+    margin-bottom: 10px;
+    z-index: 10;
+}
+
+
+.header-row {
+    margin: 0 5px;
+}
+
+.header-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 10px;
+   
+}
+
+.header-item i {
+    font-size: 30px;
+}
+
+.header-item span {
+    font-size: 25px;
+    text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+}
+
+.header-item img {
+    width: 100%;
+    max-width: 60px;
+}
+
+.header-item {
+    font-size: 25px;
+    text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+}
+
+/* Navigation Update*/
+
+   
+
+.navigation {
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    align-items: center; 
+    justify-content: end; 
+    width: 100%;
+    bottom: 0;
+    background: #fff;
+    border-radius: 20px 20px 0px 0px;
+    box-shadow: 0px 10px 36px rgba(0, 0, 0, 0.3);
+    z-index: 3;
+}
+
+.navigation ul{
+    margin-bottom: 0!important;
+    padding-left: 0rem !important;
+    display: flex;
+    width: 100%;
     
+}
+.navigation ul li{    
+    position: relative;
+    list-style: none;
+    width: 30%;
+    height: 70px;
+    z-index: 1;
+}
+.navigation ul li a{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
  
-    
+    /* text-align: center; */
+    font-weight: 500;
+}
+.navigation ul li a .icon{
+    position: relative;
+    display: block;
+    line-height: 75px;
+    font-size: 1.5em;
+    text-align: center;
+    transition: 0.5s;
+    color: var(--clr);
+
+}
+.navigation ul li.active a .icon{
+    transform: translateY(-15px);
+    padding: 0px 25px 0px 25px;
+    border-radius: 50%; 
+    font-size: 20px;
+    color: var(--orang);
+ 
+
+}
+
+.navigation ul li a .text{
+    position: absolute;
+    color: var(--orang);
+    font-weight: bold;
+    font-size: 1em;
+    letter-spacing: 0.05em;
+    /* transition: 0.5s; */
+    opacity: 0;
+    transform: translateY(20px);
+}
+.navigation ul li.active a .text{
+    opacity: 1;
+    transform: translateY(10px);
+}
+
+/* Navigation End Update*/
+
+
+</style>
+
+  </head>
+
+  <body>
+   
+          @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}           
+            </div>
+        @endif
     <header>
         <div class="header-row">
             <div class="header-item">
@@ -35,34 +183,111 @@
 
 
 @include('layouts.partials.footer')  
-        
-      
+ 
 
-    <div class="container" style="padding-top: 30px">
-        <div class="filter">
-            <ul class="invoice-flters">
-                <li id="filter-all" class="filter-active">All</li>
-                <li id="filter-ready" class="filter-inactive">Ready</li>
-                <li id="filter-unpaid" class="filter-inactive">Unpaid</li>
-                <li id="filter-paid" class="filter-inactive">Paid</li>
-            </ul>
+    <main >
+
+  
+      <!-- card -->
+      <section style="padding-top: 90px;">
+        <div class="filter custom-border rounded-4">
+            <table class="align-middle">
+              <tbody>
+                <tr>
+                  <td>Ready to send</td>
+                  <td ><span >3</span></td>
+                  <td> = $2,0000.00</td>
+                </tr>
+                <tr>
+                  <td>Sent out</td>
+                  <td ><span>15</span></td>
+                  <td> = $14,0000.00</td>
+                </tr>
+                <tr>
+                  <td>Late invoices</td>
+                  <td ><span>2</span></td>
+                  <td> = $3,0000.00</td>
+                </tr>
+              </tbody>
+            </table>
         </div>
-        
-    
-        <div class="search-bar" >
+           <div class="search-bar" >
             <i class="fas fa-search search-icon"></i>
             <input type="text" class="search-input" id="search-invoice" placeholder="Search Address or Customer" oninput="filterCards2()">
         </div>
-      
-         @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-                  {{-- <p>Invoice ID: {{ session('invoiceId') }}</p> --}}
-            </div>
+        {{-- <div class="search-bar mt-3">
+          <input type="text" class="search-input bg-white" id="search-input" placeholder="Address or Customer" oninput="filterCards()">
+          <i class="fas fa-search search-icon"></i>
+      </div> --}}
+        <div class="px-2 border-custom"></div>
+      </section>
 
-        @endif
-        <div class="portfolio-container">
-            <!-- Card Content -->
+      <section class="invoice-doc jobs_area">
+
+			<div class="jobs_house">
+				<img src="images/house.png" alt="">
+			</div>
+            @foreach($invoices as $invoice)
+                
+
+                <div class="docs_part1 docs_prt1 position-relative">
+                    <div class="invoice-cart">
+                        <h5 class="address_text mt-2">{{ $invoice->address}}</h5>
+                        <div class="invoice-cart-border"></div>
+                            <p class="text2">{{$invoice->description}} </p>
+                        <div>
+                            <p class="text3"><strong>${{number_format( $invoice->total_due, 2)}}inc gst</strong></p>
+                            <p class="text3"><strong> {{$invoice->customer_id}} </strong></p>
+                        </div>
+                    </div>
+                     @if($invoice->status == 1 )
+                    <div class="status docs_right jobs_right position-absolute bottom-0 end-0">
+                        <a class="map_btn" href="#">Ready</a>
+                    </div>
+                      @elseif($invoice->status == 2) 
+                      <div class="status-sent docs_right jobs_right position-absolute bottom-0 end-0">
+					        <a class="map_btn" href="#">Sent</a>
+				        </div>
+
+                        {{-- <div class="px-3 d-flex align-items-center docs_right jobs_right position-absolute bottom-0 end-0">
+                        <div class="status-late">
+                            <a class="map_btn" href="#">Late</a>
+                        </div>
+                        <p class="mb-0 fw-bold">3 days</p>
+                        </div> --}}
+                     @elseif( $invoice->status == 3)
+                    <div class=" docs_right jobs_right position-absolute bottom-0 end-0">
+                        <div class="status-paid">
+                            <a class="map_btn" href="#">Paid</a>
+                        </div>
+                    </div>
+                
+                    @endif   
+                </div>
+            @endforeach  
+          
+		</section>
+
+
+
+      <div style="margin: 20px 0px 300px 0px;"></div>
+        </main> 
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./profile.js"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+    <div class="container" style="padding-top: 30px">
             
             
              @foreach($invoices as $invoice)
@@ -139,66 +364,12 @@
                       </a>  
                </div>     
                 @endif         
-            @endforeach 
-
-            {{-- @foreach($jobs as $job)
-                @if($job->poitem)
-                     <div  class="card InvoicePortfolio invoice-item  filter-ready">
-                <a href="{{ '/invoiceing/' . $job->id }}">
-                <div  class="cardhaderInvoice-link">
-                    <h5 class="text-left ml-2 mt-1 showinline" style="width: 95%" id="expandable-title">{{ $job->address}}</h5>
-              
-                </div>
-                        <p class="text-center mt-2">This invoice is ready to send to cuestomer</p>
-      
-                        <div class="row p-1">
-                            <div class="col-6 reduced-line-height">
-                                <p class="text-left showinline">  </p>
-                                <p class="text-left showinline"> {{$job->poitem->description}} </p>
-                            </div>
-                            <div class="col-6 reduced-line-height">
-                                <p class="text-right"> INV0</p>
-                                <p class="text-right font-weight-bold">${{$job->price}}</p>
-                            </div>
-                        </div>
-                
-                    </a>    
-                </div> 
-                @endif
-            @endforeach --}}
-
-           
+            @endforeach           
             <!-- End Card Section -->   
         </div>
-        <div style="margin: 20px 0px 300px 0px;"></div>
+ 
     </div>
 </body>
 
-<script>
-    window.addEventListener('scroll', function() {
-        var headerHeight = document.querySelector('.header-row').offsetHeight;
-        var filterElement = document.querySelector('.filter');
-        var searchBarElement = document.querySelector('.search-bar');
-
-        if (window.pageYOffset > headerHeight) {
-            // If the page is scrolled down past the header height, fix the filter and search bar to the top
-            filterElement.classList.add('fixed-top');
-            searchBarElement.classList.add('fixed-top');
-        } else {
-            // If the page is scrolled back to the top, remove the fixed position
-            filterElement.classList.remove('fixed-top');
-            searchBarElement.classList.remove('fixed-top');
-        }
-    });
-</script>
-
-
-    <script src="{{ asset('js/script.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    
 
 </html>
