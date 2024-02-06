@@ -1,62 +1,342 @@
-@extends('layouts.app')
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>360 Painting</title>
+
+    <!-- Fav Icon -->
+    <link rel="icon" href="images/favicon.ico" />
+
+   <link rel="stylesheet" href="{{ asset('css/style10.css') }}">  
+  <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+     <style>
 
 
-@section('styles')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<link rel="stylesheet" href="{{ asset('css/style77.css') }}">
-<link rel="stylesheet" href="{{ asset('css/style8.css') }}">
+:root {
+    --clr: #222327;
+    --bg:#f5f5f5;
+    --body-bg: #ebebeb;
+    --nav-colo: #fff;
+    --orang: orangered;
+    --bg-orang: #ffddaa;
+    --newInvoice-bg: #66ff5b;
+    --dueInvoice-bf:#ff7070;
+    --yollo: #f9f14d;
+    --bg-yollo: #fffcb4;
+    --green: #17ff21;
+    --bg-green: #b8ffc3;
+}
+header {
+    /* position: relative; */
+    position: fixed;
+    width: 100%;
+    margin-top: 0px; 
+    background-color: #ffffff;
+    border-radius: 0px 0px 20px 20px;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+    padding: 5px 0;
+    margin-bottom: 10px;
+    z-index: 10;
+}
 
-<style>
-    .fixed-top {
-        position: fixed;
-        top: 0;
-        margin-top: 75px; 
-        width: 100%;
-        z-index: 999;
-    }
+
+.header-row {
+    margin: 0 5px;
+}
+
+.header-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 10px;
+   
+}
+
+.header-item i {
+    font-size: 30px;
+}
+
+.header-item span {
+    font-size: 25px;
+    text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+}
+
+.header-item img {
+    width: 100%;
+    max-width: 60px;
+}
+
+.header-item {
+    font-size: 25px;
+    text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+}
+
+/* Navigation Update*/
+
+   
+
+.navigation {
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    align-items: center; 
+    justify-content: end; 
+    width: 100%;
+    bottom: 0;
+    background: #fff;
+    border-radius: 20px 20px 0px 0px;
+    box-shadow: 0px 10px 36px rgba(0, 0, 0, 0.3);
+    z-index: 3;
+}
+
+.navigation ul{
+    margin-bottom: 0!important;
+    padding-left: 0rem !important;
+    display: flex;
+    width: 100%;
     
+}
+.navigation ul li{    
+    position: relative;
+    list-style: none;
+    width: 30%;
+    height: 70px;
+    z-index: 1;
+}
+.navigation ul li a{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+ 
+    /* text-align: center; */
+    font-weight: 500;
+}
+.navigation ul li a .icon{
+    position: relative;
+    display: block;
+    line-height: 75px;
+    font-size: 1.5em;
+    text-align: center;
+    transition: 0.5s;
+    color: var(--clr);
 
-</style>
-
-@endsection
-@section('content')
-
-
-{{-- @include('layouts.partials.language') --}}
-
-<header >
-	<div class="header-row">
-        <div class="header-item">
-            <a href="#"> </a>
-            <span> @if (!empty($company_name)) 
-                {{ $company_name }}
-
-            @else 
-                Company Name
-            @endif
-            </span>
-                
-            <a href="<?php echo '/main' ?>">   <img src="/image/logo-phone.png" alt="Logo"> </a>   
-        </div>
-	</div>
-</header>	
-
-@include('layouts.partials.footer')  
-
-
+}
+.navigation ul li.active a .icon{
+    transform: translateY(-15px);
+    padding: 0px 25px 0px 25px;
+    border-radius: 50%; 
+    font-size: 20px;
+    color: var(--orang);
  
 
+}
 
-<div class="container" >
-  <div class="filter">
+.navigation ul li a .text{
+    position: absolute;
+    color: var(--orang);
+    font-weight: bold;
+    font-size: 1em;
+    letter-spacing: 0.05em;
+    /* transition: 0.5s; */
+    opacity: 0;
+    transform: translateY(20px);
+}
+.navigation ul li.active a .text{
+    opacity: 1;
+    transform: translateY(10px);
+}
+
+/* Navigation End Update*/
+
+
+</style>
+  </head>
+
+  <body>
+        <header >
+        <div class="header-row">
+            <div class="header-item">
+                <a href="#"> </a>
+                <span> @if (!empty($company_name)) 
+                    {{ $company_name }}
+
+                @else 
+                    Company Name
+                @endif
+                </span>
+                    
+                <a href="<?php echo '/main' ?>">   <img src="/image/logo-phone.png" alt="Logo"> </a>   
+            </div>
+        </div>
+    </header>	
+
+    @include('layouts.partials.footer')  
+    <main class="position-relative" style="padding-top:90px;">
+    
+
+      <!-- card -->
+      <section >
+        <div class="search-bar">
+          <input type="text" class="search-input bg-white" id="search-input" placeholder="Address or Customer" oninput="filterCards()">
+          <i class="fas fa-search search-icon"></i>
+      </div>
+
+      {{-- <div class="filter">
       <ul class="portfolio-flters">
           <li id="filter-all" class="filter-active">All</li>
           <li id="filter-new" class="filter-inactive">New</li>
           <li id="filter-started" class="filter-inactive">Started</li>
           <li id="filter-finished" class="filter-inactive">Finished</li>
       </ul>
-  </div>
+  </div> --}}
+
+
+      <div class="job-list px-2 d-flex justify-content-between fs-5 mt-3 portfolio-flters">
+  
+        <p class="mb-0" id="filter-new" class="filter-inactive" >New 3</p>
+        <p class="mb-0" id="filter-started" class="filter-inactive">Started 12</p>
+        <p class="mb-0" id="filter-finished" class="filter-inactive">Finished 23</p>
+      </div>
+        <div class="px-2 border-custom"></div>
+      </section>
+   @if($jobs->count()  > 0)
+      <section class="invoice-doc px-2 jobs_area">
+            @foreach($jobs->sortByDesc('created_at') as $job)  
+            <a href="{{ route('jobs.show', ['id' => $job->id]) }}">
+			<div class="docs_part1 docs_prt1 d-flex gap-3">
+                <div>
+                     @forelse($pps->where('job_id', $job->id) as $pp)
+                            <img src="{{ asset('/gallery_images/'.$pp->image) }}" alt="Card image cap" width="100px" height="100px">
+                        @empty
+                            <img  src="{{ asset('/image/Home.png') }}" alt="Card image cap">
+                        @endforelse
+                    {{-- <img src="img/house1.png" alt=""> --}}
+                
+                </div>
+                <div class=" position-relative">
+                    <div class="invoice-cart">
+                        <h5 class="address_text mt-2">{{$job->address}}</h5>
+                            <p class="text2">
+                            @if (!$job->builder_company_name)
+                                 Click The Card For Learn More
+                            @else
+                                {{ $job->builder_company_name }}
+                            @endif
+                            </p>
+                        <div>
+                            <p class="text3"><strong>$1,345inc gst</strong></p>
+                            <p class="text3"><strong>Wisdom homes</strong></p>
+                        </div>
+                    </div>
+                    <div class="status status-new docs_right jobs_right position-absolute bottom-0 end-0">
+                        <a class="map_btn" href="#">New</a>
+                    </div>
+                </div>
+            </div>
+            </a>
+             @endforeach    
+            <div class="docs_part1 docs_prt1 d-flex gap-3">
+                <div><img src="img/house2.png" alt=""></div>
+                <div class=" position-relative">
+                    <div class="invoice-cart">
+                        <h5 class="address_text mt-2">110 Macksville st carnes Hill</h5>
+                            <p class="text2">Fixed the timber frame ....</p>
+                        <div>
+                            <p class="text3"><strong>$1,345inc gst</strong></p>
+                            <p class="text3"><strong>Wisdom homes</strong></p>
+                        </div>
+                    </div>
+                    <div class="status status-new docs_right jobs_right position-absolute bottom-0 end-0">
+                        <a class="map_btn" href="#">New</a>
+                    </div>
+                </div>
+            </div>
+            <div class="docs_part1 docs_prt1 d-flex gap-3">
+                <div><img src="img/house3.png" alt=""></div>
+                <div class=" position-relative">
+                    <div class="invoice-cart">
+                        <h5 class="address_text mt-2">110 Macksville st carnes Hill</h5>
+                            <p class="text2">Fixed the timber frame ....</p>
+                        <div>
+                            <p class="text3"><strong>$1,345inc gst</strong></p>
+                            <p class="text3"><strong>Wisdom homes</strong></p>
+                        </div>
+                    </div>
+                    <div class="status status-finished docs_right jobs_right position-absolute bottom-0 end-0">
+                        <a class="map_btn" href="#">Finished</a>
+                    </div>
+                </div>
+            </div>
+            <div class="docs_part1 docs_prt1 d-flex gap-3">
+                <div><img src="img/house1.png" alt=""></div>
+                <div class=" position-relative">
+                    <div class="invoice-cart">
+                        <h5 class="address_text mt-2">110 Macksville st carnes Hill</h5>
+                            <p class="text2">Fixed the timber frame ....</p>
+                        <div>
+                            <p class="text3"><strong>$1,345inc gst</strong></p>
+                            <p class="text3"><strong>Wisdom homes</strong></p>
+                        </div>
+                    </div>
+                    <div class="status status-started docs_right jobs_right position-absolute bottom-0 end-0">
+                        <a class="map_btn" href="#">Started</a>
+                    </div>
+                </div>
+            </div>
+		</section>
+        @else
+           <div class="alert alert-success">
+            <center> No jobs available.</center>
+           </div>
+       
+    @endif
+    </main>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./profile.js"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+{{-- @include('layouts.partials.language') --}}
+
+
+
+
+ 
+
+
+<div class="container" >
+  
   
 
   <div class="search-bar ">
@@ -184,9 +464,7 @@
 <h1> <?php auth()->user()->Company ?> </h1>
 <div style="margin: 20px 0px 300px 0px;"></div>
 
-@endsection
-  
-    @section('js')
+
 
 <script>
     window.addEventListener('scroll', function() {
@@ -211,6 +489,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    
-    
-    @endsection
+
+
+
+
+
+
+

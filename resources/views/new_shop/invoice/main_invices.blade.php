@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>| Shop</title>
-<link rel="stylesheet" href="{{ asset('css/style10.css') }}">  
+  <link rel="stylesheet" href="{{ asset('css/style10.css') }}">  
   <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
@@ -185,7 +185,7 @@ header {
 @include('layouts.partials.footer')  
  
 
-    <main >
+    <main class="px-2">
 
   
       <!-- card -->
@@ -230,13 +230,13 @@ header {
             @foreach($invoices as $invoice)
                 
 
-                <div class="docs_part1 docs_prt1 position-relative">
+                <div class="docs_part1 docs_prt1 position-relative ">
                     <div class="invoice-cart">
                         <h5 class="address_text mt-2">{{ $invoice->address}}</h5>
                         <div class="invoice-cart-border"></div>
                             <p class="text2">{{$invoice->description}} </p>
                         <div>
-                            <p class="text3"><strong>${{number_format( $invoice->total_due, 2)}}inc gst</strong></p>
+                            <p class="text3">${{number_format( $invoice->total_due, 2)}}inc gst</p>
                             <p class="text3"><strong> {{$invoice->customer_id}} </strong></p>
                         </div>
                     </div>
@@ -287,7 +287,44 @@ header {
 
 
 
-    <div class="container" style="padding-top: 30px">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="container xt-3" style="padding-top: 30px;">
             
             
              @foreach($invoices as $invoice)
