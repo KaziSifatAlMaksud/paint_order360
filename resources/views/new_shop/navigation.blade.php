@@ -216,22 +216,20 @@ header {
         <div class="px-2 border-custom"></div>
       </section>
    @if($jobs->count()  > 0)
-      <section class="invoice-doc px-2 jobs_area">
+      <section class="invoice-doc px-2 jobs_area " style="line-height:1;" >
             @foreach($jobs->sortByDesc('created_at') as $job)  
-            <a href="{{ route('jobs.show', ['id' => $job->id]) }}">
-			<div class="docs_part1 docs_prt1 d-flex gap-3">
+            <a href="{{ route('jobs.show', ['id' => $job->id]) }}" style="text-decoration: none; color: black;">
+			<div class="docs_part1 docs_prt1 d-flex ">
                 <div>
                      @forelse($pps->where('job_id', $job->id) as $pp)
                             <img src="{{ asset('/gallery_images/'.$pp->image) }}" alt="Card image cap" width="100px" height="100px">
                         @empty
-                            <img  src="{{ asset('/image/Home.png') }}" alt="Card image cap">
-                        @endforelse
-                    {{-- <img src="img/house1.png" alt=""> --}}
-                
+                            <img  src="{{ asset('/image/Home.png') }}" alt="Card image cap" width="100px" height="100px">
+                        @endforelse                
                 </div>
-                <div class=" position-relative">
-                    <div class="invoice-cart">
-                        <h5 class="address_text mt-2">{{$job->address}}</h5>
+                <div class=" position-relative w-100">
+                    <div class="invoice-cart " style="padding-left: 10px; line-height:1;">
+                        <h5 class="address_text showinline " >{{$job->address}}</h5>
                             <p class="text2">
                             @if (!$job->builder_company_name)
                                  Click The Card For Learn More
