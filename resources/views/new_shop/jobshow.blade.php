@@ -439,6 +439,7 @@ header {
         </div>
         <!-- 4 -->
         <div class="service-box-single col-6 mb-3 px-0">
+          <a href="{{ route('assign_painter_info', ['id' => $job->id]) }}" style="text-decoration:none">
           <div class="custom-card custom-border card h-100 rounded-4">
             <div class="card-body px-1">
               <div
@@ -452,6 +453,7 @@ header {
               </div>
             </div>
           </div>
+          </a>
         </div>
 
         <!-- 5 -->
@@ -666,6 +668,8 @@ header {
         </div>
         <!-- 4 -->
         <div class="service-col col-3 mb-3 px-0">
+        
+           <a href="{{ route('assign_painter_info', ['id' => $job->id]) }}" style="text-decoration:none">
           <div class="custom-card card custom-border rounded-4">
             <div class="card-body px-1 py-2 d-flex justify-content-center">
               <div
@@ -678,6 +682,7 @@ header {
               </div>
             </div>
           </div>
+           </a>
         </div>
         <!-- 5 -->
         <div class="service-col col-3 mb-3 px-0">

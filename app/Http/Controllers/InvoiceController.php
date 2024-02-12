@@ -97,8 +97,7 @@ class InvoiceController extends Controller
                     $attachmentPath = $file->storeAs('', $fileName, 'public');
                     $validatedData['attachment'] = $attachmentPath;
                 }
-
-                Mail::send('new_shop.invoice.invices_pdf', $data, function ($message) use ($data, $pdf, $attachmentPath) {
+                Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath,  'company_name' => $company_name, 'username' => $user_name], function ($message) use ($data, $pdf, $attachmentPath) {
                     $message->to($data["send_email"])
                         ->subject("Your Invoice - " . $data['address'])
                         ->attachData($pdf->output(), "invoice.pdf");
@@ -107,6 +106,16 @@ class InvoiceController extends Controller
                         $message->attach($fullPath);
                     }
                 });
+
+                // Mail::send('new_shop.invoice.invices_pdf', $data, function ($message) use ($data, $pdf, $attachmentPath) {
+                //     $message->to($data["send_email"])
+                //         ->subject("Your Invoice - " . $data['address'])
+                //         ->attachData($pdf->output(), "invoice.pdf");
+                //     if ($attachmentPath) {
+                //         $fullPath = public_path('uploads/' . $attachmentPath);
+                //         $message->attach($fullPath);
+                //     }
+                // });
                 $validatedData['status'] = 2;
                 $validatedData['send_to'] = Carbon::now()->format('d-m-Y H:i:s');
                 $invoice = Invoice::create($validatedData);
@@ -274,7 +283,7 @@ class InvoiceController extends Controller
                 }
 
                 // Send the email with the PDF and attachment (if available)
-                Mail::send('new_shop.invoice.invices_pdf', $data, function ($message) use ($data, $pdf, $attachmentPath) {
+                Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath,  'company_name' => $company_name, 'username' => $user_name], function ($message) use ($data, $pdf, $attachmentPath) {
                     $message->to($data["send_email"])
                         ->subject("Your Invoice - " . $data['address'])
                         ->attachData($pdf->output(), "invoice.pdf");
@@ -377,11 +386,10 @@ class InvoiceController extends Controller
                         "invoice_id" => $invoice->id,
                     ]);
                 }
-                Mail::send('new_shop.invoice.invices_pdf', $data, function ($message) use ($data, $pdf, $attachmentPath) {
+                Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath,  'company_name' => $company_name, 'username' => $user_name], function ($message) use ($data, $pdf, $attachmentPath) {
                     $message->to($data["send_email"])
                         ->subject("Your Invoice - " . $data['address'])
                         ->attachData($pdf->output(), "invoice.pdf");
-
                     if ($attachmentPath) {
                         $fullPath = public_path('uploads/' . $attachmentPath);
                         $message->attach($fullPath);
@@ -601,16 +609,26 @@ class InvoiceController extends Controller
                     }
                     // $invoice = Invoice::create($validatedData);
                 }
-                Mail::send('new_shop.invoice.invices_pdf', $data, function ($message) use ($data, $pdf, $attachmentPath) {
+                Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath,  'company_name' => $company_name, 'username' => $user_name], function ($message) use ($data, $pdf, $attachmentPath) {
                     $message->to($data["send_email"])
-                        ->subject("Invoice - " . $data['address'])
+                        ->subject("Your Invoice - " . $data['address'])
                         ->attachData($pdf->output(), "invoice.pdf");
-
                     if ($attachmentPath) {
-                        $fullPath = storage_path('app/public/' . $attachmentPath);
+                        $fullPath = public_path('uploads/' . $attachmentPath);
                         $message->attach($fullPath);
                     }
                 });
+
+                // Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath, 'customSentence' => 'Your custom sentence here'], function ($message) use ($data,  $attachmentPath) {
+                //     $message->to($data["send_email"])
+                //         ->subject("Your Invoice - " . $data['address']);
+                //     // ->attachData($pdf->output(), "invoice.pdf");
+                //     if ($attachmentPath) {
+                //         $fullPath = public_path('uploads/' . $attachmentPath);
+                //         $message->attach($fullPath);
+                //     }
+                // });
+
 
                 // Redirect with success message
                 return redirect()->back()->with('go_back', true)->with('success', 'Invoice Send to Email successfully.');

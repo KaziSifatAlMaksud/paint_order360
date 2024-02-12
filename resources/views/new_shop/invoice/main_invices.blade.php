@@ -166,11 +166,7 @@ header {
 
   <body>
    
-          @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}           
-            </div>
-        @endif
+        
     <header>
         <div class="header-row">
             <div class="header-item">
@@ -213,12 +209,13 @@ header {
         </div>
            <div class="search-bar" >
             <i class="fas fa-search search-icon"></i>
-            <input type="text" class="search-input" id="search-invoice" placeholder="Search Address or Customer" oninput="filterCards2()">
+            <input type="text" class="search-input " style="background:#EEEEEE;" id="search-input" placeholder="Search Address or Customer" oninput="filterCards()">
         </div>
-        {{-- <div class="search-bar mt-3">
-          <input type="text" class="search-input bg-white" id="search-input" placeholder="Address or Customer" oninput="filterCards()">
-          <i class="fas fa-search search-icon"></i>
-      </div> --}}
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}           
+            </div>
+        @endif
         <div class="px-2 border-custom"></div>
       </section>
 
@@ -228,23 +225,23 @@ header {
 				<img src="images/house.png" alt="">
 			</div>
             @foreach($invoices as $invoice)
-                
-
-                <div class="docs_part1 docs_prt1 position-relative ">
+            <a href="{{ '/manual_invoice/' . $invoice->id }}"  style="text-decoration: none; color:black;" >
+                <div class="docs_part1 docs_prt1 position-relative portfolio-item" style="line-height: 1;">
                     <div class="invoice-cart">
-                        <h5 class="address_text mt-2">{{ $invoice->address}}</h5>
+                        <h5 class="address_text mt-2 showinline">{{ $invoice->address}}</h5>
                         <div class="invoice-cart-border"></div>
                             <p class="text2">{{$invoice->description}} </p>
                         <div>
                             <p class="text3">${{number_format( $invoice->total_due, 2)}}inc gst</p>
-                            <p class="text3"><strong> {{$invoice->customer_id}} </strong></p>
+                            <p class="text3 bilderName"><strong> {{$invoice->customer_id}} </strong></p>
                         </div>
                     </div>
                      @if($invoice->status == 1 )
                     <div class="status docs_right jobs_right position-absolute bottom-0 end-0">
                         <a class="map_btn" href="#">Ready</a>
                     </div>
-                      @elseif($invoice->status == 2) 
+                    @endif
+                    @if($invoice->status == 2) 
                       <div class="status-sent docs_right jobs_right position-absolute bottom-0 end-0">
 					        <a class="map_btn" href="#">Sent</a>
 				        </div>
@@ -255,7 +252,8 @@ header {
                         </div>
                         <p class="mb-0 fw-bold">3 days</p>
                         </div> --}}
-                     @elseif( $invoice->status == 3)
+                    @endif
+                     @if( $invoice->status == 3)
                     <div class=" docs_right jobs_right position-absolute bottom-0 end-0">
                         <div class="status-paid">
                             <a class="map_btn" href="#">Paid</a>
@@ -264,6 +262,7 @@ header {
                 
                     @endif   
                 </div>
+            </a>
             @endforeach  
           
 		</section>
@@ -277,6 +276,7 @@ header {
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
+    <script src="{{ asset('js/script.js') }}"></script>
     <script src="./profile.js"></script>
   </body>
 </html>

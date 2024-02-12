@@ -92,7 +92,10 @@ class HomeController extends Controller
                     if ($customer->company_name == $invoice->customer_id) {
                         $dueDate = Carbon::parse($invoice->send_to)->addDays($customer->schedule);
                         if ($today->gt($dueDate)) {
-                            $lateInvoices->push($invoice);
+                            if (!$lateInvoices->contains('id', $invoice->id)) {
+                                $lateInvoices->push($invoice);
+                            }
+                            break;
                         }
                     }
                 }
@@ -506,6 +509,11 @@ class HomeController extends Controller
         }
         return $job;
     }
+    public function assign_painter(Request $request, $id)
+    {
+        return view('new_shop.assing_painter_info', ['painterjob' => $id]);
+    }
+
 
     public function updateJob(Request $request, $id)
     {

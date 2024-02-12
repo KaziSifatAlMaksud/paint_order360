@@ -1,19 +1,13 @@
 <?php
 require  public_path() . '/admin/header.blade.php';
 ?>
-<style>
- .button-navigation button.active {
-    background-color: gray;
-    color: white;
-}
-</style>
 <div class="page-header">
     <h1 class="page-title">
         Chose paint account then builder to upload A New Job form Builder
     </h1>
     <br />
     <div class="row">
-        <div class="col-sm-12 mx-3">
+        <div class="col-sm-12">
             <form method="post" id="add_shop" action="{{$painterjob->id? route('admins.painterJob.update', ['painterJob' =>$painterjob->id ]) : route('admins.painterJob.store')}}" enctype="multipart/form-data">
                 @csrf
                 {{-- /*Update Button*/ --}}
@@ -29,35 +23,71 @@ require  public_path() . '/admin/header.blade.php';
                 @method('PUT')
                 @endif
                 <div class="row">
-                  <div class="col-md-6" style="border-right:1px solid orange; margin-right: 20px;">
-                     <center> <b for="Main painter"> Main Painter: </b> </center>
-                  <br>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Painter: </label>
-                            <div class="col-sm-9">
-                                <select name="user_id" id="user_id" required class="form-control painter">
-                                    @foreach ($users as $user)
-                                    <option class="painter-val" value="{{ $user->id }}" {{ $user->id == old('user_id', $painterjob->user_id) ? 'selected' : '' }}>{{ $user->first_name .' '. $user->last_name}} - ({{ $user->company_name}})</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div> 
-                        
-                        <div class="form-group">
-                        <label class="col-sm-3 control-label">Company Name </label>
-                        <div class="col-sm-9">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Painter: </label>
+                        <div class="col-sm-10">
+                            <select name="user_id" id="user_id" required class="form-control painter">
+                                @foreach ($users as $user)
+                                <option class="painter-val" value="{{ $user->id }}" {{ $user->id == old('user_id', $painterjob->user_id) ? 'selected' : '' }}>{{ $user->first_name .' '. $user->last_name}} - ({{ $user->company_name}})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                  
+
+                {{-- @if($painterjob->id)
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Paint Account / Builders account: </label>
+                        <div class="col-sm-10">
+                            <select name="builder_id" id="builder_id" class="form-control builder">
+                                @foreach ($buliders as $bulider)
+                                <option class="single_value {{$bulider->user_id}}" data-id="{{$painterjob->builder_id}}" value="{{ $bulider->id }}" {{ $bulider->id == old('builder_id', $painterjob->builder_id) ? 'selected=selected' : '' }}>{{ $bulider->name }}</option>
+                                @endforeach
+                                <option class="single_value no_account" value="">No account Found</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                @else
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Paint Account / Builders account: </label>
+                        <div class="col-sm-10">
+                            <select name="builder_id" id="builder_id" required class="form-control builder">
+                                @foreach ($buliders as $bulider)
+                                <option class="single_value {{$bulider->user_id}}" data-id="{{$painterjob->builder_id}}" value="{{ $bulider->id }}">{{ $bulider->name }}</option>
+                                @endforeach
+                                <option class="single_value no_account" value="">No account Found</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                @endif --}}
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Company Name </label>
+                        <div class="col-sm-10">
                             <select name="company_id" id="builder_company" class="form-control brand">
                                 <option value="" selected>Select</option>
                                 @foreach ($admin_buliders as $admin_bulider)
                                 <option data-brand="{{ $admin_bulider->brand?$admin_bulider->brand->id : '0' }}" value="{{ $admin_bulider->id }}" {{ $admin_bulider->id == old('id', $painterjob->company_id) ? 'selected' : '' }}>{{ $admin_bulider->company_name }}</option>
                                 @endforeach
                             </select>
-                          
+                            {{-- <select name="company_id" id="builder_company" class="form-control brand">
+                                <option value="" selected>Select</option>
+                                @foreach ($admin_buliders as $admin_bulider)
+                                <option data-brand="{{ $admin_bulider->brand?$admin_bulider->brand->id : '0' }}" value="{{ $admin_bulider->id }}" {{ $admin_bulider->id == old('id', $painterjob->company_id) ? 'selected' : '' }}>{{ $admin_bulider->company_name}}</option>
+                                @endforeach
+                            </select> --}}
                         </div>
-                        </div>
-                        <div class="form-group">
-                        <label class="col-sm-3 control-label">Supervisor </label>
-                        <div class="col-sm-9">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Supervisor </label>
+                        <div class="col-sm-10">
                             <select name="supervisor_id" id="supervisor" class="form-control ">
                                 <option class="empty_supervisor" value="" selected>Select</option>
                                 @foreach ($supervisors as $supervisor)
@@ -65,258 +95,46 @@ require  public_path() . '/admin/header.blade.php';
                                 @endforeach
                             </select>
                         </div>
-                    </div>  
+                    </div>               
+                </div>
+                <hr/>
+      
+                {{-- Assign_painter Information  --}}
+                 <div class="row">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">Brand: </label>
-                        <div class="col-sm-9">
-                            <select name="brand_id" id="brand_id" required class="form-control brand">
-                                <option value="" selected>Select</option>
-                                @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}" {{ $brand->id == old('brand_id', $painterjob->brand_id) ? 'selected' : '' }}>{{ $brand->name}}</option>
+                        <label class="col-sm-2 control-label">Assinged Painter: </label>
+                        <div class="col-sm-10">
+                            <select name="assign_painter" id="assign_painter" required class="form-control painter">
+                                @foreach ($users as $user)
+                                <option class="painter-val" value="{{ $user->id }}" {{ $user->id == old('assign_painter', $painterjob->assign_painter) ? 'selected' : '' }}>{{ $user->first_name .' '. $user->last_name}} - ({{ $user->company_name}})</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                    {{-- main Painter Job Price --}}
-                     <div class="form-group">
-                            <label class="col-sm-3 control-label">Price :
-                                {{-- inc gst --}}
-                            </label>
-                            <div class="col-sm-9">
-                            <input name="mainPrice" 
-                            {{-- value="{{ old('po_item['.$i.'][price]', count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->price : '') }}"  --}}
-                            min="1" 
-                            max="50000000000000" 
-                            type="number" 
-                            step="0.01" 
-                            class="form-control form-control-lg"
-                             onblur="formatPrice()">
+                </div>
 
-                            </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Assign Company Name </label>
+                        <div class="col-sm-10">
+                            <select name="assign_companyName" id="assign_builder_company" class="form-control brand2">
+                                <option value="" selected>Select</option>
+                                @foreach ($admin_buliders as $admin_bulider)
+                                <option data-brand2="{{ $admin_bulider->brand?$admin_bulider->brand->id : '0' }}" value="{{ $admin_bulider->id }}" {{ $admin_bulider->id == old('assign_builder_company', $painterjob->assign_companyName) ? 'selected' : '' }}>{{ $admin_bulider->company_name }}</option>
+                                @endforeach
+                            </select>
+                           
                         </div>
-                  
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">House Size</label>
-                            <div class="col-sm-9">
-                                <input name='house_size' class="form-control form-control-lg" id="house_size" type="text" value="{{ old('house_size', $painterjob->house_size) }}">
-                            </div>
-                        </div>
-                   
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Price For Total job:</label>
-                            <div class="col-sm-9">
-                                <input type="number" min="1" max="50000000000000" name='price' class="form-control form-control-lg" value="{{ old('price',$painterjob->price)}}">
-                            </div>
-                        </div>
-
-
-                        
-               
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Received Date: </label>
-                            <div class="col-sm-9">
-                                <input name="received_date" value="{{ old('received_date',  $painterjob->received_date )}}" type="date" id="received_date" class="form-control">
-                            </div>
-                        </div>
-               
-
-              
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Job Discription: </label>
-                            <div class="col-sm-9">
-                                <input name="builder_company_name" value="{{ old('builder_company_name',  $painterjob->builder_company_name ? $painterjob->builder_company_name : '' )}}" type="text" class="form-control">
-
-                            </div>
-                        </div>
-
-
-                    
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Start Date: </label>
-                            <div class="col-sm-9">
-                                <input name="start_date" value="{{ old('start_date',  $painterjob->start_date )}}" type="date" id="start_date" class="form-control">
-                            </div>
-                        </div>
-                
-                
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Job Address: </label>
-                            <div class="col-sm-9">
-                                <textarea class="form-control" id="searchTextField" name="address" id="address" rows="1">{{old('address', $painterjob->address)}}</textarea>
-                                <input type="hidden" name="latitude" id="Lat" value="">
-                                <input type="hidden" name="longitude" id="Lng" value="">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Stairs stained:</label>
-                            <div class="col-sm-9">
-                                <div class="form-check col-sm-6">
-                                    <input {{old("stairs_stained", $painterjob->stairs_stained) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=1 id="flexRadioDefault1">
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                        Yes
-                                    </label>
-                                </div>
-                                <div class="form-check col-sm-6">
-                                    <input {{old("stairs_stained", $painterjob->stairs_stained) ==0? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=0 id="flexRadioDefault2">
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        No
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Cladding:</label>
-                                <div class="col-sm-9">
-                                    <div class="form-check col-sm-6">
-                                        <input {{old("cladding", $painterjob->cladding) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="cladding" value=1 id="cladding1">
-                                        <label class="form-check-label" for="cladding1">
-                                            Yes
-                                        </label>
-                                    </div>
-                                    <div class="form-check col-sm-6">
-                                        <input {{old("cladding", $painterjob->cladding) ==0? 'checked': '' }} class="form-check-input" type="radio" name="cladding" value=0 id="cladding2">
-                                        <label class="form-check-label" for="cladding2">
-                                            No
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                    
-                   
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">Render:</label>
-                                <div class="col-sm-9">
-                                    <div class="form-check col-sm-6">
-                                        <input {{old("render", $painterjob->render) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="render" value=1 id="render1">
-                                        <label class="form-check-label" for="render1">
-                                            Yes
-                                        </label>
-                                    </div>
-                                    <div class="form-check col-sm-6">
-                                        <input {{old("render", $painterjob->render) ==0? 'checked': '' }} class="form-check-input" type="radio" name="render" value=0 id="render2">
-                                        <label class="form-check-label" for="render2">
-                                            No
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                     
-       
-              
-                @for($i=1; $i<=4; $i++) 
-                <div class="container mt-3 po-wrap col-sm-12" id="card{{$i}}" style="display: none;">
-                    {{-- <div class="po-wrap col-sm-12"> --}}
-                
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">PO Number {{$i}}: </label>
-
-                            <div class="col-sm-9">
-                                <input name="po_item[{{$i}}][ponumber]" value="{{ old('po_item[$i][ponumber]',  count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->ponumber : '' )}}" type="text" class="form-control">
-
-                            </div>
-                  
-                        </div>
-
-                   
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Job description {{$i}}: </label>
-                            <div class="col-sm-9">
-                                <input name="po_item[{{$i}}][description]" value="{{ old('po_item[$i][description]',  count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->description : '' )}}" type="text" class="form-control">
-
-                            </div>
-                        </div>
-                    
-
-
-                    
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Long description {{$i}}: </label>
-                            <div class="col-sm-9">
-                                <input name="po_item[{{$i}}][job_details]" value="{{ old('po_item[$i][job_details]',  count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->job_details : '' )}}" type="text" class="form-control">
-                            </div>
-                        </div>
-                   
-
-                  
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">P.O upload {{$i}}:</label>
-                            <div class="col-sm-9">
-                                <input name="po_item[{{$i}}][file]" class="form-control form-control-lg" id="po" type="file">
-                                @if(count($painterjob->poItems) > 0 && $painterjob->poItems->values()[$i-1]->file)
-                                <a href="{{asset('/uploads/'.$painterjob->poItems->values()[$i-1]->file)}}" download>
-                                    <i class="fa-solid fa-file"></i>
-                                </a>
-                                @endif
-                            </div>
-                        </div>
-                   
-                  
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Price {{$i}}:
-                                {{-- inc gst --}}
-                            </label>
-                            <div class="col-sm-9">
-                            <input name="po_item[{{$i}}][price]" 
-                            value="{{ old('po_item['.$i.'][price]', count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->price : '') }}" 
-                            min="1" 
-                            max="50000000000000" 
-                            type="number" 
-                            step="0.01" 
-                            class="form-control form-control-lg"
-                             onblur="formatPrice()">
-
-                            </div>
-                        </div>
-                  
-                            
                     </div>
-                    @endfor
+                </div>
+               
 
-                    <center>
-                        <div class="button-navigation btn-group" role="group" aria-label="Card navigation">
-                            <button type="button" class="btn btn-secondary active" onclick="showCard(1)">1</button>
-                            <button type="button" class="btn btn-secondary" onclick="showCard(2)">2</button>
-                            <button type="button" class="btn btn-secondary" onclick="showCard(3)">3</button>
-                            <button type="button" class="btn btn-secondary" onclick="showCard(4)">4</button>
-                        </div>
-                    </center>
-                     
-                  </div>
 
-                  
-                  <div class="col-md-5">
-                        <center> <b for="Main painter"> Assinged Painter: </b> </center>
-                        <br>
+                    <div class="row">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Assinged Painter: </label>
-                            <div class="col-sm-9">
-                                <select name="assign_painter" id="assign_painter" required class="form-control painter">
-                                    @foreach ($users as $user)
-                                    <option class="painter-val" value="{{ $user->id }}" {{ $user->id == old('assign_painter', $painterjob->assign_painter) ? 'selected' : '' }}>{{ $user->first_name .' '. $user->last_name}} - ({{ $user->company_name}})</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Assign Company Name </label>
-                            <div class="col-sm-9">
-                                <select name="assign_companyName" id="assign_builder_company" class="form-control brand2">
-                                    <option value="" selected>Select</option>
-                                    @foreach ($admin_buliders as $admin_bulider)
-                                    <option data-brand2="{{ $admin_bulider->brand?$admin_bulider->brand->id : '0' }}" value="{{ $admin_bulider->id }}" {{ $admin_bulider->id == old('assign_builder_company', $painterjob->assign_companyName) ? 'selected' : '' }}>{{ $admin_bulider->company_name }}</option>
-                                    @endforeach
-                                </select>
-                            
-                            </div>
-                        </div>
-
-                    
-              
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Assigned Supervisor:</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 control-label">Assigned Supervisor:</label>
+                            <div class="col-sm-10">
                                 <select name="assign_supervisor" id="assign_supervisor" class="form-control">
                                     <option class="empty_supervisor2" value="" selected>Select</option>
                                     @foreach ($supervisors as $supervisor)
@@ -325,129 +143,85 @@ require  public_path() . '/admin/header.blade.php';
                                 </select>
                             </div>
                         </div>
-
-
-                  
-
-                        {{-- Assign Painter Job Price --}}
-                     <div class="form-group">
-                            <label class="col-sm-3 control-label">Price for job:
-                                {{-- inc gst --}}
-                            </label>
-                            <div class="col-sm-9">
-                            <input name="mainPrice" 
-                            {{-- value="{{ old('po_item['.$i.'][price]', count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->price : '') }}"  --}}
-                            min="1" 
-                            max="50000000000000" 
-                            type="number" 
-                            step="0.01" 
-                            class="form-control form-control-lg"
-                             onblur="formatPrice()">
-
-                            </div>
-                    </div>
-                    <div class="form-group">
-                            <label class="col-sm-3 control-label">Extra Job Discription: </label>
-                            <div class="col-sm-9">
-                                <input name="builder_company_name" value="{{ old('builder_company_name',  $painterjob->builder_company_name ? $painterjob->builder_company_name : '' )}}" type="text" class="form-control">
-
-                            </div>
                     </div>
 
-                    {{-- Here is the question will be there..  --}}
 
-                     <div class="form-group">
-                            <label class="col-sm-12 control-label">Does the Painter Buy the Paint?</label>
-                            <div class="col-sm-12">
-                                <div class="form-check col-sm-6">
-                                    <input {{old("stairs_stained", $painterjob->stairs_stained) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=1 id="flexRadioDefault1">
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                        Yes
-                                    </label>
-                                </div>
-                                <div class="form-check col-sm-6">
-                                    <input {{old("stairs_stained", $painterjob->stairs_stained) ==0? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=0 id="flexRadioDefault2">
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        No
-                                    </label>
-                                </div>
-                            </div>
-                     </div>
-
-                      <div class="form-group">
-                            <label class="col-sm-12 control-label">Does the Painter orders the paint or me ?</label>
-                            <div class="col-sm-12">
-                                <div class="form-check col-sm-6">
-                                    <input {{old("stairs_stained", $painterjob->stairs_stained) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=1 id="flexRadioDefault1">
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                        Yes
-                                    </label>
-                                </div>
-                                <div class="form-check col-sm-6">
-                                    <input {{old("stairs_stained", $painterjob->stairs_stained) ==0? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=0 id="flexRadioDefault2">
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        No
-                                    </label>
-                                </div>
-                            </div>
-                     </div>
-
-                      <div class="form-group">
-                            <label class="col-sm-12 control-label">Is Paint order is sent to me or paint shop ?</label>
-                            <div class="col-sm-12">
-                                <div class="form-check col-sm-6">
-                                    <input {{old("stairs_stained", $painterjob->stairs_stained) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=1 id="flexRadioDefault1">
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                        Yes
-                                    </label>
-                                </div>
-                                <div class="form-check col-sm-6">
-                                    <input {{old("stairs_stained", $painterjob->stairs_stained) ==0? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=0 id="flexRadioDefault2">
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        No
-                                    </label>
-                                </div>
-                            </div>
-                     </div>
-                        
-                    {{-- End Here is the question will be there..  --}}
-                         @for($i=5; $i<=8; $i++) 
-                    <div class="container mt-3 po-wrap col-sm-12 group-2" id="card{{$i}}" style="display: none;">
                 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">PO {{$i}}: </label>
 
-                            <div class="col-sm-9">
+                 {{-- Assign_painter Information  --}}
+            
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Brand: </label>
+                        <div class="col-sm-10">
+                            <select name="brand_id" id="brand_id" required class="form-control brand">
+                                <option value="" selected>Select</option>
+                                @foreach ($brands as $brand)
+                                <option value="{{ $brand->id }}" {{ $brand->id == old('brand_id', $painterjob->brand_id) ? 'selected' : '' }}>{{ $brand->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Received Date: </label>
+                        <div class="col-sm-10">
+                            <input name="received_date" value="{{ old('received_date',  $painterjob->received_date )}}" type="date" id="received_date" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Job Discription: </label>
+                        <div class="col-sm-10">
+                            <input name="builder_company_name" value="{{ old('builder_company_name',  $painterjob->builder_company_name ? $painterjob->builder_company_name : '' )}}" type="text" class="form-control">
+
+                        </div>
+                    </div>
+                </div>
+                <?php
+                ?>
+                @for($i=1; $i<=4; $i++) <div class="po-wrap">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">PO Number {{$i}}: </label>
+
+                            <div class="col-sm-10">
                                 <input name="po_item[{{$i}}][ponumber]" value="{{ old('po_item[$i][ponumber]',  count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->ponumber : '' )}}" type="text" class="form-control">
 
                             </div>
-                  
                         </div>
+                    </div>
 
-                   
+                    <div class="row">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Description{{$i}}: </label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 control-label">Job description {{$i}}: </label>
+                            <div class="col-sm-10">
                                 <input name="po_item[{{$i}}][description]" value="{{ old('po_item[$i][description]',  count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->description : '' )}}" type="text" class="form-control">
 
                             </div>
                         </div>
-                    
+                    </div>
 
 
-                    
+                    <div class="row">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">L.description{{$i}}: </label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 control-label">Long description {{$i}}: </label>
+                            <div class="col-sm-10">
                                 <input name="po_item[{{$i}}][job_details]" value="{{ old('po_item[$i][job_details]',  count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->job_details : '' )}}" type="text" class="form-control">
                             </div>
                         </div>
-                   
+                    </div>
 
-                  
+                    <div class="row">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">P.O upload{{$i}}:</label>
-                            <div class="col-sm-9">
+                            <label class="col-sm-2 control-label">P.O upload {{$i}}:</label>
+                            <div class="col-sm-10">
                                 <input name="po_item[{{$i}}][file]" class="form-control form-control-lg" id="po" type="file">
                                 @if(count($painterjob->poItems) > 0 && $painterjob->poItems->values()[$i-1]->file)
                                 <a href="{{asset('/uploads/'.$painterjob->poItems->values()[$i-1]->file)}}" download>
@@ -456,13 +230,13 @@ require  public_path() . '/admin/header.blade.php';
                                 @endif
                             </div>
                         </div>
-                   
-                  
+                    </div>
+                    <div class="row">
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Price {{$i}}:
+                            <label class="col-sm-2 control-label">Price {{$i}}:
                                 {{-- inc gst --}}
                             </label>
-                            <div class="col-sm-9">
+                            <div class="col-sm-10">
                             <input name="po_item[{{$i}}][price]" 
                             value="{{ old('po_item['.$i.'][price]', count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->price : '') }}" 
                             min="1" 
@@ -474,98 +248,170 @@ require  public_path() . '/admin/header.blade.php';
 
                             </div>
                         </div>
-                  
-                            
                     </div>
-                    @endfor
+        </div>
+        @endfor
 
-                    <center>
-                        <div class="button-navigation btn-group" role="group" aria-label="Card navigation">
-                            <button type="button" class="btn btn-secondary active group-2-btn" onclick="showCard(5)">1</button>
-                            <button type="button" class="btn btn-secondary group-2-btn" onclick="showCard(6)">2</button>
-                            <button type="button" class="btn btn-secondary group-2-btn" onclick="showCard(7)">3</button>
-                            <button type="button" class="btn btn-secondary group-2-btn" onclick="showCard(8)">4</button>
-                        </div>
-                    </center>
-
-                   </div>
-                </div> 
-            
-                 {{-- Assign_painter Information  --}}
 
         <br>
-
         <div class="row">
-            <div class="col-md-6">
-                  {{-- House Plan --}}
-                <div class="form-group">
-                    <label class="col-sm-5 control-label">House Plan:</label>
-                    <div class="col-sm-7">
-                        <input name='plan' class="form-control form-control-lg" id="plan" type="file" value="{{ old('plan')}}">
-                        @if($painterjob->plan)
-                        <a href="{{asset('/uploads/'.$painterjob->plan)}}" download>
-                            <i class="fa-solid fa-file"></i>
-                        </a>
-                        @endif
-                    </div>
-                </div>
-                            {{-- House Plan 2nd/granny flat --}}
-                <div class="form-group">
-                    <label class="col-sm-5 control-label">House Plan 2nd/granny flat:</label>
-                    <div class="col-sm-7">
-                        <input name='plan_granny' class="form-control form-control-lg" id="plan_granny" type="file" value="{{ old('plan_granny')}}">
-                        @if($painterjob->plan_granny)
-                        <a href="{{asset('/uploads/'.$painterjob->plan_granny)}}" download>
-                            <i class="fa-solid fa-file"></i>
-                        </a>
-                        @endif
-                    </div>
-            
-                </div>
-                         {{-- color space --}}
-                <div class="form-group">
-                    <label class="col-sm-5 control-label">Color Spec:</label>
-                    <div class="col-sm-7">
-                        <input name='colors_spec' class="form-control form-control-lg" id="colors_spec" type="file">
-                        @if($painterjob->colors_spec)
-                        <a href="{{asset('/uploads/'.$painterjob->colors_spec)}}" download>
-                            <i class="fa-solid fa-file"></i>
-                        </a>
-                        @endif
-                    </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Start Date: </label>
+                <div class="col-sm-10">
+                    <input name="start_date" value="{{ old('start_date',  $painterjob->start_date )}}" type="date" id="start_date" class="form-control">
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label class="col-sm-5 control-label">Color Spec 2nd/granny flat:</label>
-                    <div class="col-sm-7">
-                        <input name='colors_secound' class="form-control form-control-lg" id="colors_secound" type="file">
-                        @if($painterjob->colors_secound)
-                        <a href="{{asset('/uploads/'.$painterjob->colors_secound)}}" download>
-                            <i class="fa-solid fa-file"></i>
-                        </a>
-                        @endif
-                    </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Job Address: </label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" id="searchTextField" name="address" id="address" rows="1">{{old('address', $painterjob->address)}}</textarea>
+                    <input type="hidden" name="latitude" id="Lat" value="">
+                    <input type="hidden" name="longitude" id="Lng" value="">
                 </div>
-                <div class="form-group">
-                    <label class="col-sm-5 control-label">Color Spec Mark up:</label>
-                    <div class="col-sm-7">
-                        <input name='colors' class="form-control form-control-lg" id="colors" type="file">
-                        @if($painterjob->colors)
-                        <a href="{{asset('/uploads/'.$painterjob->colors)}}" download>
-                            <i class="fa-solid fa-file"></i>
-                        </a>
-                        @endif
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Stairs stained:</label>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input {{old("stairs_stained", $painterjob->stairs_stained) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=1 id="flexRadioDefault1">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input {{old("stairs_stained", $painterjob->stairs_stained) ==0? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=0 id="flexRadioDefault2">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            No
+                        </label>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Cladding:</label>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input {{old("cladding", $painterjob->cladding) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="cladding" value=1 id="cladding1">
+                        <label class="form-check-label" for="cladding1">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input {{old("cladding", $painterjob->cladding) ==0? 'checked': '' }} class="form-check-input" type="radio" name="cladding" value=0 id="cladding2">
+                        <label class="form-check-label" for="cladding2">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Render:</label>
+                <div class="col-sm-10">
+                    <div class="form-check">
+                        <input {{old("render", $painterjob->render) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="render" value=1 id="render1">
+                        <label class="form-check-label" for="render1">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input {{old("render", $painterjob->render) ==0? 'checked': '' }} class="form-check-input" type="radio" name="render" value=0 id="render2">
+                        <label class="form-check-label" for="render2">
+                            No
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">House Plan:</label>
+                <div class="col-sm-10">
+                    <input name='plan' class="form-control form-control-lg" id="plan" type="file" value="{{ old('plan')}}">
+                    @if($painterjob->plan)
+                    <a href="{{asset('/uploads/'.$painterjob->plan)}}" download>
+                        <i class="fa-solid fa-file"></i>
+                    </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">House Plan 2nd/granny flat:</label>
+                <div class="col-sm-10">
+                    <input name='plan_granny' class="form-control form-control-lg" id="plan_granny" type="file" value="{{ old('plan_granny')}}">
+                    @if($painterjob->plan_granny)
+                    <a href="{{asset('/uploads/'.$painterjob->plan_granny)}}" download>
+                        <i class="fa-solid fa-file"></i>
+                    </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Color Spec:</label>
+                <div class="col-sm-10">
+                    <input name='colors_spec' class="form-control form-control-lg" id="colors_spec" type="file">
+                    @if($painterjob->colors_spec)
+                    <a href="{{asset('/uploads/'.$painterjob->colors_spec)}}" download>
+                        <i class="fa-solid fa-file"></i>
+                    </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Color Spec 2nd/granny flat:</label>
+                <div class="col-sm-10">
+                    <input name='colors_secound' class="form-control form-control-lg" id="colors_secound" type="file">
+                    @if($painterjob->colors_secound)
+                    <a href="{{asset('/uploads/'.$painterjob->colors_secound)}}" download>
+                        <i class="fa-solid fa-file"></i>
+                    </a>
+                    @endif
+                </div>
+            </div>
+        </div>
 
-       
-            
- 
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Color Spec Mark up:</label>
+                <div class="col-sm-10">
+                    <input name='colors' class="form-control form-control-lg" id="colors" type="file">
+                    @if($painterjob->colors)
+                    <a href="{{asset('/uploads/'.$painterjob->colors)}}" download>
+                        <i class="fa-solid fa-file"></i>
+                    </a>
+                    @endif
+                </div>
+            </div>
+        </div>
 
-        
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">House Size</label>
+                <div class="col-sm-10">
+                    <input name='house_size' class="form-control form-control-lg" id="house_size" type="text" value="{{ old('house_size', $painterjob->house_size) }}">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">Price For Total job</label>
+                <div class="col-sm-10">
+                    <input type="number" min="1" max="50000000000000" name='price' class="form-control form-control-lg" value="{{ old('price',$painterjob->price)}}">
+                </div>
+            </div>
+        </div>
         <div class="row">
             <label class="col-sm-12 control-label">
                 <h2>Outside Paint & Undercoat:</h2>
@@ -868,25 +714,7 @@ require  public_path() . '/admin/footer.blade.php';
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCb7MpXPNGT9y6LKzg_bi8R1Q_hwmLKMgk&libraries=places&callback=initialize" async defer></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-<script>
-    // JavaScript function to show/hide cards and toggle active class
-    function showCard(cardNumber) {
-        var cards = document.getElementsByClassName('po-wrap');
-        for (var i = 0; i < cards.length; i++) {
-            cards[i].style.display = 'none';
-        }
-        var buttons = document.getElementsByClassName('btn');
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove('active');
-        }
-        document.getElementById('card' + cardNumber).style.display = 'block';
-        document.querySelector('[onclick="showCard(' + cardNumber + ')"]').classList.add('active');
-    }
-    // Initially show the first card
-    showCard(1);
 
-
-</script>
 
 <script>
 $(document).ready(function() {

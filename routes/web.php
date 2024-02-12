@@ -74,6 +74,7 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 	Route::get('/invoiceing/{jobs_id}/create', [HomeController::class, 'invoice_create2'])->name('invoice_create2');
 
 
+
 	Route::post('/invoiceing/{jobs_id}/{poItem_id}/{batch}/store', [InvoiceController::class, 'invoice_savesend'])->name('invoice_savesend');
 
 
@@ -99,7 +100,7 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 
 	Route::get('/garage-paints/{id}/edit', 'GaragePaintController@edit')->name('garage-paints.edit');
 
-	Route::put('/garage-paints/{id}', 'GaragePaintController@update')->name('garage-paints.update');
+	// Route::put('/garage-paints/{id}', 'GaragePaintController@update')->name('garage-paints.update');
 
 	Route::delete('/add_gerag/{id}', 'GaragePaintController@destroy')->name('garage-paints.destroy');
 
@@ -118,6 +119,7 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 	Route::get('jobs/{id}/map_view', [HomeController::class, 'showJobonMap'])->name('show_on_map');
 	Route::get('/invoices/late',	[InvoiceController::class, 'late'])->name('invoices.late');
 	Route::get('/invoices/report',	[InvoiceController::class, 'report'])->name('invoices.report');
+	Route::get('jobs/{id}/assign_painter', [HomeController::class, 'assign_painter'])->name('assign_painter_info');
 });
 
 
@@ -197,10 +199,6 @@ Route::group(['middleware' => ['auth:admin'], 'as' => 'admins.', 'prefix' => 'ad
 	Route::get('painters', array('uses' => 'AdminController@painters'))->name('painters');
 	Route::get('delete_order/{id}', array('uses' => 'AdminController@delete_order'));
 	Route::get('shops', array('uses' => 'AdminController@shops'))->name('shops');
-
-
-
-
 	Route::get('orders', array('uses' => 'AdminController@orders'))->name('orders');
 	Route::get('brands', array('uses' => 'AdminController@brands'))->name('brands');
 	Route::match(array('GET', 'POST'), 'edit_brand/{id}', array('uses' => 'AdminController@edit_brand'));

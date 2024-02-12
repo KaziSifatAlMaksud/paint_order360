@@ -18,14 +18,6 @@ body {
   font-style: normal;
   font-variation-settings: "slnt" 0;
 }
-.showinline {
-  white-space: nowrap;
-  /* width: 100%; */
-  overflow: hidden;
-  font-weight: bold;
-  text-overflow: ellipsis;
-
-}
 
 :root {
   --clr: #222327;
@@ -46,6 +38,15 @@ body {
   border: 3px solid #E8E6E6;
   box-shadow: 1.5px 2px 2px #b8b9b8;
 }
+.showinline{
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  font-weight: bold;
+  text-overflow: ellipsis;
+
+}
+
 
 /* 
 ====================
@@ -581,7 +582,7 @@ See-Invoice Page Style
   margin: 0 10px;
   line-height: 1;
   transition: all 0.3s ease-in-out;
-  flex: 1; 
+  flex: 1; /* Distribute space evenly */
 } */
 
 /* .portfolio-flters li:hover, */
@@ -619,51 +620,51 @@ See-Invoice Page Style
 .status {
   font-size: 16px;
   margin: 10px;
-  padding: 0px 15px;
   border-radius: 100px;
   background-color: #ff9800;
+ 
 }
 .status a {
   color: #f5f5f5;
   text-decoration: none;
-  font-weight: 750;
+  font-weight: 600;
 }
 
 .status-sent {
   font-size: 16px;
   margin: 10px;
-  padding: 0px 15px;
+  padding: 0px 1px;
   border-radius: 100px;
   background-color: #009EB4;
 }
 .status-sent a {
   color: #f5f5f5;
   text-decoration: none;
-  font-weight: 750;
+  font-weight: 600;
 }
 .status-late {
   font-size: 16px;
   margin: 10px;
-  padding: 0px 15px;
+  padding: 4px 20px;
   border-radius: 100px;
   background-color: #FF0000;
 }
 .status-late a {
   color: #f5f5f5;
   text-decoration: none;
-  font-weight: 750;
+  font-weight: 600;
 }
 .status-paid {
   font-size: 16px;
   margin: 10px;
-  padding: 0px 15px;
+  padding: 0px 1px;
   border-radius: 100px;
   background-color: #07C607;
 }
 .status-paid a {
   color: #f5f5f5;
   text-decoration: none;
-  font-weight: 750;
+  font-weight: 600;
 }
 .invoice-cart-border{
   border: 2px solid #90909027;
@@ -772,8 +773,8 @@ job Page Style
 
 .status-new {
   font-size: 16px;
-  margin: 10px;
-  padding: 4px 20px;
+  margin-left: -20px;
+  padding: 0px 1px;
   border-radius: 100px;
   background-color: var(--orange);
 }
@@ -785,7 +786,7 @@ job Page Style
 .status-finished {
   font-size: 16px;
   margin: 10px;
-  padding: 4px 20px;
+  padding: 0px 1px;
   border-radius: 100px;
   background-color: #0085FF;
 }
@@ -797,7 +798,7 @@ job Page Style
 .status-started {
   font-size: 16px;
   margin: 10px;
-  padding: 4px 20px;
+  padding: 0px 1px;
   border-radius: 100px;
   background-color: #17AA1D;
 }
