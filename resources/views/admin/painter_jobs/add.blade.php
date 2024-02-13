@@ -29,7 +29,7 @@ require  public_path() . '/admin/header.blade.php';
                 @method('PUT')
                 @endif
                 <div class="row">
-                  <div class="col-md-6" style="border-right:1px solid orange; margin-right: 20px;">
+                  <div class="col-sm-6">
                      <center> <b for="Main painter"> Main Painter: </b> </center>
                   <br>
                         <div class="form-group">
@@ -79,7 +79,7 @@ require  public_path() . '/admin/header.blade.php';
                     </div>
                     {{-- main Painter Job Price --}}
                      <div class="form-group">
-                            <label class="col-sm-3 control-label">Price :
+                            <label class="col-sm-3 control-label">Job Price :
                                 {{-- inc gst --}}
                             </label>
                             <div class="col-sm-9">
@@ -102,22 +102,22 @@ require  public_path() . '/admin/header.blade.php';
                             </div>
                         </div>
                    
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="col-sm-3 control-label">Price For Total job:</label>
                             <div class="col-sm-9">
                                 <input type="number" min="1" max="50000000000000" name='price' class="form-control form-control-lg" value="{{ old('price',$painterjob->price)}}">
                             </div>
-                        </div>
+                        </div> --}}
 
 
                         
                
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="col-sm-3 control-label">Received Date: </label>
                             <div class="col-sm-9">
                                 <input name="received_date" value="{{ old('received_date',  $painterjob->received_date )}}" type="date" id="received_date" class="form-control">
                             </div>
-                        </div>
+                        </div> --}}
                
 
               
@@ -204,9 +204,9 @@ require  public_path() . '/admin/header.blade.php';
                             </div>
                      
        
-              
+             <div id="section1"> 
                 @for($i=1; $i<=4; $i++) 
-                <div class="container mt-3 po-wrap col-sm-12" id="card{{$i}}" style="display: none;">
+                 <div class="container mt-3 po-wrap col-sm-12" id="card{{$i}}" style="display: none; border: 2px solid #ff8e0a;">
                     {{-- <div class="po-wrap col-sm-12"> --}}
                 
                         <div class="form-group">
@@ -274,7 +274,7 @@ require  public_path() . '/admin/header.blade.php';
                     </div>
                     @endfor
 
-                    <center>
+                   <center>
                         <div class="button-navigation btn-group" role="group" aria-label="Card navigation">
                             <button type="button" class="btn btn-secondary active" onclick="showCard(1)">1</button>
                             <button type="button" class="btn btn-secondary" onclick="showCard(2)">2</button>
@@ -284,9 +284,10 @@ require  public_path() . '/admin/header.blade.php';
                     </center>
                      
                   </div>
+                  </div>
 
                   
-                  <div class="col-md-5">
+                  <div class="col-sm-6">
                         <center> <b for="Main painter"> Assinged Painter: </b> </center>
                         <br>
                         <div class="form-group">
@@ -331,7 +332,7 @@ require  public_path() . '/admin/header.blade.php';
 
                         {{-- Assign Painter Job Price --}}
                      <div class="form-group">
-                            <label class="col-sm-3 control-label">Price for job:
+                            <label class="col-sm-3 control-label">Price for Job:
                                 {{-- inc gst --}}
                             </label>
                             <div class="col-sm-9">
@@ -409,10 +410,11 @@ require  public_path() . '/admin/header.blade.php';
                                 </div>
                             </div>
                      </div>
-                        
+                   
+                    <div id="section2">
                     {{-- End Here is the question will be there..  --}}
-                         @for($i=5; $i<=8; $i++) 
-                    <div class="container mt-3 po-wrap col-sm-12 group-2" id="card{{$i}}" style="display: none;">
+                    @for($i=1; $i<=4; $i++) 
+                       <div class="container mt-3 po-wrap col-sm-12 group-2" id="card{{$i}}" style="display: none; border: 3px solid #ff0aba;">
                 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">PO {{$i}}: </label>
@@ -479,23 +481,24 @@ require  public_path() . '/admin/header.blade.php';
                     </div>
                     @endfor
 
-                    <center>
-                        <div class="button-navigation btn-group" role="group" aria-label="Card navigation">
-                            <button type="button" class="btn btn-secondary active group-2-btn" onclick="showCard(5)">1</button>
-                            <button type="button" class="btn btn-secondary group-2-btn" onclick="showCard(6)">2</button>
-                            <button type="button" class="btn btn-secondary group-2-btn" onclick="showCard(7)">3</button>
-                            <button type="button" class="btn btn-secondary group-2-btn" onclick="showCard(8)">4</button>
-                        </div>
-                    </center>
+                     <center>
+                            <div class="button-navigation btn-group" role="group" aria-label="Card navigation">
+                                <button type="button" class="btn btn-secondary active group-2-btn" onclick="showAssingPainter(1)">1</button>
+                                <button type="button" class="btn btn-secondary group-2-btn" onclick="showAssingPainter(2)">2</button>
+                                <button type="button" class="btn btn-secondary group-2-btn" onclick="showAssingPainter(3)">3</button>
+                                <button type="button" class="btn btn-secondary group-2-btn" onclick="showAssingPainter(4)">4</button>
+                            </div>
+                        </center>
 
                    </div>
                 </div> 
+            </div>
             
                  {{-- Assign_painter Information  --}}
 
         <br>
-
-        <div class="row">
+    <section  style="border: 3px solid blue; padding-top:15px;">
+        <div class="row" >
             <div class="col-md-6">
                   {{-- House Plan --}}
                 <div class="form-group">
@@ -562,7 +565,7 @@ require  public_path() . '/admin/header.blade.php';
         </div>
 
        
-            
+    </section>   
  
 
         
@@ -869,24 +872,48 @@ require  public_path() . '/admin/footer.blade.php';
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCb7MpXPNGT9y6LKzg_bi8R1Q_hwmLKMgk&libraries=places&callback=initialize" async defer></script>
 <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 <script>
-    // JavaScript function to show/hide cards and toggle active class
-    function showCard(cardNumber) {
-        var cards = document.getElementsByClassName('po-wrap');
-        for (var i = 0; i < cards.length; i++) {
-            cards[i].style.display = 'none';
-        }
-        var buttons = document.getElementsByClassName('btn');
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove('active');
-        }
-        document.getElementById('card' + cardNumber).style.display = 'block';
-        document.querySelector('[onclick="showCard(' + cardNumber + ')"]').classList.add('active');
+ // Default selection for section 1
+
+
+// Default selection for section 2
+window.onload = function() {
+    showAssingPainter(1);
+     showCard(1);
+};
+
+
+function showCard(cardNumber) {
+    var cards = document.querySelectorAll('#section1 .po-wrap');
+    for (var i = 0; i < cards.length; i++) {
+        cards[i].style.display = 'none';
     }
-    // Initially show the first card
-    showCard(1);
+    document.querySelector('#section1 #card' + cardNumber).style.display = 'block';
+    updateNavigation('section1', cardNumber);
+}
+
+function showAssingPainter(cardNumber) {
+    var cards = document.querySelectorAll('#section2 .po-wrap');
+    for (var i = 0; i < cards.length; i++) {
+        cards[i].style.display = 'none';
+    }
+    document.querySelector('#section2 #card' + cardNumber).style.display = 'block';
+    updateNavigation('section2', cardNumber);
+}
+
+function updateNavigation(section, cardNumber) {
+    var buttons = document.querySelectorAll('#' + section + ' .button-navigation button');
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove('active');
+    }
+    document.querySelector('#' + section + ' .button-navigation button:nth-child(' + (cardNumber ) + ')').classList.add('active');
+}
+
+    
 
 
 </script>
+
+
 
 <script>
 $(document).ready(function() {
