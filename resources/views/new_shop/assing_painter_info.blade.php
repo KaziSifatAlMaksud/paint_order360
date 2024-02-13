@@ -26,6 +26,152 @@
    <link rel="stylesheet" href="{{ asset('css/style10.css') }}">  
     <style>
 
+:root {
+    --clr: #222327;
+    --bg:#f5f5f5;
+    --body-bg: #ebebeb;
+    --nav-colo: #fff;
+    --orang: orangered;
+    --bg-orang: #ffddaa;
+    --newInvoice-bg: #66ff5b;
+    --dueInvoice-bf:#ff7070;
+    --yollo: #f9f14d;
+    --bg-yollo: #fffcb4;
+    --green: #17ff21;
+    --bg-green: #b8ffc3;
+}
+header {
+    /* position: relative; */
+    position: fixed;
+    width: 100%;
+    margin-top: 0px; 
+    background-color: #ffffff;
+    border-radius: 0px 0px 20px 20px;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+    padding: 5px 0;
+    margin-bottom: 10px;
+    z-index: 10;
+}
+
+
+.header-row {
+    margin: 0 5px;
+}
+
+.header-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 10px;
+   
+}
+
+.header-item i {
+    font-size: 30px;
+}
+
+.header-item span {
+    font-size: 25px;
+    text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+}
+
+.header-item img {
+    width: 100%;
+    max-width: 60px;
+}
+
+.header-item {
+    font-size: 25px;
+    text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
+}
+
+/* Navigation Update*/
+
+   
+
+.navigation {
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    align-items: center; 
+    justify-content: end; 
+    width: 100%;
+    bottom: 0;
+    background: #fff;
+    border-radius: 20px 20px 0px 0px;
+    box-shadow: 0px 10px 36px rgba(0, 0, 0, 0.3);
+    z-index: 3;
+}
+
+.navigation ul{
+    margin-bottom: 0!important;
+    padding-left: 0rem !important;
+    display: flex;
+    width: 100%;
+    
+}
+.navigation ul li{    
+    position: relative;
+    list-style: none;
+    width: 30%;
+    height: 70px;
+    z-index: 1;
+}
+.navigation ul li a{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+ 
+    /* text-align: center; */
+    font-weight: 500;
+}
+.navigation ul li a .icon{
+    position: relative;
+    display: block;
+    line-height: 75px;
+    font-size: 1.5em;
+    text-align: center;
+    transition: 0.5s;
+    color: var(--clr);
+
+}
+.navigation ul li.active a .icon{
+    transform: translateY(-15px);
+    padding: 0px 25px 0px 25px;
+    border-radius: 50%; 
+    font-size: 20px;
+    color: var(--orang);
+ 
+
+}
+
+.navigation ul li a .text{
+    position: absolute;
+    color: var(--orang);
+    font-weight: bold;
+    font-size: 1em;
+    letter-spacing: 0.05em;
+    /* transition: 0.5s; */
+    opacity: 0;
+    transform: translateY(20px);
+}
+.navigation ul li.active a .text{
+    opacity: 1;
+    transform: translateY(10px);
+}
+
+/* Navigation End Update*/
+
+.showinline{
+    white-space: nowrap;
+    width: 90%;
+    overflow: hidden;
+    font-weight: bold;
+    text-overflow: ellipsis;
+
+}
     .modal {
       display: none; 
       position: fixed; 
@@ -262,10 +408,9 @@
                   <label for="paintCost" class="form-label">Paint Cost</label>
                   <input type="text" id="paintCost" value="$30.00" class="form-control" readonly>
                 </div>
-                <center> <button class="btn btn-primary" id="nextButton">Next</button> </center>
-                <!-- Add submit button or any other elements as needed -->
+             
               </form>
-              <button class="btn btn-primary" id="clickbtn" onclick="showCostSection()">Next</button>
+              <center> <button class="btn btn-primary" id="clickbtn" onclick="showCostSection()">Next</button></center>
             </div>
           </div>
         </div>
@@ -307,7 +452,7 @@
 <!-- 
  select who pays for and orders the paint -->
     <section id="sectionfirst">
-      <div class="custom-border card mx-3  mb-4 mt-4 rounded-4">
+      <div id="first-q" class="custom-border card mx-3 mb-4 mt-4 rounded-4 d-none">
          <h3 class="pt-4 px-2 text-center">Select who pays for and orders the paint</h3>
           <div id="page-content" class="content active">
             <div class="d-flex flex-column align-items-stretch px-2">
@@ -458,6 +603,7 @@
     // new 
     function showCostSection() {
     document.getElementById("cost").classList.remove("d-none");
+    document.getElementById("first-q").classList.remove("d-none");
   }
     function showSecondQues() {
     var quesTwo = document.getElementById("quesTwo");
