@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\PjItem;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\AssignedPainterJob;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PainterJob extends Model
@@ -117,6 +118,11 @@ class PainterJob extends Model
     {
         return $this->hasMany(GallaryPlan::class, 'job_id');
     }
+    public function assignedJob()
+    {
+        return $this->hasMany(AssignedPainterJob::class, 'assigned_painter_name', 'assign_painter');
+    }
+
     /**
      * Get the painter for the job.
      */

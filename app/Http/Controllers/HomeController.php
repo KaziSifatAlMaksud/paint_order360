@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\PainterBoss;
+use App\Models\AssignedPainterJob;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\BuilderModel;
@@ -54,7 +55,8 @@ class HomeController extends Controller
     {
         $userId = $request->user()->id;
         $company_name = $request->user()->company_name;
-        $jobs = PainterJob::with('gallaryPlan', 'admin_builders', 'superviser', 'poitem', 'users')
+
+        $jobs = PainterJob::with('gallaryPlan', 'admin_builders', 'superviser', 'poitem', 'users', 'assignedJob')
             // ->where('user_id', $request->user()->id)
             ->where(function ($query) use ($userId) {
                 $query->where('user_id', $userId)
@@ -62,9 +64,13 @@ class HomeController extends Controller
             })
             ->whereNull('parent_id')
             ->get();
+        // Counting new, started, and finished jobs
+        $newCount = $jobs->where('status', 1)->count();
+        $startedCount = $jobs->where('status', 2)->count();
+        $finishedCount = $jobs->where('status', 3)->count();
         $admin_builders = BuilderModel::all();
         $pps = JobPp::all();
-        return view('new_shop.navigation', ['jobs' => $jobs, 'admin_builders' => $admin_builders, 'company_name' => $company_name, 'pps' => $pps]);
+        return view('new_shop.navigation', ['jobs' => $jobs, 'admin_builders' => $admin_builders, 'company_name' => $company_name, 'pps' => $pps, 'newCount' => $newCount, 'startedCount' => $startedCount, 'finishedCount' => $finishedCount]);
     }
 
 
@@ -161,12 +167,13 @@ class HomeController extends Controller
     public function show($id)
     {
         $job = PainterJob::with('GallaryPlan', 'admin_builders')->find($id);
+        $assign_job = AssignedPainterJob::where('job_id', $id)->with(['adminBuilder', 'painterJob'])->first();
 
         if (!$job) {
             abort(404);
         }
 
-        return view('new_shop.jobshow', ['job' => $job]);
+        return view('new_shop.jobshow', ['job' => $job, 'assign_job' => $assign_job]);
     }
 
 
@@ -511,8 +518,17 @@ class HomeController extends Controller
     }
     public function assign_painter(Request $request, $id)
     {
-        return view('new_shop.assing_painter_info', ['painterjob' => $id]);
+        if ($request->isMethod('post')) {
+        }
+        if ($request->isMethod('get')) {
+
+            $job = PainterJob::where('id', $id)->with('superviser', 'admin_builders')->first();
+            $users = User::all();
+            return view('new_shop.assing_painter_info', ['job' => $job, 'users' => $users]);
+        }
+        return redirect()->back()->with('error', 'Unexpected request method.');
     }
+
 
 
     public function updateJob(Request $request, $id)

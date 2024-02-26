@@ -13,6 +13,14 @@ require  public_path() . '/admin/header.blade.php';
             <div class="row">
                 <form method="post" id="add_builder" action="{{route('admins.admin_builder.store')}}">
                     @csrf
+                    <!-- Icon Image Upload Field -->
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Icon Image</label>
+                       
+                        <div class="col-sm-9">
+                            <input type="file" accept="image/*"  class="form-control" name="icon_img">
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Company Name </label>
                         @if ($errors->has('company_name'))
@@ -20,6 +28,15 @@ require  public_path() . '/admin/header.blade.php';
                         @endif
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="company_name" placeholder="Company Name" required>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-sm-3 control-label">Builder Name </label>
+                        @if ($errors->has('builder_name'))
+                        <p class="error">{{ $errors->first('builder_name') }}</p>
+                        @endif
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="builder_name" placeholder="Builder Name" required>
                         </div>
                     </div>
                     <div class="form-group">

@@ -42,8 +42,9 @@ require  public_path() . '/admin/header.blade.php';
                                 </select>
                             </div>
                         </div> 
-                        
-                        <div class="form-group">
+                      
+                    
+                    <div class="form-group">
                         <label class="col-sm-3 control-label">Company Name </label>
                         <div class="col-sm-9">
                             <select name="company_id" id="builder_company" class="form-control brand">
@@ -52,16 +53,21 @@ require  public_path() . '/admin/header.blade.php';
                                 <option data-brand="{{ $admin_bulider->brand?$admin_bulider->brand->id : '0' }}" value="{{ $admin_bulider->id }}" {{ $admin_bulider->id == old('id', $painterjob->company_id) ? 'selected' : '' }}>{{ $admin_bulider->company_name }}</option>
                                 @endforeach
                             </select>
-                          
+                            {{-- <select name="company_id" id="builder_company" class="form-control brand">
+                                <option value="" selected>Select</option>
+                                @foreach ($admin_buliders as $admin_bulider)
+                                <option data-brand="{{ $admin_bulider->brand?$admin_bulider->brand->id : '0' }}" value="{{ $admin_bulider->id }}" {{ $admin_bulider->id == old('id', $painterjob->company_id) ? 'selected' : '' }}>{{ $admin_bulider->company_name}}</option>
+                                @endforeach
+                            </select> --}}
                         </div>
-                        </div>
+                    </div>
                         <div class="form-group">
                         <label class="col-sm-3 control-label">Supervisor </label>
                         <div class="col-sm-9">
                             <select name="supervisor_id" id="supervisor" class="form-control ">
                                 <option class="empty_supervisor" value="" selected>Select</option>
                                 @foreach ($supervisors as $supervisor)
-                                <option value="{{ $supervisor->id }}" class="all_supervisors supervisor_{{$supervisor->builder_id}}" {{ $supervisor->id == old('id', $painterjob->supervisor_id) ? 'selected' : '' }}>{{ $supervisor->name}}</option>
+                                <option value="{{ $supervisor->id }}" class="all_supervisors supervisor_{{$supervisor->builder_id}}" {{ $supervisor->id == old('supervisor_id', $painterjob->supervisor_id) ? 'selected' : '' }}>{{ $supervisor->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -83,14 +89,13 @@ require  public_path() . '/admin/header.blade.php';
                                 {{-- inc gst --}}
                             </label>
                             <div class="col-sm-9">
-                            <input name="mainPrice" 
-                            {{-- value="{{ old('po_item['.$i.'][price]', count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->price : '') }}"  --}}
+                            <input name="price" 
+                             value="{{ old('price') ?? ($painterjob ? $painterjob->price : '') }}" 
                             min="1" 
                             max="50000000000000" 
                             type="number" 
                             step="0.01" 
-                            class="form-control form-control-lg"
-                             onblur="formatPrice()">
+                            class="form-control form-control-lg">
 
                             </div>
                         </div>
@@ -286,27 +291,34 @@ require  public_path() . '/admin/header.blade.php';
                   </div>
                   </div>
 
-                  
+               
                   <div class="col-sm-6">
-                        <center> <b for="Main painter"> Assinged Painter: </b> </center>
+                        <center> <b for="Main painter"> Assinged Painter:     </b> </center>
                         <br>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Assinged Painter: </label>
                             <div class="col-sm-9">
-                                <select name="assign_painter" id="assign_painter" required class="form-control painter">
+                                
+                                <select name="assigned_painter_name" id="assign_painter" required class="form-control painter">
+
                                     @foreach ($users as $user)
-                                    <option class="painter-val" value="{{ $user->id }}" {{ $user->id == old('assign_painter', $painterjob->assign_painter) ? 'selected' : '' }}>{{ $user->first_name .' '. $user->last_name}} - ({{ $user->company_name}})</option>
+                                        <option class="painter-val" value="{{ $user->id }}" 
+                                            {{ ($assign_painter !== null && $user->id == old('assigned_painter_name', $assign_painter->assigned_painter_name)) ? 'selected' : '' }}>{{ $user->first_name .' '. $user->last_name }} - ({{ $user->company_name }})</option>
                                     @endforeach
+
+                               
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Assign Company Name </label>
                             <div class="col-sm-9">
-                                <select name="assign_companyName" id="assign_builder_company" class="form-control brand2">
+                                <select name="assign_company_id" id="assign_company_id" class="form-control brand2">
                                     <option value="" selected>Select</option>
                                     @foreach ($admin_buliders as $admin_bulider)
-                                    <option data-brand2="{{ $admin_bulider->brand?$admin_bulider->brand->id : '0' }}" value="{{ $admin_bulider->id }}" {{ $admin_bulider->id == old('assign_builder_company', $painterjob->assign_companyName) ? 'selected' : '' }}>{{ $admin_bulider->company_name }}</option>
+                                    <option data-brand2="{{ $admin_bulider->brand?$admin_bulider->brand->id : '0' }}" value="{{ $admin_bulider->id }}" 
+                                        {{ ($assign_painter !== null && $admin_bulider->id == old('assign_company_id', $assign_painter->assign_company_id)) ? 'selected' : '' }}>{{ $admin_bulider->company_name }}
+                                    </option>
                                     @endforeach
                                 </select>
                             
@@ -318,10 +330,12 @@ require  public_path() . '/admin/header.blade.php';
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Assigned Supervisor:</label>
                             <div class="col-sm-9">
-                                <select name="assign_supervisor" id="assign_supervisor" class="form-control">
+                                <select name="assigned_supervisor" id="assigned_supervisor" class="form-control">
                                     <option class="empty_supervisor2" value="" selected>Select</option>
                                     @foreach ($supervisors as $supervisor)
-                                        <option value="{{ $supervisor->id }}" class="all_supervisors supervisor_2{{ $supervisor->builder_id }}" {{ $supervisor->id == old('assign_supervisor', $painterjob->assign_supervisor) ? 'selected' : '' }}>{{ $supervisor->name }}</option>
+                                        <option value="{{ $supervisor->id }}" class=" all_supervisors supervisor_{{$supervisor->builder_id}}" 
+                                             {{ ($assign_painter !== null && $supervisor->id == old('assigned_supervisor', $assign_painter->assign_company_id)) ? 'selected' : '' }}>{{$supervisor->name }}
+                                       
                                     @endforeach
                                 </select>
                             </div>
@@ -336,8 +350,8 @@ require  public_path() . '/admin/header.blade.php';
                                 {{-- inc gst --}}
                             </label>
                             <div class="col-sm-9">
-                            <input name="mainPrice" 
-                            {{-- value="{{ old('po_item['.$i.'][price]', count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->price : '') }}"  --}}
+                            <input name="assign_price_job" 
+                            value="{{ old('assign_job_description') ?? ($assign_painter ? $assign_painter->assign_price_job : '') }}" 
                             min="1" 
                             max="50000000000000" 
                             type="number" 
@@ -348,16 +362,16 @@ require  public_path() . '/admin/header.blade.php';
                             </div>
                     </div>
                     <div class="form-group">
-                            <label class="col-sm-3 control-label">Extra Job Discription: </label>
-                            <div class="col-sm-9">
-                                <input name="builder_company_name" value="{{ old('builder_company_name',  $painterjob->builder_company_name ? $painterjob->builder_company_name : '' )}}" type="text" class="form-control">
-
-                            </div>
+                        <label class="col-sm-3 control-label">Extra Job Description: </label>
+                        <div class="col-sm-9">
+                            <input name="assign_job_description" type="text" class="form-control" value="{{ old('assign_job_description') ?? ($assign_painter ? $assign_painter->assign_job_description : '') }}">
+                        </div>
                     </div>
+
 
                     {{-- Here is the question will be there..  --}}
 
-                     <div class="form-group">
+                     {{-- <div class="form-group">
                             <label class="col-sm-12 control-label">Does the Painter Buy the Paint?</label>
                             <div class="col-sm-12">
                                 <div class="form-check col-sm-6">
@@ -409,7 +423,7 @@ require  public_path() . '/admin/header.blade.php';
                                     </label>
                                 </div>
                             </div>
-                     </div>
+                     </div> --}}
                    
                     <div id="section2">
                     {{-- End Here is the question will be there..  --}}
@@ -428,7 +442,7 @@ require  public_path() . '/admin/header.blade.php';
 
                    
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">Description{{$i}}: </label>
+                            <label class="col-sm-3 control-label">Description{{$i-4}}: </label>
                             <div class="col-sm-9">
                                 <input name="po_item[{{$i}}][description]" value="{{ old('po_item[$i][description]',  count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->description : '' )}}" type="text" class="form-control">
 
@@ -439,7 +453,7 @@ require  public_path() . '/admin/header.blade.php';
 
                     
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">L.description{{$i}}: </label>
+                            <label class="col-sm-3 control-label">L.description{{$i-4}}: </label>
                             <div class="col-sm-9">
                                 <input name="po_item[{{$i}}][job_details]" value="{{ old('po_item[$i][job_details]',  count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->job_details : '' )}}" type="text" class="form-control">
                             </div>
@@ -448,7 +462,7 @@ require  public_path() . '/admin/header.blade.php';
 
                   
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">P.O upload{{$i}}:</label>
+                            <label class="col-sm-3 control-label">P.O upload{{$i-4}}:</label>
                             <div class="col-sm-9">
                                 <input name="po_item[{{$i}}][file]" class="form-control form-control-lg" id="po" type="file">
                                 @if(count($painterjob->poItems) > 0 && $painterjob->poItems->values()[$i-1]->file)

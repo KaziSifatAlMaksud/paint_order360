@@ -19,6 +19,14 @@ body {
   font-variation-settings: "slnt" 0;
 }
 
+.custom-input {
+  background-color: var(--body-bg);
+  border: none;
+  border-bottom: 2px solid #ccced1;
+  padding: 5px;
+  outline: none;
+  width: 100%;
+}
 :root {
   --clr: #222327;
   --bg: #f5f5f5;
@@ -294,7 +302,7 @@ Profile Page Style
     cursor: pointer;
   }
   .nav-bar div p {
-    font-size: 40px;
+    /* font-size: 40px; */
     font-weight: bold;
   }
 
@@ -582,9 +590,10 @@ See-Invoice Page Style
   margin: 0 10px;
   line-height: 1;
   transition: all 0.3s ease-in-out;
-  flex: 1; /* Distribute space evenly */
-} */
+  flex: 1; /* Distribute space evenly 
+}
 
+*/
 /* .portfolio-flters li:hover, */
 /* .portfolio-flters li.filter-active {
   color: #f5f5f5;
@@ -685,7 +694,7 @@ See-Invoice Page Style
   padding: 10px 10px;
   border-radius: 13px; 
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 
 .docs_prt1 {

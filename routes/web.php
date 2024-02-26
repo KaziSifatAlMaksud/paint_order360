@@ -13,6 +13,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SubcustomerController;
 use App\Http\Controllers\PainterJobPlanController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\AssignedPainterController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\GaragePaintController;
 /*
@@ -73,6 +74,9 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 	// Route::get('/invoiceing/{jobs_id}/create', [InvoiceController::class, 'invoice_send2'])->name('invoice_send2');
 	Route::get('/invoiceing/{jobs_id}/create', [HomeController::class, 'invoice_create2'])->name('invoice_create2');
 
+	Route::post('jobs/{id}/assign_painter/assign', 'AssignedPainterController@UserAssign')->name('assignJob.Store');
+	// In your routes file (e.g., web.php)
+	Route::post('save-message/{assign_painter}', 'AssignedPainterController@saveMessage')->name('save.message');
 
 
 	Route::post('/invoiceing/{jobs_id}/{poItem_id}/{batch}/store', [InvoiceController::class, 'invoice_savesend'])->name('invoice_savesend');
@@ -119,7 +123,11 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 	Route::get('jobs/{id}/map_view', [HomeController::class, 'showJobonMap'])->name('show_on_map');
 	Route::get('/invoices/late',	[InvoiceController::class, 'late'])->name('invoices.late');
 	Route::get('/invoices/report',	[InvoiceController::class, 'report'])->name('invoices.report');
-	Route::get('jobs/{id}/assign_painter', [HomeController::class, 'assign_painter'])->name('assign_painter_info');
+
+
+
+	// AssingPainter Rountings 
+	Route::match(['get', 'post'], 'jobs/{id}/assign_painter', [HomeController::class, 'assign_painter'])->name('assign_painter_info');
 });
 
 
@@ -171,6 +179,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 	// Route::delete('/jobs/{id}', 'PainterJobController@destroy')->name('painterjob.destroy');
 	Route::delete('/jobs/{id}', 'PainterJobController@delete')->name('painterjob.delete');
+	Route::delete('/jobs/unassign/{id}', 'PainterJobController@unassign')->name('painterjob.unassign');
 	Route::delete('/jobs/{id}/finishe', 'PainterJobController@finishjob')->name('painterjob.finishejob');
 	Route::delete('/jobs/{id}/started', 'PainterJobController@started')->name('painterjob.started');
 	Route::get('/subcontractors/create', [SubcustomerController::class, 'create'])->name('subcustomers.create');

@@ -53,6 +53,12 @@ header {
     z-index: 10;
 }
 
+ .red-dot {
+    height: 10px; /* Size of the dot */
+    width: 10px; /* Size of the dot */
+    background-color: red; /* Color of the dot */
+    border-radius: 50%; /* Makes the dot round */
+  }
 
 .header-row {
     margin: 0 5px;
@@ -176,7 +182,7 @@ header {
 </style>
   </head>
 
-  <body>
+  <body style="background-color: #e6e6e6;">
         <header >
         <div class="header-row">
             <div class="header-item">
@@ -206,11 +212,11 @@ header {
       </div>
 
    
-      <ul class="job-list px-2 d-flex justify-content-between fs-5 mt-3 portfolio-flters">
-            <li id="filter-all" class="filter-active">All</li>
-            <li id="filter-new" class="filter-inactive">New</li>
-            <li id="filter-started" class="filter-inactive">Started</li>
-            <li id="filter-finished" class="filter-inactive">Finished</li>
+      <ul class="job-list px-2 d-flex justify-content-between fs-5 mt-3 portfolio-flters" style="color: #ff4500;  font-weight: bold;">
+            <li id="filter-all" class="filter-active" hidden >All</li>
+            <li id="filter-new" class="filter-inactive">New {{$newCount ? $newCount : ''}}</li>
+            <li id="filter-started" class="filter-inactive">Started {{$startedCount ? $startedCount : ''}}</li>
+            <li id="filter-finished" class="filter-inactive">Finished {{$finishedCount ? $finishedCount : '0'}}</li>
         </ul>
 
         <div class="px-2 border-custom"></div>
@@ -223,7 +229,7 @@ header {
                     <div style="width: 100px; height: 110px; margin: -10px 0px -10px -10px;" >
                         <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; border-top-left-radius: 10px; border-bottom-left-radius: 10px; overflow: hidden;">
                             @forelse($pps->where('job_id', $job->id) as $pp)
-                            <img src="{{ asset('/gallery_images/'.$pp->image) }}" alt="Card image cap" style="width: 100px; height: 100px; object-fit: cover; object-position: center center;">
+                            <img src="{{ asset('/gallery_images/'.$pp->image) }}" alt="Card image cap" style="width: 100%; height: 100%; object-fit: fill; object-position: center center;">
                             @empty
                             <img src="{{ asset('/image/Home.png') }}" alt="Card image cap" style="width: 100px; height: 100px; object-fit: cover; object-position: center center;">
                             @endforelse
@@ -235,21 +241,40 @@ header {
 
                             <div style="display: flex; justify-content: space-between;">
                                 <div style="text-align: left; width: 50%; overflow:hidden;">
-                                    <p class="text2">
+                                    <p class="text2 showinline ">
                                         @if (!$job->builder_company_name)
                                         Click The Card For Learn More
                                         @else
                                         {{ $job->builder_company_name }}
                                         @endif
-                                    </p>
-                                    <p class="text3"><strong>${{ number_format( $job->price , 2)  }} inc gst</strong></p>
-                                    <p class="text3 bilderName"><strong>
-                                    @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
-                                                    {{ $job->admin_builders->company_name }}
-                                    @endif  
-                                    </strong></p>
+                                        </p>
+                                        <p class="text3"><strong>${{ number_format( $job->price , 2)  }} inc gst</strong></p>
+                                        <p class="text3 bilderName " style="display: flex; align-items: center; white-space: nowrap;"><strong>
+                                         @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
+                                            {{ $job->admin_builders->company_name }}
+                                        @endif                                       
+                                        </strong>                                       
+                                        </p>
                                 </div>
-                                <div style="align-self: flex-end;">
+                       
+                                  <div style="display: flex;  align-items: flex-end; margin-bottom: 5px">  
+                                 
+                                            @php
+                                                $assignedJobs = json_decode($job->assignedJob, true); // Decode the JSON string into an associative array
+                                            @endphp
+
+
+                                            @if( isset($assignedJobs[0]['assigned_painter_name']) && $assignedJobs[0]['assigned_painter_name'] === auth()->id() )
+                                                <div class="red-dot" style="background: green;"></div>
+                                            @endif
+
+                                        @if($job->assign_painter && $job->user_id === auth()->id())
+                                            <div class="red-dot"></div>
+                                        @endif
+                                  </div>
+
+                                <div style="align-self: flex-end; margin-bottom:-6px;">
+                                   
                                     @if ($job->status == 1)
                                     <p class="map_btn status status-new ml-5 text-light">New</p>
                                     @elseif($job->status == 2)
@@ -263,6 +288,7 @@ header {
                     </div>
                 </div>
             </a>
+
             @endforeach
         </section>
         @else

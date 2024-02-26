@@ -56,7 +56,7 @@
 
         
     
-            <div class="mt-5 pt-5">
+            <div class="mt-5">
                 <label for="companyName" class="form-label">Customer Company Name: <span class="text-danger " style="font-size: 1.2em">*</span></label>
                 <input type="text" class="custom-input" id="companyName" required value=" {{ isset($customer) ? $customer->companyName : '' }}"  required name="companyName">
             </div>
