@@ -153,12 +153,12 @@ class HomeController extends Controller
 
     public function jobs(Request $request)
     {
-        $jobs = PainterJob::with('GallaryPlan', 'builder')
+        $jobs = PainterJob::with('GallaryPlan', 'builder', 'painter', 'superviser')
             ->where('user_id', $request->user()->id)
             ->whereNull('parent_id')
             ->where('start_date', '>=', date('Y-m-d'))
             ->where('status', 1)
-            ->paginate(1); // Paginate the results with 1 job per page
+            ->paginate(1);
 
         return view('new_shop.main', ['jobs' => $jobs]);
     }
@@ -167,7 +167,7 @@ class HomeController extends Controller
     public function show($id)
     {
         $job = PainterJob::with('GallaryPlan', 'admin_builders')->find($id);
-        $assign_job = AssignedPainterJob::where('job_id', $id)->with(['adminBuilder', 'painterJob'])->first();
+        $assign_job = AssignedPainterJob::where('job_id', $id)->with(['adminBuilder', 'painterJob', 'painter'])->first();
 
         if (!$job) {
             abort(404);

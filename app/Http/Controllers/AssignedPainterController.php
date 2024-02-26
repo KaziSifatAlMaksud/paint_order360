@@ -17,6 +17,11 @@ class AssignedPainterController extends Controller
             $paintCost = $request->input('paint_cost');
             $painterId = $request->input('assigned_painter_name'); // Assuming this should be the painter's ID
             $extrasMessage = $request->input('assign_job_description');
+
+            $ans1 = $request->input('Q_1');
+            $ans2 = $request->input('Q_2');
+            $ans3 = $request->input('Q_3');
+
             $jobId = $id;
 
             // Retrieve the PainterJob
@@ -28,6 +33,7 @@ class AssignedPainterController extends Controller
                 $painterJob->save(); // Save the update
             } else {
                 // Handle the case where the specified PainterJob doesn't exist
+
                 return response()->json(['error' => 'The specified job does not exist'], 404); // 404 Not Found
             }
             $assignedPainterJob = AssignedPainterJob::create([
@@ -36,10 +42,14 @@ class AssignedPainterController extends Controller
                 'assigned_painter_name' => $painterId, // Assuming this stores the painter's ID or name correctly
                 'paint_cost' => $paintCost,
                 'assign_job_description' => $extrasMessage,
-            ]);
+                'status' => 1,
+                'Q_1' => $ans1,
+                'Q_2' => $ans2,
+                'Q_3' => $ans3,
 
+            ]);
             // Return a JSON response
-            return redirect()->back()->with('go_back', true)->with('success', 'Assign Successfully successfully.');
+            return Redirect::route('main')->withErrors(['success' => 'Assign Successfully successfully.!']);
         } else {
             // Handle the case where 'assigned_painter_name' is not provided
 

@@ -395,7 +395,7 @@ header {
           <div id="page-content" class="content active">
             <div class="d-flex justify-content-between py-2 mb-4">
               <h3>Cost & Profit on This Job  </h3>
-              <button type="button">ADD Painter</button> <!-- Changed from <a> to <button> for better semantic meaning -->
+              {{-- <button type="button">ADD Painter</button> <!-- Changed from <a> to <button> for better semantic meaning --> --}}
             </div>
             <div class="fw-medium">
            
@@ -474,33 +474,33 @@ header {
                     <div class="d-flex flex-column align-items-stretch px-2">
                       <p class="mb-3 text-center fs-6 pt-3 text-decoration-underline">Does the Painter Buy the Paint?</p>
                       <div class="mt-auto d-flex justify-content-between">
-                        <button class="w-25 btn btn-warning" onclick="setAnswer(1, 1)" >Yes</button>
-                        <button onclick="showSecondQues(); setAnswer(1, 0);"  class="w-25 btn btn-danger">No</button>
+                        <p class="w-25 btn btn-warning" onclick="setAnswer(1, 1)" >Yes</p>
+                        <p onclick="showSecondQues(); setAnswer(1, 0);"  class="w-25 btn btn-danger">No</p>
                       </div>
                   </div>
 
                   <div id="quesTwo" class="d-none flex-column align-items-stretch px-2">
                       <p class="mb-3 text-center fs-6 pt-5 text-decoration-underline">Does the Painter orders the paint or me ?</p>
                       <div class="mt-auto d-flex justify-content-between">
-                        <button class="w-25 btn btn-warning" onclick="setAnswer(2, 1)" >Me</button>
-                        <button class="w-25 btn btn-danger" onclick="showThirdQues();setAnswer(2, 0);">Painter</button>
+                        <p class="w-25 btn btn-warning" onclick="setAnswer(2, 1)" >Me</p>
+                        <p class="w-25 btn btn-danger" onclick="showThirdQues();setAnswer(2, 0);">Painter</p>
                       </div>
                     </div>
 
                     <div id="quesThird" class="d-none flex-column align-items-stretch px-2">
                       <p class="mb-3 text-center fs-6 pt-5 text-decoration-underline">Is Paint order is sent to me or paint shop ?</p>
                       <div class="mt-auto d-flex justify-content-between">
-                        <button class="w-25 btn btn-warning" onclick="setAnswer(3, 1)"  >Me</button>
-                        <button class="w-25 btn btn-danger"  onclick="showThirdQues();setAnswer(3, 0);">Shop</button>
+                        <p class="w-25 btn btn-warning" onclick="setAnswer(3, 1)"  >Me</p>
+                        <p class="w-25 btn btn-danger"  onclick="showThirdQues();setAnswer(3, 0);">Shop</p>
                       </div>
                     </div>
-
-                    <input type="hidden" name="Q1" id="answer1">
-                    <input type="hidden" name="Q2" id="answer2">
-                    <input type="hidden" name="Q3" id="answer3">
+                    <input type="hidden" name="status" value="1">
+                    <input type="hidden" name="Q_1" id="answer1">
+                    <input type="hidden" name="Q_2" id="answer2">
+                    <input type="hidden" name="Q_3" id="answer3">
 
                     <center style="margin-bottom: 20px;">
-                      <button class="btn btn-success" id="addInvoicePaidLessButton">Start</button>
+                      <P class="btn btn-success" id="addInvoicePaidLessButton">Start</P>
                     </center>
               </div>
               </section>
@@ -623,6 +623,9 @@ $(document).ready(function() {
 
 
   <script>
+      function setAnswer(questionNumber, answerValue) {
+    document.getElementById(`answer${questionNumber}`).value = answerValue;
+    }
     function closebtn(){
     var span = document.getElementsByClassName("nobtn")[0];
       span.onclick = function() {
@@ -721,9 +724,7 @@ document.getElementById('nextbtnsubmit').addEventListener('click', function(even
     quesThird.classList.add("d-flex");
   }
 
-  function setAnswer(questionNumber, answerValue) {
-    document.getElementById(`answer${questionNumber}`).value = answerValue;
-  }
+
   </script>
 
 

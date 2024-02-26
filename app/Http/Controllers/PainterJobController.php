@@ -120,6 +120,14 @@ class PainterJobController extends Controller
         return redirect()->route('main')->with('success', 'Job deleted successfully.');
     }
 
+    public function acceptJob($id)
+    {
+        $Assjob = AssignedPainterJob::find($id);
+        $Assjob->status = 2;
+        $Assjob->save();
+        return redirect()->route('main')->with('success', 'Job is Accepted Successfully.');
+    }
+
     public function unassign($id)
     {
         $job = PainterJob::find($id);

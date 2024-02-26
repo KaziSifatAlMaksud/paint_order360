@@ -178,6 +178,8 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::post('/customer/store', [CustomerController::class, 'store'])->name('customer.store');
 
 	// Route::delete('/jobs/{id}', 'PainterJobController@destroy')->name('painterjob.destroy');
+	Route::delete('/jobs/{id}/accept', 'PainterJobController@acceptJob')->name('Accept.Job');
+
 	Route::delete('/jobs/{id}', 'PainterJobController@delete')->name('painterjob.delete');
 	Route::delete('/jobs/unassign/{id}', 'PainterJobController@unassign')->name('painterjob.unassign');
 	Route::delete('/jobs/{id}/finishe', 'PainterJobController@finishjob')->name('painterjob.finishejob');

@@ -21,6 +21,7 @@ class AssignedPainterJob extends Model
         'assign_job_description',
         'assign_price_job',
         'paint_cost',
+        'status',
         'Q_1',
         'Q_2',
         'Q_3',
@@ -33,5 +34,9 @@ class AssignedPainterJob extends Model
     public function painterJob()
     {
         return $this->belongsTo(PainterJob::class, 'job_id');
+    }
+    public function painter()
+    {
+        return $this->belongsTo(User::class, 'assigned_painter_name');
     }
 }
