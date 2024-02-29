@@ -236,6 +236,9 @@ header {
 
         @include('layouts.partials.footer')  
     
+@php
+    $assign_job_info = json_decode($assign_job);
+@endphp
 
     <!-- slider -->
 <section class="nav-bar" style="padding: 110px 0px 20px 0px;">
@@ -356,14 +359,14 @@ header {
                 style="height: 60px">
 
 
-                <div class="d-flex flex-column align-items-center" id="job">
+                <div class="d-flex flex-column align-items-center active" id="job">
                   <img
                     src="/image/icon1/details-icon-png-cc-by-3-0--it-1 1.png"
                     alt="job.png"
                   />
                   <p>Job Detail</p>
                 </div>
-                <div class="painter-btn d-flex flex-column align-items-center"
+                <div class="painter-btn d-flex flex-column align-items-center "
                   id="paint">
                   <img src="/image/icon1/25581 1.png" alt="job.png" />
                   <p>Assign Painter</p>
@@ -386,7 +389,12 @@ header {
               <div class="d-flex flex-column gap-2">
                 <div class="d-flex align-items-center gap-2">
                   <img src="/image/icon1/126169 1.png" style="height: 25px" />
-                  <p class="mb-0">$ {{ number_format( $job->price , 2)  }} inc gst</p>
+                 @if($assign_job && $assign_job->assigned_painter_name && $assign_job->assigned_painter_name == auth()->id())
+                      <p class="mb-0">$ {{ number_format($assign_job->assign_price_job ?? 0, 2) }} inc gst</p>
+                  @else
+                     <p class="mb-0">$ {{ number_format( $job->price , 2)  }} inc gst</p>
+                    @endif
+                
                 </div>
                 <div class="d-flex align-items-center gap-2">
                   <img src="/image/icon1/4793321 1.png" style="height: 25px" />
@@ -404,21 +412,44 @@ header {
                   src="/uploads/{{$job->painter->photo ?  $job->painter->photo  : ''}}"
                   style="height: 60px;"
                 />
-                <p> <b> Gate Code: </b>   @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
-                                                    {{ $job->admin_builders->gate }}
-                                    @endif 
-                                   
-               <br>
-               <b> Supervisor : </b> 
-                   @if($job->superviser)
-                     {{ $job->superviser->name }}
-                     @elseif($job->supervisor)
-                     {{ $job->supervisor->name }}
-                    @else
-                        {{''}}
-                    
-                    @endif
-                </p>
+
+
+     
+      
+                @if(isset($assign_job_info->admin_builder) && isset($assign_job_info->assigned_painter_name) && $assign_job_info->assigned_painter_name == auth()->id())
+                     <p> <b> Gate Code: </b>  {{ $assign_job_info->admin_builder->gate }}  <br>
+                          <b> Supervisor : </b> 
+
+                         
+                         @if(isset($assign_job) && isset($assign_job->superviser->name))
+
+                              {{ $assign_job->superviser->name }}
+                          @else
+                              {{ '' }}
+                          @endif
+                  </p>
+               @else
+                            
+                              <p> <b> Gate Code: </b>   @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
+                                                                  {{ $job->admin_builders->gate }}
+                                                  @endif 
+                      
+                            <br>
+                            <b> Supervisor : </b> 
+                                @if($job->superviser)
+                                  {{ $job->superviser->name }}
+                                  @elseif($job->supervisor)
+                                  {{ $job->supervisor->name }}
+                                  @else
+                                      {{''}}
+                                  
+                                  @endif
+                              </p>
+              @endif
+
+
+
+            
               </div>
             </div>
             <div>
@@ -479,10 +510,10 @@ header {
                 @csrf
 
                 <div class="row">
-                    <div class="col-sm-10">
+                    <div class="col-10">
                         <input id="messageInput" name="message" type="text" class="custom-input" style="background-color: #ffff" placeholder="Type your message">
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-2">
                         <button id="sendMessageBtn" type="submit" class="btn btn-primary btn-block">Send</button>
                     </div>
                 </div>
@@ -568,22 +599,24 @@ header {
         <!-- 2 -->
     {{-- //this is for Assign  Painter Call  --}}    
     @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
-
         <div class="service-box-single col-6 mb-3 px-0">
-           <a href="tel:{{ $assign_job->painter->phone ? $assign_job->painter->phone : '' }}" style="text-decoration: none;">
-          <div class="custom-card custom-border card  h-100 rounded-4">
-            <div class="card-body px-1 d-flex">
-              <div class="d-flex justify-content-between align-items-center">
-                <img src="/image/icon1/190034-200 1.png" style="height: 40px" />
+        <a href="tel:{{ $assign_job->painter->phone ? $assign_job->painter->phone : '' }}" style="text-decoration: none;">
+          <div class="custom-card custom-border card h-100 rounded-4">
+            <div class="card-body px-1">
+              <div
+                class="d-flex justify-content-between align-items-center w-100 gap-2"
+              >
+               <img src="/image/icon1/190034-200 1.png" style="height: 40px" />
                 <div>
                   <h6 class="mb-0">Call Painter</h6>
-                  <p class="mb-0 pb-0"> {{ $assign_job->painter->company_name ? $assign_job->painter->company_name : '' }} - {{ $assign_job->painter->first_name ? $assign_job->painter->first_name : '' }}</p>
+                  <p class="mb-0 pb-0">{{ $assign_job->painter->company_name ? $assign_job->painter->company_name : '' }} - {{ $assign_job->painter->first_name ? $assign_job->painter->first_name : '' }}</p>
                 </div>
               </div>
             </div>
           </div>
-          </a>
+             </a>
         </div>
+
       @endif
 {{-- //this is for Assign Painter  Painter call  --}}
       @if($assign_job ? $assign_job->assigned_painter_name == auth()->id() : '')
@@ -606,11 +639,13 @@ header {
 {{-- //this is for Boss Painter end  --}}        
         <!-- 3 -->
         <div class="service-box-single col-6 mb-3 px-0">
-         <a href="{{ route('show_on_map',['id'=> $job->id]) }}" style="text-decoration:none">
+          <a href="{{ route('show_on_map',['id'=> $job->id]) }}" style="text-decoration:none">
           <div class="custom-card custom-border card h-100 rounded-4">
             <div class="card-body px-1">
-              <div class="d-flex align-items-center w-100 gap-3">
-                <img
+              <div
+                class="d-flex justify-content-between align-items-center w-100 gap-2"
+              >
+               <img
                   src="/image/icon1/Google_Maps_icon_(2020) 1.png"
                   style="height: 40px"
                 />
@@ -621,7 +656,7 @@ header {
               </div>
             </div>
           </div>
-         </a>
+             </a>
         </div>
         <!-- 4 -->
 
@@ -666,7 +701,8 @@ header {
         </div>
 
         <!-- 5 -->
-        <div class="service-box-single col-6 mb-3 px-0">
+       
+ <div class="service-box-single col-6 mb-3 px-0">
              <a href="{{ route('jobs.files', ['id' => $job->id]) }}" style="text-decoration:none">
           <div class="custom-card custom-border card h-100 rounded-4">
             <div class="card-body px-1">
@@ -686,7 +722,6 @@ header {
           </div>
              </a>
         </div>
-
         <!-- 6 -->
       
         <div class="service-box-single col-6 mb-3 px-0">
@@ -707,8 +742,9 @@ header {
               </div>
             </div>
           </div>
+            </a>
         </div>
-          </a>
+        
         <!-- 7 -->
         
         <div class="service-box-single col-6 mb-3 px-0">

@@ -543,105 +543,8 @@ class PainterController extends BaseController
             ->where('orders.user_id', '=', $request->user()->id)->groupBy('orders.id')->orderBy('orders.created_at', 'DESC')->get();
         return View::make('painter/my_jobs', array('orders' => $orders, 'user' => $request->user()));
     }
-    // public function my_jobs(Request $request)
-    // {
-
-    //     $orders  = Order::leftJoin('users', 'orders.user_id', '=', 'users.id')
-    //         ->leftJoin('shop', 'orders.shop_id', '=', 'shop.id')
-    //         ->leftJoin('items', 'orders.id', '=', 'items.order_id')
-    //         ->leftJoin('builders', 'orders.builder', '=', 'builders.id')
-    //         ->leftJoin('brands', 'items.brand', '=', 'brands.id') // Added this line for brand name
-    //         ->select(
-    //             'orders.*',
-    //             'orders.created_at as order_date',
-    //             'users.first_name',
-    //             'users.last_name',
-    //             'builders.name as builder_name',
-    //             'shop.name',
-    //             'brands.name as brand_name', // Added this line for brand name
-    //             DB::raw("count(items.id) as count")
-    //         )
-    //         ->addSelect('items.*')
-    //         ->where('orders.user_id', '=', $request->user()->id)
-    //         ->groupBy('orders.id')
-    //         ->orderBy('orders.created_at', 'DESC')
-    //         ->get();
 
 
-    //     return View::make('painter/my_jobs', compact('orders', 'request'));
-    // }
-
-
-
-
-
-    // previous order
-    // public function view_order(Request $request, $id)
-    // {
-    //     //$shops = DB::table('shop')->get();
-    //     $Painter_user = Session::get('Painter_user');
-
-    //     $ordersdetails  = DB::table('items')
-    //         ->leftJoin('orders', 'orders.id', '=', 'items.order_id')
-    //         ->leftJoin('users', 'orders.user_id', '=', 'users.id')
-    //         ->leftJoin('builders', 'orders.builder', '=', 'builders.id')
-    //         ->leftJoin('shop', 'orders.shop_id', '=', 'shop.id')
-    //         ->leftJoin('brands', 'items.brand', '=', 'brands.id')
-
-    //         ->leftJoin('sheens', 'items.sheen', '=', 'sheens.id')->select(
-    //             DB::raw("orders.status as o_status ,orders.id as o_id , orders.pickup,  orders.type,  orders.price , orders.address ,orders.customer_name "),
-    //             'users.first_name',
-    //             'users.last_name',
-    //             'users.email',
-    //             'users.company_name',
-    //             'builders.account_no',
-    //             'builders.name as builder_name',
-    //             'builders.brand as builder_brand',
-    //             'users.phone',
-    //             'shop.name',
-    //             'items.*',
-    //             'brands.name as b_name',
-    //             'sheens.name as s_name'
-    //         )
-    //         ->where('items.order_id', '=', $id)->where('items.size', '!=', 101)->where('items.qty', '!=', 0)->get();
-    //     if ($request->isMethod('post')) {
-    //         $input = $request->all();
-    //         //$this->pr($input);
-    //         $old_order = DB::table('orders')->where('id', $id)->first();
-    //         $old_item = DB::table('items')->where('order_id', $id)->get();
-    //         //$this->pr($old_order);
-    //         //$this->prx(	$old_item);
-    //         $orderData['address'] = $old_order->address;
-    //         $orderData['customer_name'] = $old_order->customer_name;
-    //         $orderData['builder'] = $old_order->builder;
-    //         $orderData['pickup'] = $old_order->pickup;
-    //         $order_id = DB::table('orders')->insertGetId($orderData);
-    //         if (count($old_item) > 0) {
-    //             foreach ($old_item as $mkey => $mvalue) {
-    //                 $items = [];
-    //                 $items['note']         = ($mvalue->note) ? $mvalue->note : '';
-    //                 $items['product']     = $mvalue->product;
-    //                 $items['size']         = $mvalue->size;
-    //                 $items['qty']         = $mvalue->qty;
-    //                 $items['color']     = $mvalue->color;
-    //                 $items['brand']     = $mvalue->brand;
-    //                 $items['area']         = (@$mvalue->area) ? $mvalue->area : '';
-    //                 $items['order_id']     = $order_id;
-    //                 $items['user_id']     = $Painter_user->id;
-    //                 $items['main_area'] = '';
-    //                 $_items[] = $items;
-    //                 //DB::table('items')->insert($items);
-    //             }
-    //             $orderData['items'] = $_items;
-    //             Session::put('Re_order', $orderData);
-    //             return Redirect::action('PainterController@new_order');
-    //         }
-    //     }
-    //     $brands = DB::table('brands')->get();
-    //     return View::make('painter/view_order', array('ordersdetails' => $ordersdetails, 'brands' => $brands));
-    // }
-
-    // previous jobs
     public function view_order_new(Request $request, $id)
     {
         $ordersdetails  = DB::table('painter_jobs')
@@ -684,17 +587,6 @@ class PainterController extends BaseController
         return Response::json($return);
     }
 
-
-
-    // public function expireJobs($id)
-    // {
-    //     $expjobs = PainterJob::where('parent_id', $id)->whereNotNull('parent_id')
-    //         // ->whereDate('start_date', '<', Carbon::now())
-    //         // ->where('status', '!=', 2)
-    //         ->orderBy('created_at', 'DESC')->get();
-    //     // return $expjobs;
-    //     return view('painter.previouse', ['expjobs' => $expjobs, 'id' => $id]);
-    // }
     public function expireJobs($jobid)
     {
         $ordersdetails  = DB::table('painter_jobs')

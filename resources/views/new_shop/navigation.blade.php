@@ -247,8 +247,19 @@ header {
                                         @else
                                         {{ $job->builder_company_name }}
                                         @endif
-                                        </p>
-                                        <p class="text3"><strong>${{ number_format( $job->price , 2)  }} inc gst</strong></p>
+                                    </p>
+                                       
+                                          @php
+                                                $assignedJobs = json_decode($job->assignedJob, true); 
+                                            @endphp
+                                        @if(isset($assignedJobs[0]['assigned_painter_name']) && $assignedJobs[0]['assigned_painter_name'] == auth()->id())
+                                            <p class="text3"><strong>${{ number_format(floatval($assignedJobs[0]['assign_price_job'] ?? '0'), 2) }} inc gst</strong></p>
+                                        @else
+                                            <p class="text3"><strong>${{ number_format(floatval($job->price ?? '0'), 2) }} inc gst</strong></p>
+                                        @endif
+
+
+                                      
                                         <p class="text3 bilderName " style="display: flex; align-items: center; white-space: nowrap;"><strong>
                                          @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
                                             {{ $job->admin_builders->company_name }}
@@ -259,9 +270,7 @@ header {
                        
                                   <div style="display: flex;  align-items: flex-end; margin-bottom: 5px">  
                                  
-                                            @php
-                                                $assignedJobs = json_decode($job->assignedJob, true); // Decode the JSON string into an associative array
-                                            @endphp
+                                         
 
 
                                             @if( isset($assignedJobs[0]['assigned_painter_name']) && $assignedJobs[0]['assigned_painter_name'] === auth()->id() )
@@ -288,7 +297,7 @@ header {
                     </div>
                 </div>
             </a>
-
+            
             @endforeach
         </section>
         @else
@@ -298,12 +307,45 @@ header {
        
     @endif
     </main>
+
+    <button onclick="requestPermission()">Enable Notification</button>
+
     <div style="margin: 20px 0px 300px 0px;"></div>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
       crossorigin="anonymous"
     ></script>
+    {{-- push Notification start  --}}
+
+<script>
+    // Corrected navigator object spelling
+    navigator.serviceWorker.register("/sw.js").then(registration => {
+        console.log('Service Worker registered successfully:', registration);
+    }).catch(error => {
+        console.error('Service Worker registration failed:', error);
+    });
+
+    function requestPermission() {
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+
+                sw.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: ""
+                })
+                new Notification('Permission Granted', {
+                    body: 'You can now receive notifications.'
+                });
+            } else {
+                // Permission denied or dismissed
+                console.warn('Notification permission not granted.');
+            }
+        });
+    }
+</script>
+
+    {{-- push Notification End  --}}
     <script src="{{ asset('js/script.js') }}"></script>
     <script src="./profile.js"></script>
   </body>

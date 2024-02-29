@@ -153,7 +153,7 @@ require  public_path() . '/admin/header.blade.php';
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label class="col-sm-3 control-label">Stairs stained:</label>
                             <div class="col-sm-9">
                                 <div class="form-check col-sm-6">
@@ -169,8 +169,8 @@ require  public_path() . '/admin/header.blade.php';
                                     </label>
                                 </div>
                             </div>
-                        </div>
-
+                        </div> --}}
+{{-- 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Cladding:</label>
                                 <div class="col-sm-9">
@@ -187,9 +187,9 @@ require  public_path() . '/admin/header.blade.php';
                                         </label>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                     
-                   
+{{--                    
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Render:</label>
                                 <div class="col-sm-9">
@@ -206,7 +206,7 @@ require  public_path() . '/admin/header.blade.php';
                                         </label>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                      
        
              <div id="section1"> 
@@ -431,10 +431,11 @@ require  public_path() . '/admin/header.blade.php';
                        <div class="container mt-3 po-wrap col-sm-12 group-2" id="card{{$i}}" style="display: none; border: 3px solid #ff0aba;">
                 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label">PO {{$i}}: </label>
+                            <label class="col-sm-3 control-label">PO {{$i+4}}: </label>
 
                             <div class="col-sm-9">
-                                <input name="po_item[{{$i}}][ponumber]" value="{{ old('po_item[$i][ponumber]',  count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->ponumber : '' )}}" type="text" class="form-control">
+                            
+                                <input name="po_item[{{$i+4}}][ponumber]" value="{{ old('po_item['.($i+4).'][ponumber]', count($painterjob->poItems) > ($i+3) ? $painterjob->poItems->values()[$i+3]->ponumber : '' )}}" type="text" class="form-control">
 
                             </div>
                   
@@ -444,7 +445,7 @@ require  public_path() . '/admin/header.blade.php';
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Description{{$i-4}}: </label>
                             <div class="col-sm-9">
-                                <input name="po_item[{{$i}}][description]" value="{{ old('po_item[$i][description]',  count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->description : '' )}}" type="text" class="form-control">
+                              <input name="po_item[{{$i+4}}][description]" value="{{ old('po_item['. ($i+4) .'][description]', count($painterjob->poItems) > ($i+3) && isset($painterjob->poItems[$i+3]) ? $painterjob->poItems->values()[$i+3]->description : '' )}}" type="text" class="form-control">
 
                             </div>
                         </div>
@@ -452,44 +453,39 @@ require  public_path() . '/admin/header.blade.php';
 
 
                     
-                        <div class="form-group">
+                       <div class="form-group">
                             <label class="col-sm-3 control-label">L.description{{$i-4}}: </label>
                             <div class="col-sm-9">
-                                <input name="po_item[{{$i}}][job_details]" value="{{ old('po_item[$i][job_details]',  count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->job_details : '' )}}" type="text" class="form-control">
+                                <input name="po_item[{{$i+4}}][job_details]" value="{{ old('po_item['. ($i+4) .'][job_details]', count($painterjob->poItems) > ($i+3) && isset($painterjob->poItems[$i+3]) ? $painterjob->poItems->values()[$i+3]->job_details : '' )}}" type="text" class="form-control">
                             </div>
                         </div>
-                   
 
-                  
                         <div class="form-group">
                             <label class="col-sm-3 control-label">P.O upload{{$i-4}}:</label>
                             <div class="col-sm-9">
-                                <input name="po_item[{{$i}}][file]" class="form-control form-control-lg" id="po" type="file">
-                                @if(count($painterjob->poItems) > 0 && $painterjob->poItems->values()[$i-1]->file)
-                                <a href="{{asset('/uploads/'.$painterjob->poItems->values()[$i-1]->file)}}" download>
+                                <input name="po_item[{{$i+4}}][file]" class="form-control form-control-lg" id="po" type="file">
+                                @if(count($painterjob->poItems) > 0 && isset($painterjob->poItems[$i+3]) && $painterjob->poItems->values()[$i+3]->file)
+                                <a href="{{asset('/uploads/'.$painterjob->poItems->values()[$i+3]->file)}}" download>
                                     <i class="fa-solid fa-file"></i>
                                 </a>
                                 @endif
                             </div>
                         </div>
-                   
-                  
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Price {{$i}}:
-                                {{-- inc gst --}}
-                            </label>
-                            <div class="col-sm-9">
-                            <input name="po_item[{{$i}}][price]" 
-                            value="{{ old('po_item['.$i.'][price]', count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i-1]->price : '') }}" 
-                            min="1" 
-                            max="50000000000000" 
-                            type="number" 
-                            step="0.01" 
-                            class="form-control form-control-lg"
-                             onblur="formatPrice()">
 
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Price {{$i+3}}:</label>
+                            <div class="col-sm-9">
+                                <input name="po_item[{{$i+4}}][price]" 
+                                value="{{ old('po_item['. $i .'][price]', count($painterjob->poItems) > ($i+3) && isset($painterjob->poItems[$i+3]) ? $painterjob->poItems->values()[$i+3]->price : '') }}" 
+                                min="1" 
+                                max="50000000000000" 
+                                type="number" 
+                                step="0.01" 
+                                class="form-control form-control-lg"
+                                onblur="formatPrice()">
                             </div>
                         </div>
+
                   
                             
                     </div>

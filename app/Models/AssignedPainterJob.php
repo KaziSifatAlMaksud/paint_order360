@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\BuilderModel;
 use App\Models\PainterJob;
+use App\Models\Superviser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -38,5 +39,9 @@ class AssignedPainterJob extends Model
     public function painter()
     {
         return $this->belongsTo(User::class, 'assigned_painter_name');
+    }
+    public function superviser()
+    {
+        return $this->belongsTo(Superviser::class, 'assigned_supervisor');
     }
 }
