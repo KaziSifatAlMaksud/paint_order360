@@ -248,15 +248,16 @@ header {
                                         {{ $job->builder_company_name }}
                                         @endif
                                     </p>
-                                       
-                                          @php
-                                                $assignedJobs = json_decode($job->assignedJob, true); 
-                                            @endphp
-                                        @if(isset($assignedJobs[0]['assigned_painter_name']) && $assignedJobs[0]['assigned_painter_name'] == auth()->id())
-                                            <p class="text3"><strong>${{ number_format(floatval($assignedJobs[0]['assign_price_job'] ?? '0'), 2) }} inc gst</strong></p>
+                                      
+                                      
+                                            
+                                      @if(isset($job->assignedJob) && $job->assignedJob->assigned_painter_name == auth()->id())
+                                            <p class="text3"><strong>${{ number_format(floatval($job->assignedJob->assign_price_job ?? '0'), 2) }} inc gst</strong></p>
                                         @else
                                             <p class="text3"><strong>${{ number_format(floatval($job->price ?? '0'), 2) }} inc gst</strong></p>
                                         @endif
+
+
 
 
                                       
@@ -267,13 +268,14 @@ header {
                                         </strong>                                       
                                         </p>
                                 </div>
+
                        
                                   <div style="display: flex;  align-items: flex-end; margin-bottom: 5px">  
                                  
                                          
 
 
-                                            @if( isset($assignedJobs[0]['assigned_painter_name']) && $assignedJobs[0]['assigned_painter_name'] === auth()->id() )
+                                             @if($job->assign_painter && $job->assignedJob->assigned_painter_name == auth()->id())
                                                 <div class="red-dot" style="background: green;"></div>
                                             @endif
 
@@ -281,6 +283,8 @@ header {
                                             <div class="red-dot"></div>
                                         @endif
                                   </div>
+
+                                
 
                                 <div style="align-self: flex-end; margin-bottom:-6px;">
                                    
@@ -299,6 +303,7 @@ header {
             </a>
             
             @endforeach
+           
         </section>
         @else
            <div class="alert alert-success">
@@ -307,6 +312,7 @@ header {
        
     @endif
     </main>
+
 
     <button onclick="requestPermission()">Enable Notification</button>
 

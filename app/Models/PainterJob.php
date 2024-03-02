@@ -119,8 +119,11 @@ class PainterJob extends Model
     }
     public function assignedJob()
     {
-        return $this->hasMany(AssignedPainterJob::class, 'assigned_painter_name', 'assign_painter');
+        return $this->belongsTo(AssignedPainterJob::class, 'id', 'job_id');
     }
+
+
+
 
     /**
      * Get the painter for the job.

@@ -409,7 +409,7 @@ header {
                 
                 <img
                 class="company-logo" 
-                  src="/uploads/{{$job->painter->photo ?  $job->painter->photo  : ''}}"
+                  src="/uploads/  "
                   style="height: 60px;"
                 />
 
@@ -467,7 +467,7 @@ header {
 
           <!-- ------ Assign Painter ----- -->
 
-       @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
+        @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
 
           <div id="paint-content" class="content">
          
@@ -523,12 +523,7 @@ header {
               <div id="successAlert" class="alert alert-success">
                   {{ session('success') }}
               </div>
-          @endif
-
-
-
-            
-              
+          @endif              
             </div>
           </div>
 
@@ -567,7 +562,7 @@ header {
     </section>
 
     <!-- ====== job view1 ====== -->
-    <section class="view1 mt-4">
+    <section class="view1 mt-4" style="display:block;">
       <div class="row service-box justify-content-between mx-3">
         <!-- 1 -->
         <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}" style="text-decoration: none;">
@@ -659,9 +654,8 @@ header {
              </a>
         </div>
         <!-- 4 -->
-
-        <div class="service-box-single col-6 mb-3 px-0">
-          @if($job->assign_painter)
+        @if($job->assign_painter && $job->user_id == auth()->id())
+          <div class="service-box-single col-6 mb-3 px-0">         
             <form id="UnassignJobForm" action="{{ route('painterjob.unassign', $job->id) }}" method="POST"> 
               @csrf       
               @method('DELETE') 
@@ -678,8 +672,12 @@ header {
                   </div>
                 </div>
               </div>
-            </form> 
+            </form>
+                   </div>
+          @elseif($job->assign_painter && $job->assignedJob->assigned_painter_name == auth()->id())
+
           @else
+             <div class="service-box-single col-6 mb-3 px-0">    
            <a href="{{ route('assign_painter_info', ['id' => $job->id]) }}" style="text-decoration:none">
               <div class="custom-card custom-border card h-100 rounded-4">
                 <div class="card-body px-1">
@@ -695,10 +693,10 @@ header {
                 </div>
               </div>
               </a>
-            
+             </div>
           @endif
           
-        </div>
+ 
 
         <!-- 5 -->
        
@@ -858,7 +856,7 @@ header {
     </section>
 
     <!-- view2 -->
-    <section class="view2 mt-4">
+    <section class="view2 mt-4" style="display: none;">
         <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}" style="text-decoration: none;">
       <div class="row service-box gap-2 mx-3">
         <div class="service-col col-3 mb-3 px-0">
@@ -877,6 +875,7 @@ header {
         </a>
         </div>
         <!-- 2 -->
+      @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
         <div class="service-col col-3 mb-3 px-0">
           <div class="custom-card card custom-border rounded-4">
             <div class="card-body px-1 py-2 d-flex justify-content-center">
@@ -891,6 +890,25 @@ header {
             </div>
           </div>
         </div>
+       @endif
+      @if($assign_job ? $assign_job->assigned_painter_name == auth()->id() : '')
+        <div class="service-col col-3 mb-3 px-0">
+            <a href="tel:{{ $job->painter->phone ? $job->painter->phone : '' }}" style="text-decoration: none;">
+          <div class="custom-card card custom-border rounded-4">
+            <div class="card-body px-1 py-2 d-flex justify-content-center">
+              <div
+                class="d-flex flex-column justify-content-center align-items-center gap-1"
+              >
+                <img src="/image/icon1/190034-200 1.png" style="height: 40px" />
+                <div>
+                  <h6 class="mb-0">Boss</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+            </a>
+        </div>
+       @endif
         <!-- 3 -->
         <div class="service-col col-3 mb-3 px-0">
         <a href="{{ route('show_on_map',['id'=> $job->id]) }}" style="text-decoration:none">
@@ -912,8 +930,11 @@ header {
         </a>
         </div>
         <!-- 4 -->
-        <div class="service-col col-3 mb-3 px-0">
-           @if($job->assign_painter)
+
+
+
+        @if($job->assign_painter && $job->user_id == auth()->id())
+        <div class="service-col col-3 mb-3 px-0">           
             <form id="UnassignJobForm" action="{{ route('painterjob.unassign', $job->id) }}" method="POST"> 
               @csrf       
               @method('DELETE') 
@@ -930,24 +951,27 @@ header {
                   </div>
                 </div>
              </form>
-
-            @else
+           
+        </div>
+         @elseif($job->assign_painter && $job->assignedJob->assigned_painter_name == auth()->id())
+         @else
+          <div class="service-col col-3 mb-3 px-0">           
               <a href="{{ route('assign_painter_info', ['id' => $job->id]) }}" style="text-decoration:none">
-                <div class="custom-card card custom-border rounded-4">
-                  <div class="card-body px-1 py-2 d-flex justify-content-center">
-                    <div
-                      class="d-flex flex-column justify-content-center align-items-center gap-1"
-                    >
-                      <img src="/image/icon1/image 477.png" style="height: 40px" />
-                      <div class="text-center">
-                        <h6 class="mb-0">Assign</h6>
+                  <div class="custom-card card custom-border rounded-4">
+                    <div class="card-body px-1 py-2 d-flex justify-content-center">
+                      <div
+                        class="d-flex flex-column justify-content-center align-items-center gap-1"
+                      >
+                        <img src="/image/icon1/image 477.png" style="height: 40px" />
+                        <div class="text-center">
+                          <h6 class="mb-0">Assign</h6>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                </a>
-            @endif
-        </div>
+                  </a>           
+          </div>      
+        @endif
         <!-- 5 -->
         <div class="service-col col-3 mb-3 px-0">
             <a href="{{ route('jobs.files', ['id' => $job->id]) }}" style="text-decoration:none">
@@ -1086,17 +1110,25 @@ header {
     </section>
 
     <div class="px-3 d-flex flex-column align-items-center gap-3 mb-4">
-       <form id="deleteJobForm" action="{{ route('painterjob.delete', $job->id) }}" method="POST" style="width: 100%;">  
+          @if(isset($job->assignedJob) && $job->assignedJob->assigned_painter_name == auth()->id())
+            <form id="UnassignJobForm" action="{{ route('painterjob.unassign', $job->id) }}" method="POST" style="width: 100%;"> 
+              @csrf       
+              @method('DELETE') 
+            <button type="button" class="btn btn-danger w-100 border-white border-2 rounded-3 shadow-sm"  onclick="confirmUnassign()">
+              <span class="fw-bold fs-5">Delete This Job</span>
+              <p class="mb-0">Delete this entire assign job file</p>
+            </button>
+            </form>
+         @else
+            <form id="deleteJobForm" action="{{ route('painterjob.delete', $job->id) }}" method="POST" style="width: 100%;">  
             @csrf       
             @method('DELETE')
             <button type="button" class="btn btn-danger w-100 border-white border-2 rounded-3 shadow-sm" onclick="confirmAndSubmit()">
               <span class="fw-bold fs-5">Delete This Job</span>
               <p class="mb-0">Delete this entire job file</p>
             </button>
-
-
-       </form>
-
+            </form> 
+         @endif
       <button
         type="button"
         class="btn btn-sm btn-light shadow-sm w-50 fw-medium"
