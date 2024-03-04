@@ -257,6 +257,7 @@ Route::group(['middleware' => ['auth:admin'], 'as' => 'admins.', 'prefix' => 'ad
 	// Route::delete('assign_builder/{customerId}', [::class, 'delete'])->name('customer.destroy');
 
 	Route::resource('admin_builder', BuilderController::class);
+
 	Route::get('', array('uses' => 'AdminController@shops'))->name('shops');
 });
 

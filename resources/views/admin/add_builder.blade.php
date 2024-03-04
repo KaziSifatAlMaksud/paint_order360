@@ -18,9 +18,10 @@ require  public_path() . '/admin/header.blade.php';
                         <label class="col-sm-3 control-label">Icon Image</label>
                        
                         <div class="col-sm-9">
-                            <input type="file" accept="image/*"  class="form-control" name="icon_img">
+                            <input type="file" class="form-control"  id="img_log" name="img_log">
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Company Name </label>
                         @if ($errors->has('company_name'))

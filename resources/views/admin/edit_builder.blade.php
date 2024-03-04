@@ -15,9 +15,9 @@ require  public_path() . '/admin/header.blade.php';
                     @csrf
                              <!-- Icon Image Upload Field -->
                    <div class="form-group row"> <!-- Added row class for proper alignment with Bootstrap if you're using it -->
-                        <label for="icon_img" class="col-sm-3 col-form-label">Icon Image</label> <!-- Added 'for' attribute and updated class to 'col-form-label' -->
+                        <label for="img_log" class="col-sm-3 col-form-label">Icon Image</label> <!-- Added 'for' attribute and updated class to 'col-form-label' -->
                         <div class="col-sm-9">
-                            <input type="file" class="form-control"  name="icon_img" id="icon_img">
+                            <input type="file" class="form-control" value="{{old('img_log',$builders->img_log)}}" name="img_log" id="img_log">
                         </div>
                     </div>
 

@@ -25,6 +25,7 @@ class BuilderModel extends Model
         'schedule',
 
     ];
+
     protected $table = 'admin_builders';
 
     /**

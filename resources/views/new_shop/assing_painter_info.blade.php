@@ -405,7 +405,7 @@ header {
                     <select name="assigned_painter_name" id="assigned_painter_name" class="custom-input">
                         <option value="" selected>Select an option</option>
                         @foreach ($users as $user)
-                            <option value="{{ $user->id }}" {{ old('assigned_painter_name', $job->user_id) == $user->id ? 'selected' : '' }}>{{ $user->first_name }} - {{ $user->company_name }}</option>
+                            <option value="{{ $user->id }}" >{{ $user->first_name }} - {{ $user->company_name }}</option>
                         @endforeach
                     </select>
                 </div>
