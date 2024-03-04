@@ -13,10 +13,25 @@ require  public_path() . '/admin/header.blade.php';
             <div class="row">
                 <form id="add_builder" action="javascript:void(0)">
                     @csrf
+                             <!-- Icon Image Upload Field -->
+                   <div class="form-group row"> <!-- Added row class for proper alignment with Bootstrap if you're using it -->
+                        <label for="img_log" class="col-sm-3 col-form-label">Icon Image</label> <!-- Added 'for' attribute and updated class to 'col-form-label' -->
+                        <div class="col-sm-9">
+                            <input type="file" class="form-control" value="{{old('img_log',$builders->img_log)}}" name="img_log" id="img_log">
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Company Name </label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="company_name" value="{{old('company_name',$builders->company_name)}}" placeholder="Company Name" required>
+                        </div>
+                    </div>
+                      <div class="form-group">
+                        <label class="col-sm-3 control-label">Builder Name </label>
+                   
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="builder_name" value="{{old('builder_name',$builders->builder_name)}}" placeholder="Builder Name" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -98,7 +113,7 @@ require  public_path() . '/admin/header.blade.php';
 <?php
 require  public_path() . '/admin/footer.blade.php';
 ?>
-<script>
+ <script>
     $(document).on('click', '.builder-update-button', function(e) {
         var id = $(this).data("builder-id");
         var url = "{{route('admins.admin_builder.update',['admin_builder' =>'_id_'])}}";

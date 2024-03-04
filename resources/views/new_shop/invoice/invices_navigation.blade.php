@@ -97,7 +97,7 @@
                 </div>
                 
                 <div class="docs_right" style="padding: 0px!important; margin: 0px; ">
-                    <img src="/image/icon1/dfdf.png" >
+                    <img src="/image/icon1/l-invoice.png" >
                 </div>
             </div>
         </a> 
@@ -115,7 +115,7 @@
                 </div>
                 
                 <div class="docs_right" style="padding: 0px!important; margin: 0px; ">
-                    <img src="/image/icon1/dfdf.png" >
+                    <img src="/image/icon1/report.png" >
                 </div>
             </div>
         </a> 

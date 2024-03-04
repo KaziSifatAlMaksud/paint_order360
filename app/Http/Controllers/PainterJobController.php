@@ -9,10 +9,13 @@ use App\Models\Order;
 use App\Models\PjItem;
 use App\Models\Builder;
 use App\Models\PoItems;
+use App\Models\PoItem;
+
 use App\Models\PainterJob;
 use App\Models\Superviser;
 use App\Models\BuilderModel;
-
+use App\Models\AssignedPainterJob;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -91,6 +94,7 @@ class PainterJobController extends Controller
      */
     public function create()
     {
+        $assign_painter = null;
         $painterJob = new PainterJob();
         // $buliders =  Builder::whereNotNull('name')->orderBy('name')->get();
         $data['inside'] = [];
@@ -103,6 +107,7 @@ class PainterJobController extends Controller
         return view('admin.painter_jobs.add', [
             'data' => $data, 'users' => $users, 'supervisors' => $supervisors, 'order' => $order, 'brands' => $brands, 'admin_buliders' => $admin_buliders, 'painterjob' => $painterJob,
             // 'buliders' => $buliders, 
+            'assign_painter' => $assign_painter,
             'outside' => $this->outside, 'inside' => $this->inside
         ]);
     }
@@ -113,6 +118,29 @@ class PainterJobController extends Controller
         $job = PainterJob::find($id);
         $job->delete();
         return redirect()->route('main')->with('success', 'Job deleted successfully.');
+    }
+
+    public function acceptJob($id)
+    {
+        $Assjob = AssignedPainterJob::find($id);
+        $Assjob->status = 2;
+        $Assjob->save();
+        return redirect()->route('main')->with('success', 'Job is Accepted Successfully.');
+    }
+
+    public function unassign($id)
+    {
+        $job = PainterJob::find($id);
+        $assign_job = AssignedPainterJob::where('job_id', $id)->first();
+
+        if ($job) {
+            $job->assign_painter = null;
+            $job->save();
+        }
+        if ($assign_job) {
+            $assign_job->delete();
+        }
+        return redirect()->route('main')->with('success', 'Job unassigned successfully.');
     }
 
     public function finishjob($id)
@@ -138,8 +166,6 @@ class PainterJobController extends Controller
      */
     public function store(Request $request)
     {
-        // $order = Order::where('id', $request->order_id)->first();
-
         $request->merge(['status' => 1]);
         $painterjob = new PainterJob();
         $data = $request->only($painterjob->getFillable());
@@ -152,7 +178,22 @@ class PainterJobController extends Controller
         if ($request->has('company_id')) {
             $painterjob->builder_id = $request->company_id;
         }
+        if ($request->has('assigned_painter_name')) {
+            $painterjob->assign_painter = $request->assigned_painter_name;
+        }
+
+
         $painterjob->fill($data)->save();
+        if ($request->has('assigned_painter_name')) {
+            AssignedPainterJob::create([
+                'assigned_painter_name' => $request->assigned_painter_name,
+                'assign_company_id' => $request->assign_company_id,
+                'assigned_supervisor' => $request->assigned_supervisor,
+                'assign_price_job' => $request->assign_price_job,
+                'assign_job_description' => $request->assign_job_description,
+                'job_id' => $painterjob->id,
+            ]);
+        }
         if ($request->inside) {
             foreach ($request->inside as $oskey => $osvalue) {
                 if ($osvalue['product']) {
@@ -214,6 +255,7 @@ class PainterJobController extends Controller
         foreach ($items as  $item) {
             $data[$item->type][$item->key] = $item;
         }
+        $assign_painter = AssignedPainterJob::where('job_id', $painterJob->id)->first();
         $painterJob->load('poItems');
         $buliders =  Builder::whereNotNull('name')->orderBy('name')->get();
         $brands = Brand::all();
@@ -222,7 +264,7 @@ class PainterJobController extends Controller
         $admin_buliders = BuilderModel::all();
         $supervisors = Superviser::all();
 
-        return view('admin.painter_jobs.add', ['data' => $data, 'order' => $order, 'admin_buliders' => $admin_buliders,  'supervisors' => $supervisors, 'users' => $users, 'brands' => $brands, 'painterjob' => $painterJob, 'buliders' => $buliders, 'outside' => $this->outside, 'inside' => $this->inside, 'items' => $items]);
+        return view('admin.painter_jobs.add', ['data' => $data, 'order' => $order, 'admin_buliders' => $admin_buliders,   'assign_painter' => $assign_painter,  'supervisors' => $supervisors, 'users' => $users, 'brands' => $brands, 'painterjob' => $painterJob, 'buliders' => $buliders, 'outside' => $this->outside, 'inside' => $this->inside, 'items' => $items]);
     }
 
     /**
@@ -234,63 +276,82 @@ class PainterJobController extends Controller
      */
     public function update(Request $request, PainterJob $painterJob)
     {
-        $data = $request->only($painterJob->getFillable());
-        $this->manageFile($request, 'po', $data, $painterJob);
-        $this->manageFile($request, 'colors', $data, $painterJob);
-        $this->manageFile($request, 'plan', $data, $painterJob);
-        $this->manageFile($request, 'colors_secound', $data, $painterJob);
-        $this->manageFile($request, 'colors_spec', $data, $painterJob);
-        $this->manageFile($request, 'plan_granny', $data, $painterJob);
 
-        if ($request->has('company_id')) {
-            $painterJob->builder_id = $request->company_id;
-        }
+        try {
+            $data = $request->only($painterJob->getFillable());
+            $this->manageFile($request, 'po', $data, $painterJob);
+            $this->manageFile($request, 'colors', $data, $painterJob);
+            $this->manageFile($request, 'plan', $data, $painterJob);
+            $this->manageFile($request, 'colors_secound', $data, $painterJob);
+            $this->manageFile($request, 'colors_spec', $data, $painterJob);
+            $this->manageFile($request, 'plan_granny', $data, $painterJob);
 
 
-        $painterJob->fill($data)->save();
-        $painterJob->items()->delete();
-        if ($request->inside) {
-            foreach ($request->inside as $oskey => $osvalue) {
-                if ($osvalue['product']) {
-                    $pjItem = new PjItem();
-                    $osvalue['job_id'] = $painterJob->id;
-                    $osvalue['key'] = $oskey;
-                    $pjItem->fill($osvalue)->save();
+            if ($request->has('company_id')) {
+                $painterJob->builder_id = $request->company_id;
+            }
+            if ($request->has('assigned_painter_name')) {
+                $painterJob->assign_painter = $request->assigned_painter_name;
+            }
+
+
+            $painterJob->fill($data)->save();
+            $painterJob->items()->delete();
+            if ($request->inside) {
+                foreach ($request->inside as $oskey => $osvalue) {
+                    if ($osvalue['product']) {
+                        $pjItem = new PjItem();
+                        $osvalue['job_id'] = $painterJob->id;
+                        $osvalue['key'] = $oskey;
+                        $pjItem->fill($osvalue)->save();
+                    }
                 }
             }
-        }
-        if ($request->outside) {
-            foreach ($request->outside as $oskey => $osvalue) {
-                if ($osvalue['product']) {
-                    $pjItem = new PjItem();
-                    $osvalue['job_id'] = $painterJob->id;
-                    $osvalue['type'] = 'outside';
-                    $osvalue['key'] = $oskey;
-                    $pjItem->fill($osvalue)->save();
+
+
+            if ($request->outside) {
+                foreach ($request->outside as $oskey => $osvalue) {
+                    if ($osvalue['product']) {
+                        $pjItem = new PjItem();
+                        $osvalue['job_id'] = $painterJob->id;
+                        $osvalue['type'] = 'outside';
+                        $osvalue['key'] = $oskey;
+                        $pjItem->fill($osvalue)->save();
+                    }
                 }
             }
-        }
-        if ($request->po_item) {
-            foreach ($request->po_item as $pokey => $povalue) {
-                $poItem = PoItems::where(['job_id' => $painterJob->id, 'batch' => $pokey])->first();
-                if (!$poItem) {
-                    $poItem = new PoItems();
+            if ($request->po_item) {
+                foreach ($request->po_item as $pokey => $povalue) {
+                    $poItem = PoItems::where(['job_id' => $painterJob->id, 'batch' => $pokey])->first();
+                    if (!$poItem) {
+                        $poItem = new PoItems();
+                    }
+                    $povalue['job_id'] = $painterJob->id;
+                    $povalue['batch'] = $pokey;
+                    $this->manageFile($request, "po_item.$pokey.file", $povalue, $poItem, 'file');
+                    $poItem->fill($povalue)->save();
                 }
-                $povalue['job_id'] = $painterJob->id;
-                $povalue['batch'] = $pokey;
-                $this->manageFile($request, "po_item.$pokey.file", $povalue, $poItem, 'file');
-                $poItem->fill($povalue)->save();
             }
+
+            // Update or Create logic for AssignedPainterJob
+            $assignedPainterJob = AssignedPainterJob::firstOrNew(['job_id' => $painterJob->id]); // Assuming 'job_id' is the correct identifier
+            $assignedPainterJob->fill($request->only(['assigned_painter_name', 'assign_company_id', 'assigned_supervisor', 'assign_price_job', 'job_description']))->save();
+            DB::commit();
+            Session::flash('message', 'PainterJob updated successfully');
+            Session::flash('alert-class', 'alert-success');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            // Handle the exception
+            Session::flash('message', 'Update failed: ' . $e->getMessage());
+            Session::flash('alert-class', 'alert-danger');
         }
-        Session::flash('message', 'PainterJob updated successfully');
-        Session::flash('alert-class', 'alert-success');
         return redirect()->route("admins.painterJob.index");
     }
 
-    public function PoItems()
-    {
-        return $this->hasMany(PoItem::class, 'job_id');
-    }
+    // public function PoItems()
+    // {
+    //     return $this->hasMany(PoItem::class, 'job_id');
+    // }
 
     /**
      * Remove the specified resource from storage.

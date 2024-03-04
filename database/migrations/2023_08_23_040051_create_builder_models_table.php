@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('admin_builders', function (Blueprint $table) {
             $table->id();
-            $table->string('company_name');
+            $table->string('company_name')->nullable();
             $table->string('builder_email')->unique();
             $table->enum('account_type', ['painter', 'builder']);
             $table->string('phone_number');

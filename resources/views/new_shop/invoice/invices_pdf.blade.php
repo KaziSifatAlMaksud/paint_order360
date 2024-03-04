@@ -168,7 +168,8 @@
                     <tr>
                         <td> <span style="color: #5086e6 !important;">{{$job_details}} </span>  </td>
                         <td class="text-right">$
-                            {{$amount}}
+                         
+                              {{ number_format($amount, 2) }}
                         </td>
                     </tr>
                     <tr>
@@ -183,20 +184,23 @@
                     <tr>
                         <td class="text-right">Amount:</td>
                         <td class="text-right">$
-                            {{$amount}}
+                      
+                              {{ number_format($amount, 2) }}
                         </td>
                     </tr>
 
                     <tr>
                         <td class="text-right">Gst:</td>
                         <td class="text-right">$
-                            {{$gst}}
+                            {{ number_format($gst, 2) }}
+                      
                         </td>
                     </tr>
                     <tr>
                         <td class="text-right"><b>Balance Due:</b></td>
                         <td class="text-right"><b> $
-                                {{$total_due}}
+                             
+                                  {{ number_format($total_due, 2) }}
                             </b></td>
                     </tr>
                 </tbody>

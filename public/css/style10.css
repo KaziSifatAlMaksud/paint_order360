@@ -13,12 +13,20 @@ Global Style
 body {
   background-color: #e6e6e6;
   font-family: "Inter", sans-serif;
-  font-size: 12px;
+  /* font-size: 12px; */
   font-weight: 400;
   font-style: normal;
   font-variation-settings: "slnt" 0;
 }
 
+.custom-input {
+  background-color: var(--body-bg);
+  border: none;
+  border-bottom: 2px solid #ccced1;
+  padding: 5px;
+  outline: none;
+  width: 100%;
+}
 :root {
   --clr: #222327;
   --bg: #f5f5f5;
@@ -38,6 +46,15 @@ body {
   border: 3px solid #E8E6E6;
   box-shadow: 1.5px 2px 2px #b8b9b8;
 }
+.showinline{
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  font-weight: bold;
+  text-overflow: ellipsis;
+
+}
+
 
 /* 
 ====================
@@ -65,7 +82,7 @@ Profile Page Style
   cursor: pointer;
 }
 .nav-bar div p {
-  font-size: 25px;
+  font-size: 15px;
   font-weight: 600;
 }
 
@@ -163,7 +180,7 @@ Profile Page Style
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
   .nav-bar div .arrow {
-    height: 30px;
+    height: 15px;
     cursor: pointer;
   }
   .nav-bar div .logo {
@@ -171,7 +188,7 @@ Profile Page Style
     cursor: pointer;
   }
   .nav-bar div p {
-    font-size: 30px;
+    font-size: 15px;
     font-weight: bold;
   }
 
@@ -285,7 +302,7 @@ Profile Page Style
     cursor: pointer;
   }
   .nav-bar div p {
-    font-size: 40px;
+    font-size: 18px;
     font-weight: bold;
   }
 
@@ -573,9 +590,10 @@ See-Invoice Page Style
   margin: 0 10px;
   line-height: 1;
   transition: all 0.3s ease-in-out;
-  flex: 1; /* Distribute space evenly */
-} */
+  flex: 1; /* Distribute space evenly 
+}
 
+*/
 /* .portfolio-flters li:hover, */
 /* .portfolio-flters li.filter-active {
   color: #f5f5f5;
@@ -611,9 +629,9 @@ See-Invoice Page Style
 .status {
   font-size: 16px;
   margin: 10px;
-  padding: 5px 10px;
   border-radius: 100px;
   background-color: #ff9800;
+ 
 }
 .status a {
   color: #f5f5f5;
@@ -624,7 +642,7 @@ See-Invoice Page Style
 .status-sent {
   font-size: 16px;
   margin: 10px;
-  padding: 4px 20px;
+  padding: 0px 1px;
   border-radius: 100px;
   background-color: #009EB4;
 }
@@ -648,7 +666,7 @@ See-Invoice Page Style
 .status-paid {
   font-size: 16px;
   margin: 10px;
-  padding: 4px 20px;
+  padding: 0px 1px;
   border-radius: 100px;
   background-color: #07C607;
 }
@@ -676,7 +694,7 @@ See-Invoice Page Style
   padding: 10px 10px;
   border-radius: 13px; 
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-  margin-bottom: 30px;
+  margin-bottom: 15px;
 }
 
 .docs_prt1 {
@@ -764,8 +782,8 @@ job Page Style
 
 .status-new {
   font-size: 16px;
-  margin: 10px;
-  padding: 4px 20px;
+  margin-left: -20px;
+  padding: 0px 1px;
   border-radius: 100px;
   background-color: var(--orange);
 }
@@ -777,7 +795,7 @@ job Page Style
 .status-finished {
   font-size: 16px;
   margin: 10px;
-  padding: 4px 20px;
+  padding: 0px 1px;
   border-radius: 100px;
   background-color: #0085FF;
 }
@@ -789,7 +807,7 @@ job Page Style
 .status-started {
   font-size: 16px;
   margin: 10px;
-  padding: 4px 20px;
+  padding: 0px 1px;
   border-radius: 100px;
   background-color: #17AA1D;
 }

@@ -12,7 +12,9 @@ class BuilderModel extends Model
 
     protected $fillable =
     [
+        'icon_img',
         'company_name',
+        'builder_name',
         'builder_email',
         'account_type',
         'phone_number',
@@ -21,7 +23,9 @@ class BuilderModel extends Model
         'brand_id',
         'gate',
         'schedule',
+
     ];
+
     protected $table = 'admin_builders';
 
     /**

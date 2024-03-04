@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company Name</title>
+    <title>| Job Details</title>
      <link rel="stylesheet" href="{{ asset('css/style10.css') }}">  
   <link
       rel="stylesheet"
@@ -19,7 +19,10 @@
       integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
       crossorigin="anonymous"
     />
+ <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
     <style>
+      
 
 :root {
     --clr: #222327;
@@ -47,6 +50,56 @@ header {
     margin-bottom: 10px;
     z-index: 10;
 }
+
+
+/* job confrom notification start */
+ .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 1; 
+      left: 0;
+      top: 0;
+      width: 100%; 
+      height: 100%; 
+      overflow: auto; 
+      background-color: rgba(0,0,0,0.4);
+      backdrop-filter: blur(5px); 
+  }
+  
+  .modal-content {
+      background-color: #fefefe;
+      padding: 20px;
+      border: 1px solid #888;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); 
+      width: 80%; 
+      max-width: 600px;
+      position: relative; 
+      margin: 10% auto; 
+  }
+  
+  .close {
+      color: #a00;
+      margin: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      position: absolute;
+      top: -10px;
+      right: 0;
+      border-radius: 20%;
+      padding: 5px;
+      cursor: pointer;
+      transition: color 0.3s;
+      z-index: 10;
+  }
+  
+  
+  .close:hover,
+  .close:focus {
+      color: black;
+      text-decoration: none;
+      transform: scale(1.1); 
+  }
+/* job confrom notification end */
 
 
 .header-row {
@@ -156,6 +209,10 @@ header {
     opacity: 1;
     transform: translateY(10px);
 }
+.viewUp{
+  display: block;
+  z-index: 2;
+}
 
 /* Navigation End Update*/
 
@@ -167,14 +224,10 @@ header {
 
 
 <body> 
-  
-
-
-
 		<header>
 			<div class="header-row">
 				<div class="header-item">
-				 <a href="<?php echo '/main' ?>"> <i class="fa-solid fa-arrow-left"></i> </a>	
+				 <a href="<?php echo '/main' ?>" style="color:#222327;"> <i class="fa-solid fa-arrow-left"></i> </a>	
 					<span> View Job </span>
 					<a href="<?php echo '/main' ?>">   <img src="/image/logo-phone.png" alt="Logo"> </a>   
 				</div>
@@ -183,9 +236,76 @@ header {
 
         @include('layouts.partials.footer')  
     
+@php
+    $assign_job_info = json_decode($assign_job);
+@endphp
 
     <!-- slider -->
-    <section class="nav-bar" style="padding: 110px 0px 20px 0px;">
+<section class="nav-bar" style="padding: 110px 0px 20px 0px;">
+
+   @if( $assign_job && $assign_job->assigned_painter_name == auth()->id() && $assign_job->status === 1)
+
+     <div id="amountNotesModal" class="modal mt-5 pt-4 mb-5 viewUp">
+
+      <div class="modal-content">
+          <span class="close">&times;</span>
+                
+              <div id="job-content" class="content active">
+                <div class="py-2 ">
+                  <h3>New Job</h3>
+                  <p > {{$job->address ? $job->address : ''}} </p>
+                  <p> <b> Start Date: </b>  {{ $job->start_date ? date('d, F Y', strtotime($job->start_date)) : '' }} </p>
+                   <p><b>From: </b> {{$job->painter->first_name ? $job->painter->first_name . " " . $job->painter->last_name : ''}} <br>
+
+                 <b>Company: </b> {{$job->painter->company_name ? $job->painter->company_name : '' }} <br>
+                 <b>Supervisor: </b>{{$job->superviser->name ? $job->superviser->name : '' }}  </p>
+                </div>
+           
+                <div class="d-flex gap-2 justify-content-between">
+                  <div class="d-flex flex-column gap-2">                 
+                    <div>
+                      <p>
+                        <b>Job Details: </b> <br>
+                        {{$job->builder_company_name ? $job->builder_company_name : ''}}
+
+                      </p>
+                        <p>
+                        <b>Extra Message: </b> <br>
+                        <span id="extrasMessages"></span>
+
+                      </p>
+                    </div>
+                  </div>
+                
+                </div>
+                <div>
+                  <p>
+                  </p>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-6 text-center">
+                  <form id="AcceptJobForm" action="{{ route('Accept.Job', $assign_job->id) }}" method="POST" style="width: 100%;">  
+                    @csrf       
+                    @method('DELETE')  
+                          <button type="button" class="btn btn-success btn-lg" onclick="confimtoAccept()">Yes</button>
+                  </form> 
+
+                </div>
+                <div class="col-6 text-center">
+                <form id="UnassignJobForm" action="{{ route('painterjob.unassign', $job->id) }}" method="POST"> 
+                  @csrf       
+                  @method('DELETE') 
+                  <button class="btn btn-danger btn-lg nobtn" onclick="denyjob()">No</button>
+                  
+                </form>
+                </div>
+              </div>
+      </div>
+    </div>
+
+   @endif
+
 
 {{-- Photo Gallary.. --}}
 <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
@@ -232,33 +352,33 @@ header {
     <section>
       <div class="custom-border card mx-3  rounded-4">
         <div class="card-body">
-          <div
-            class="job-btn d-flex align-items-center justify-content-between toggle-card"
-            style="height: 60px"
-          >
-            <div class="d-flex flex-column align-items-center" id="job">
-              <img
-                src="/image/icon1/details-icon-png-cc-by-3-0--it-1 1.png"
-                alt="job.png"
-              />
-              <p>Job Detail</p>
-            </div>
-            <div
-              class="painter-btn d-flex flex-column align-items-center"
-              id="paint"
-            >
-              <img src="/image/icon1/25581 1.png" alt="job.png" />
-              <p>Assign Painter</p>
-            </div>
-            <div class="d-flex flex-column align-items-center" id="page">
-              <img src="/image/icon1/download 39.png" alt="job.png" />
-              <p>Profit Page</p>
-            </div>
-          </div>
-          <hr />
+
+           @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
+              <div
+                class="job-btn d-flex align-items-center justify-content-between toggle-card"
+                style="height: 60px">
 
 
-
+                <div class="d-flex flex-column align-items-center active" id="job">
+                  <img
+                    src="/image/icon1/details-icon-png-cc-by-3-0--it-1 1.png"
+                    alt="job.png"
+                  />
+                  <p>Job Detail</p>
+                </div>
+                <div class="painter-btn d-flex flex-column align-items-center "
+                  id="paint">
+                  <img src="/image/icon1/25581 1.png" alt="job.png" />
+                  <p>Assign Painter</p>
+                </div>
+                <div class="d-flex flex-column align-items-center" id="page">
+                  <img src="/image/icon1/download 39.png" alt="job.png" />
+                  <p>Profit Page</p>
+                </div>
+              </div>
+              <hr />
+          @endif
+  
 
           <!-- ----- Job detail------ -->
           <div id="job-content" class="content active">
@@ -269,7 +389,12 @@ header {
               <div class="d-flex flex-column gap-2">
                 <div class="d-flex align-items-center gap-2">
                   <img src="/image/icon1/126169 1.png" style="height: 25px" />
-                  <p class="mb-0">$ {{ number_format( $job->price , 2)  }} inc gst</p>
+                 @if($assign_job && $assign_job->assigned_painter_name && $assign_job->assigned_painter_name == auth()->id())
+                      <p class="mb-0">$ {{ number_format($assign_job->assign_price_job ?? 0, 2) }} inc gst</p>
+                  @else
+                     <p class="mb-0">$ {{ number_format( $job->price , 2)  }} inc gst</p>
+                    @endif
+                
                 </div>
                 <div class="d-flex align-items-center gap-2">
                   <img src="/image/icon1/4793321 1.png" style="height: 25px" />
@@ -280,27 +405,51 @@ header {
                   <p class="mb-0"> {{$job->house_size}}</p>
                 </div>
               </div>
-              <div class="d-flex flex-column align-items-center">
+              <div class="d-flex flex-column align-items-center" >
+                
                 <img
-                class="company-logo"
-                  src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png"
-                  style="height: 30px"
+                class="company-logo" 
+                  src="/uploads/  "
+                  style="height: 60px;"
                 />
-                <p>Gate Code:  @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
-                                                    {{ $job->admin_builders->gate }}
-                                    @endif 
-                                   
+
+
+     
+      
+                @if(isset($assign_job_info->admin_builder) && isset($assign_job_info->assigned_painter_name) && $assign_job_info->assigned_painter_name == auth()->id())
+                     <p> <b> Gate Code: </b>  {{ $assign_job_info->admin_builder->gate }}  <br>
+                          <b> Supervisor : </b> 
+
+                         
+                         @if(isset($assign_job) && isset($assign_job->superviser->name))
+
+                              {{ $assign_job->superviser->name }}
+                          @else
+                              {{ '' }}
+                          @endif
                   </p>
-                <p class="text-center">Supervisor :
-                   @if($job->superviser)
-                     {{ $job->superviser->name }}
-                     @elseif($job->supervisor)
-                     {{ $job->supervisor->name }}
-                    @else
-                        {{''}}
-                    
-                    @endif
-                </p>
+               @else
+                            
+                              <p> <b> Gate Code: </b>   @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
+                                                                  {{ $job->admin_builders->gate }}
+                                                  @endif 
+                      
+                            <br>
+                            <b> Supervisor : </b> 
+                                @if($job->superviser)
+                                  {{ $job->superviser->name }}
+                                  @elseif($job->supervisor)
+                                  {{ $job->supervisor->name }}
+                                  @else
+                                      {{''}}
+                                  
+                                  @endif
+                              </p>
+              @endif
+
+
+
+            
               </div>
             </div>
             <div>
@@ -314,68 +463,106 @@ header {
             </div>
           </div>
 
+
+
           <!-- ------ Assign Painter ----- -->
+
+        @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
+
           <div id="paint-content" class="content">
+         
             <div class="py-2 mb-2"><h3>Assigned painter : Job details</h5></div>
             <div class="d-flex justify-content-between">
               <div class="d-flex flex-column gap-2">
                 <div class="d-flex align-items-center gap-2">
                   <img src="/image/icon1/1995396 1.png" style="height: 25px" />
-                  <p class="mb-0">Magic Touch painters</p>
+                 <p class="mb-0">
+                     {{ $assign_job->Painter->company_name ?? '' }} - {{ $assign_job->Painter->first_name ?? ' ' }} {{  $assign_job->Painter->last_name ?? '' }}  
+                </p>
+
+
                 </div>
                 <div class="d-flex align-items-center gap-2">
                   <img src="/image/icon1/1295109 1.png" style="height: 25px" />
-                  <p class="mb-0">$200.00 inc gst</p>
+                  <p class="mb-0">
+                      ${{ $assign_job ? number_format($assign_job->assign_price_job, 2) : '0.00' }} inc gst
+                  </p>
                 </div>
               </div>
               <div class="d-flex flex-column align-items-center">
                 <img
                 class="company-logo"
-                  src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png"
-                  style="height: 30px"
+                  src="/uploads/{{$assign_job? $assign_job->painter->photo : ''}}"
+                  style="height: 80px;"
                 />
               </div>
             </div>
             <div class="pt-2">
-              <p class="mb-0">This price labour only.</p>
-              <p>
+              <p class="mb-0">
+                {{$assign_job? $assign_job->assign_job_description : ''}}</p>
+              {{-- <p>
                 Painter needs to order the paint for this job using this app
                 (paint order comes to you )
-              </p>
+              </p> --}}
+           
               <p class="mb-1">Extra Message:</p>
-              <input type="text" class="w-100" />
+           <form method="POST" action="{{ route('save.message', ['assign_painter' => $assign_job->id]) }}">
+                @csrf
+
+                <div class="row">
+                    <div class="col-10">
+                        <input id="messageInput" name="message" type="text" class="custom-input" style="background-color: #ffff" placeholder="Type your message">
+                    </div>
+                    <div class="col-2">
+                        <button id="sendMessageBtn" type="submit" class="btn btn-primary btn-block">Send</button>
+                    </div>
+                </div>
+            </form>
+
+            @if(session('success'))
+              <div id="successAlert" class="alert alert-success">
+                  {{ session('success') }}
+              </div>
+          @endif              
             </div>
           </div>
+
+         
           <!-- Profit Page -->
           <div id="page-content" class="content">
             <div class="d-flex justify-content-between py-2 mb-4">
               <h3>Cost & profit on this job</h3>
-              <img
+              {{-- <img
               class="company-logo"
                 src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png"
                 style="height: 30px"
-              />
+              /> --}}
             </div>
             <div class="fw-medium">
               <p>
-                Your Price:
-                <span style="color: #10be0d">original price, eg $500.00</span>
+                <b> Original Price: </b>
+                <span>${{$job ? number_format($job->price, 2 ) : ''}} </span>
               </p>
-              <p>Painter Price : <span>$200.00 this is input field</span></p>
-              <p>Paint Cost : <span>$30.00</span></p>
-              <p>
-                Total Profit $100.00 = give % of profit from
-                <span style="color: #10be0d">original price &</span>
-                <span style="color: #9105ff">less Paint Cost</span>
-              </p>
+              <p> <strong>Painter Price : <strong> <span> {{$job ? number_format($assign_job->assign_price_job, 2 ) : ''}}</span></p>
+              <p>Paint Cost : <span>
+               {{$assign_job ? number_format($assign_job->paint_cost, 2 ) : ''}}
+              </span></p>
+          <p>
+            Total Profit: $ {{ $assign_job ? number_format(($job->price - (($assign_job->assign_price_job ? $assign_job->assign_price_job : 0) + ($assign_job->paint_cost ? $assign_job->paint_cost : 0))), 2) : 0 }}
+
+          </p>
+
+
             </div>
           </div>
+
+        @endif
         </div>
       </div>
     </section>
 
     <!-- ====== job view1 ====== -->
-    <section class="view1 mt-4">
+    <section class="view1 mt-4" style="display:block;">
       <div class="row service-box justify-content-between mx-3">
         <!-- 1 -->
         <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}" style="text-decoration: none;">
@@ -405,26 +592,55 @@ header {
            </a>
         </div>
         <!-- 2 -->
+    {{-- //this is for Assign  Painter Call  --}}    
+    @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
         <div class="service-box-single col-6 mb-3 px-0">
+        <a href="tel:{{ $assign_job->painter->phone ? $assign_job->painter->phone : '' }}" style="text-decoration: none;">
+          <div class="custom-card custom-border card h-100 rounded-4">
+            <div class="card-body px-1">
+              <div
+                class="d-flex justify-content-between align-items-center w-100 gap-2"
+              >
+               <img src="/image/icon1/190034-200 1.png" style="height: 40px" />
+                <div>
+                  <h6 class="mb-0">Call Painter</h6>
+                  <p class="mb-0 pb-0">{{ $assign_job->painter->company_name ? $assign_job->painter->company_name : '' }} - {{ $assign_job->painter->first_name ? $assign_job->painter->first_name : '' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+             </a>
+        </div>
+
+      @endif
+{{-- //this is for Assign Painter  Painter call  --}}
+      @if($assign_job ? $assign_job->assigned_painter_name == auth()->id() : '')
+           <div class="service-box-single col-6 mb-3 px-0">
+           <a href="tel:{{ $job->painter->phone ? $job->painter->phone : '' }}" style="text-decoration: none;">
           <div class="custom-card custom-border card  h-100 rounded-4">
             <div class="card-body px-1 d-flex">
               <div class="d-flex justify-content-between align-items-center">
                 <img src="/image/icon1/190034-200 1.png" style="height: 40px" />
                 <div>
-                  <h6 class="mb-0">Call Painter</h6>
-                  <p class="mb-0 pb-0">Magic Painting Joe</p>
+                  <h6 class="mb-0">Call To Boss</h6>
+                  <p class="mb-0 pb-0"> {{ $job->painter->company_name ? $job->painter->company_name : '' }} - {{ $job->painter->first_name ? $job->painter->first_name : '' }}</p>
                 </div>
               </div>
             </div>
           </div>
+          </a>
         </div>
+      @endif
+{{-- //this is for Boss Painter end  --}}        
         <!-- 3 -->
         <div class="service-box-single col-6 mb-3 px-0">
-         <a href="{{ route('show_on_map',['id'=> $job->id]) }}" style="text-decoration:none">
+          <a href="{{ route('show_on_map',['id'=> $job->id]) }}" style="text-decoration:none">
           <div class="custom-card custom-border card h-100 rounded-4">
             <div class="card-body px-1">
-              <div class="d-flex align-items-center w-100 gap-3">
-                <img
+              <div
+                class="d-flex justify-content-between align-items-center w-100 gap-2"
+              >
+               <img
                   src="/image/icon1/Google_Maps_icon_(2020) 1.png"
                   style="height: 40px"
                 />
@@ -435,27 +651,56 @@ header {
               </div>
             </div>
           </div>
-         </a>
+             </a>
         </div>
         <!-- 4 -->
-        <div class="service-box-single col-6 mb-3 px-0">
-          <div class="custom-card custom-border card h-100 rounded-4">
-            <div class="card-body px-1">
-              <div
-                class="d-flex justify-content-between align-items-center w-100 gap-2"
-              >
-                <img src="/image/icon1/image 477.png" style="height: 40px" />
-                <div>
-                  <h6 class="mb-0">Assign Painter</h6>
-                  <p class="mb-0 pb-0">Send this job to a painter</p>
+        @if($job->assign_painter && $job->user_id == auth()->id())
+          <div class="service-box-single col-6 mb-3 px-0">         
+            <form id="UnassignJobForm" action="{{ route('painterjob.unassign', $job->id) }}" method="POST"> 
+              @csrf       
+              @method('DELETE') 
+              <div class="custom-card custom-border card h-100 rounded-4" onclick="confirmUnassign()">
+                <div class="card-body px-1">
+                  <div
+                    class="d-flex justify-content-between align-items-center w-100 gap-2"
+                  >
+                    <img src="/image/icon1/Unassing.png" style="height: 40px" />
+                    <div>
+                      <h6 class="mb-0">Unassign A Painter</h6>
+                      <p class="mb-0 pb-0"> Remove painter from this job</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </form>
+                   </div>
+          @elseif($job->assign_painter && $job->assignedJob->assigned_painter_name == auth()->id())
+
+          @else
+             <div class="service-box-single col-6 mb-3 px-0">    
+           <a href="{{ route('assign_painter_info', ['id' => $job->id]) }}" style="text-decoration:none">
+              <div class="custom-card custom-border card h-100 rounded-4">
+                <div class="card-body px-1">
+                  <div
+                    class="d-flex justify-content-between align-items-center w-100 gap-2"
+                  >
+                    <img src="/image/icon1/image 477.png" style="height: 40px" />
+                    <div>
+                      <h6 class="mb-0">Assign Painter</h6>
+                      <p class="mb-0 pb-0">Send this job to a painter</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </a>
+             </div>
+          @endif
+          
+ 
 
         <!-- 5 -->
-        <div class="service-box-single col-6 mb-3 px-0">
+       
+ <div class="service-box-single col-6 mb-3 px-0">
              <a href="{{ route('jobs.files', ['id' => $job->id]) }}" style="text-decoration:none">
           <div class="custom-card custom-border card h-100 rounded-4">
             <div class="card-body px-1">
@@ -475,7 +720,6 @@ header {
           </div>
              </a>
         </div>
-
         <!-- 6 -->
       
         <div class="service-box-single col-6 mb-3 px-0">
@@ -496,8 +740,9 @@ header {
               </div>
             </div>
           </div>
+            </a>
         </div>
-          </a>
+        
         <!-- 7 -->
         
         <div class="service-box-single col-6 mb-3 px-0">
@@ -566,12 +811,12 @@ header {
               @csrf       
               @method('DELETE')     
                         
-                  <div class="custom-card custom-border card h-100 rounded-4">
+                  <div class="custom-card custom-border card h-100 rounded-4" onclick="confirmAndSubmit3()">
                     <div class="card-body px-1 py-4">
                       <div
                         class="d-flex justify-content-between align-items-center w-100 gap-2">
                         <img
-                          src="/image/icon1/27880-5-green-tick-clipart 1.png"
+                          src="/image/icon1/started.png"
                           style="height: 40px"/>
                         <div>
                           <h6 class="mb-0">Starting Job</h6>
@@ -588,7 +833,7 @@ header {
               @csrf       
               @method('DELETE') 
                        
-                  <div class="custom-card custom-border card h-100 rounded-4">
+                  <div class="custom-card custom-border card h-100 rounded-4"  onclick="confirmAndSubmit2()">
                     <div class="card-body px-1 py-4">
                       <div
                         class="d-flex justify-content-between align-items-center w-100 gap-2">
@@ -611,7 +856,7 @@ header {
     </section>
 
     <!-- view2 -->
-    <section class="view2 mt-4">
+    <section class="view2 mt-4" style="display: none;">
         <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}" style="text-decoration: none;">
       <div class="row service-box gap-2 mx-3">
         <div class="service-col col-3 mb-3 px-0">
@@ -630,6 +875,7 @@ header {
         </a>
         </div>
         <!-- 2 -->
+      @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
         <div class="service-col col-3 mb-3 px-0">
           <div class="custom-card card custom-border rounded-4">
             <div class="card-body px-1 py-2 d-flex justify-content-center">
@@ -644,6 +890,25 @@ header {
             </div>
           </div>
         </div>
+       @endif
+      @if($assign_job ? $assign_job->assigned_painter_name == auth()->id() : '')
+        <div class="service-col col-3 mb-3 px-0">
+            <a href="tel:{{ $job->painter->phone ? $job->painter->phone : '' }}" style="text-decoration: none;">
+          <div class="custom-card card custom-border rounded-4">
+            <div class="card-body px-1 py-2 d-flex justify-content-center">
+              <div
+                class="d-flex flex-column justify-content-center align-items-center gap-1"
+              >
+                <img src="/image/icon1/190034-200 1.png" style="height: 40px" />
+                <div>
+                  <h6 class="mb-0">Boss</h6>
+                </div>
+              </div>
+            </div>
+          </div>
+            </a>
+        </div>
+       @endif
         <!-- 3 -->
         <div class="service-col col-3 mb-3 px-0">
         <a href="{{ route('show_on_map',['id'=> $job->id]) }}" style="text-decoration:none">
@@ -665,20 +930,48 @@ header {
         </a>
         </div>
         <!-- 4 -->
-        <div class="service-col col-3 mb-3 px-0">
-          <div class="custom-card card custom-border rounded-4">
-            <div class="card-body px-1 py-2 d-flex justify-content-center">
-              <div
-                class="d-flex flex-column justify-content-center align-items-center gap-1"
-              >
-                <img src="/image/icon1/image 477.png" style="height: 40px" />
-                <div class="text-center">
-                  <h6 class="mb-0">Assign</h6>
+
+
+
+        @if($job->assign_painter && $job->user_id == auth()->id())
+        <div class="service-col col-3 mb-3 px-0">           
+            <form id="UnassignJobForm" action="{{ route('painterjob.unassign', $job->id) }}" method="POST"> 
+              @csrf       
+              @method('DELETE') 
+                <div class="custom-card card custom-border rounded-4" onclick="confirmUnassign()">
+                  <div class="card-body px-1 py-2 d-flex justify-content-center">
+                    <div
+                      class="d-flex flex-column justify-content-center align-items-center gap-1"
+                    >
+                      <img src="/image/icon1/Unassing.png" style="height: 40px" />
+                      <div class="text-center">
+                        <h6 class="mb-0">Unassigned</h6>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
+             </form>
+           
         </div>
+         @elseif($job->assign_painter && $job->assignedJob->assigned_painter_name == auth()->id())
+         @else
+          <div class="service-col col-3 mb-3 px-0">           
+              <a href="{{ route('assign_painter_info', ['id' => $job->id]) }}" style="text-decoration:none">
+                  <div class="custom-card card custom-border rounded-4">
+                    <div class="card-body px-1 py-2 d-flex justify-content-center">
+                      <div
+                        class="d-flex flex-column justify-content-center align-items-center gap-1"
+                      >
+                        <img src="/image/icon1/image 477.png" style="height: 40px" />
+                        <div class="text-center">
+                          <h6 class="mb-0">Assign</h6>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  </a>           
+          </div>      
+        @endif
         <!-- 5 -->
         <div class="service-col col-3 mb-3 px-0">
             <a href="{{ route('jobs.files', ['id' => $job->id]) }}" style="text-decoration:none">
@@ -779,7 +1072,7 @@ header {
                     class="d-flex flex-column justify-content-center align-items-center gap-1"
                   >
                     <img
-                      src="/image/icon1/27880-5-green-tick-clipart 1.png"
+                      src="/image/icon1/started.png"
                       style="height: 40px"
                     />
                     <div class="text-center">
@@ -817,17 +1110,25 @@ header {
     </section>
 
     <div class="px-3 d-flex flex-column align-items-center gap-3 mb-4">
-       <form id="deleteJobForm" action="{{ route('painterjob.delete', $job->id) }}" method="POST" style="width: 100%;">  
+          @if(isset($job->assignedJob) && $job->assignedJob->assigned_painter_name == auth()->id())
+            <form id="UnassignJobForm" action="{{ route('painterjob.unassign', $job->id) }}" method="POST" style="width: 100%;"> 
+              @csrf       
+              @method('DELETE') 
+            <button type="button" class="btn btn-danger w-100 border-white border-2 rounded-3 shadow-sm"  onclick="confirmUnassign()">
+              <span class="fw-bold fs-5">Delete This Job</span>
+              <p class="mb-0">Delete this entire assign job file</p>
+            </button>
+            </form>
+         @else
+            <form id="deleteJobForm" action="{{ route('painterjob.delete', $job->id) }}" method="POST" style="width: 100%;">  
             @csrf       
             @method('DELETE')
-      <button type="button" class="btn btn-danger w-100 border-white border-2 rounded-3 shadow-sm" onclick="confirmAndSubmit()">
-        <span class="fw-bold fs-5">Delete This Job</span>
-        <p class="mb-0">Delete this entire job file</p>
-      </button>
-
-
-    </form>
-
+            <button type="button" class="btn btn-danger w-100 border-white border-2 rounded-3 shadow-sm" onclick="confirmAndSubmit()">
+              <span class="fw-bold fs-5">Delete This Job</span>
+              <p class="mb-0">Delete this entire job file</p>
+            </button>
+            </form> 
+         @endif
       <button
         type="button"
         class="btn btn-sm btn-light shadow-sm w-50 fw-medium"
@@ -841,11 +1142,60 @@ header {
 </div>
 </body>
 
+
+
+
 <script>
+
+  function closebtn(){
+     var modal = document.getElementById("amountNotesModal");
+    var btn = document.getElementById("addInvoicePaidLessButton");
+     modal.style.display = "none";
+      modal.classList.remove("viewUp");
+
+  }
+
+  var modal = document.getElementById("amountNotesModal");
+    var btn = document.getElementById("addInvoicePaidLessButton");
+    var span = document.getElementsByClassName("close")[0];
+    // btn.onclick = function() {
+    // modal.style.display = "block";
+    // }
+
+    span.onclick = function() {
+    modal.style.display = "none";
+    modal.classList.remove("viewUp");
+    }
+
+    window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "block";
+    }
+    }   
+
+
+    function confirmUnassign(){
+       var confirmation = confirm("Do you really Unassign this Painter");
+        if (confirmation) {
+            document.getElementById('UnassignJobForm').submit();
+        }
+    }
     function confirmAndSubmit() {
         var confirmation = confirm("Do you really want to delete this job?");
         if (confirmation) {
             document.getElementById('deleteJobForm').submit();
+        }
+    }
+    function confimtoAccept(){
+        var confirmation = confirm("Do you really want to Accept this job?");
+        if (confirmation) {
+            document.getElementById('AcceptJobForm').submit();
+        }
+    }
+    function denyjob(){
+       var confirmation = confirm("Do you really deny this job ?");
+        if (confirmation) {
+            document.getElementById('UnassignJobForm').submit();
         }
     }
        function confirmAndSubmit2() {
@@ -867,7 +1217,7 @@ header {
 </script>
 <script src="{{ asset('js/script.js') }}"></script>
 <script src="{{ asset('js/profile.js') }}"></script>
- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

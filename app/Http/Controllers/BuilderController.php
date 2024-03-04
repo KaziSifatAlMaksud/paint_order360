@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use App\Models\Brand;
 use App\Models\Builder;
+use Illuminate\Support\Facades\Storage;
 use App\Models\BuilderModel;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use App\Http\Requests\adminbulderRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\File;
+
 
 class BuilderController extends Controller
 {
@@ -27,25 +30,104 @@ class BuilderController extends Controller
         return view('admin.add_builder', array('brands' => $brands));
     }
 
-    public function store(adminbulderRequest $request)
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'img_log' => 'image|mimes:jpeg,png,jpg,gif|max:2048|nullable', // Adjust maximum file size as needed
+    //         'company_name' => 'required',
+    //         'builder_name' => 'required',
+    //         'builder_email' => 'required|email',
+    //         'brand_id' => 'required',
+    //         'phone_number' => 'required',
+    //         'address' => 'required',
+    //         'abn' => 'required',
+    //         'gate' => 'required',
+    //         'schedule' => 'required'
+    //         // Ensure 'account_type' validation is added if it's being used
+    //     ]);
+
+    //     $imageName = null; // Default value if no image is uploaded
+
+    //     if ($request->hasFile('img_log') && $request->file('img_log')->isValid()) {
+    //         $image = $request->file('img_log');
+    //         $imageName = time() . '_' . $image->getClientOriginalName(); // Correctly prefixes the file name
+    //         $destination = public_path('/gallery_images/');
+    //         $image->move($destination, $imageName);
+    //     }
+
+    //     $builder = BuilderModel::create([
+    //         // Ensure this attribute is fillable in your model
+    //         'company_name' => $request->input('company_name'),
+    //         'builder_name' => $request->input('builder_name'),
+    //         'builder_email' => $request->input('builder_email'),
+    //         'brand_id' => $request->input('brand_id'),
+    //         'phone_number' => $request->input('phone_number'),
+    //         'address' => $request->input('address'),
+    //         'abn' => $request->input('abn'),
+    //         'gate' => $request->input('gate'),
+    //         'schedule' => $request->input('schedule'),
+    //         'account_type' => $request->input('account_type', 'default_account_type'),
+    //         'img_log' => $imageName, // Use a default value if not provided
+    //     ]);
+
+    //     if ($builder) {
+    //         return redirect('admin/admin_builder')->with('success', 'Builder account created successfully.');
+    //     } else {
+    //         // This else block might not be necessary since create() should throw an exception on failure
+    //         return redirect()->back()->with('error', 'Failed to create builder account.');
+    //     }
+    // }
+
+    public function store(Request $request)
     {
-        // Create Builder account using Eloquent ORM
-        BuilderModel::create([
+        $request->validate([
+            'img_log' => 'file|max:2048|nullable', // Adjust maximum file size as needed and allow various file types
+            'company_name' => 'required',
+            'builder_name' => 'required',
+            'builder_email' => 'required|email',
+            'brand_id' => 'required',
+            'phone_number' => 'required',
+            'address' => 'required',
+            'abn' => 'required',
+            'gate' => 'required',
+            'schedule' => 'required'
+            // Ensure 'account_type' validation is added if it's being used
+        ]);
+
+        $attachmentName = null; // Default value if no attachment is uploaded
+
+        if ($request->hasFile('img_log') && $request->file('img_log')->isValid()) {
+            $attachment = $request->file('img_log');
+            $attachmentName = time() . '_' . $attachment->getClientOriginalName(); // Correctly prefixes the file name
+            $destination = public_path('/uploads/');
+            $attachment->move($destination, $attachmentName);
+        }
+
+        $builderData = [
+            // Ensure these attributes are fillable in your model
             'company_name' => $request->input('company_name'),
+            'builder_name' => $request->input('builder_name'),
             'builder_email' => $request->input('builder_email'),
-            'account_type' => $request->input('account_type') ?? 'account_type',
             'brand_id' => $request->input('brand_id'),
             'phone_number' => $request->input('phone_number'),
             'address' => $request->input('address'),
             'abn' => $request->input('abn'),
             'gate' => $request->input('gate'),
-        ]);
-        return redirect('admin/admin_builder')->with('success', 'Builder account created successfully.');
+            'schedule' => $request->input('schedule'),
+            'account_type' => $request->input('account_type', 'default_account_type'),
+            'img_log' => $attachmentName, // Use a default value if not provided
+        ];
+
+        if ($builder = BuilderModel::create($builderData)) {
+            return redirect('admin/admin_builder')->with('success', 'Builder account created successfully.');
+        } else {
+            // This else block might not be necessary since create() should throw an exception on failure
+            return redirect()->back()->with('error', 'Failed to create builder account.');
+        }
     }
-    public function show()
-    {
-        dd('show');
-    }
+
+
+
 
     public function edit($admin_builder)
     {
@@ -53,31 +135,37 @@ class BuilderController extends Controller
         $builders = BuilderModel::findOrFail($admin_builder);
         return view('admin.edit_builder', ['builders' => $builders, 'brands' => $brands]);
     }
+
     public function update(adminbulderRequest $request, $admin_builder)
     {
-        BuilderModel::findOrFail($admin_builder)->update($request->all());
+        $builder = BuilderModel::findOrFail($admin_builder);
+
+        if ($request->hasFile('img_log') && $request->file('img_log')->isValid()) {
+            // Delete old image if it exists
+            if ($builder->img_log) {
+                $imagePath = public_path('images/' . $builder->img_log);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+
+            $image = $request->file('img_log');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images'), $imageName);
+            $builder->img_log = $imageName;
+        }
+
+        $builder->update($request->except('img_log')); // Exclude the img_log field from mass assignment
 
         return true;
     }
+
 
     public function destroy($admin_builder)
     {
         BuilderModel::findOrFail($admin_builder)->delete();
     }
 
-
-
-    // public function showPage()
-    // {
-    //     $users = User::all();
-    //     $admin_builders = BuilderModel::all();
-
-
-    //     $customers = DB::table('customers')->where('state', 1)->get();
-
-
-    //     return view('admin.assign_builder', ['users' => $users, 'admin_builders' => $admin_builders, 'customers' => $customers]);
-    // }
 
 
     public function handleRequest(Request $request)
@@ -134,6 +222,12 @@ class BuilderController extends Controller
 
         if ($request->isMethod('delete')) {
         }
+    }
+
+
+    public function show()
+    {
+        dd('show');
     }
 
     public function deleteCustomer(Request $request, $id)

@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('painter_jobs', function (Blueprint $table) {
             $table->json('assign_painter')->nullable()->after('company_id');
+            $table->json('assign_companyName')->nullable()->after('assign_painter');
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration
     {
         Schema::table('painter_jobs', function (Blueprint $table) {
             $table->dropColumn('assign_painter');
+            $table->dropColumn('assign_companyName');
         });
     }
 };

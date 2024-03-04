@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\PjItem;
 use Illuminate\Support\Facades\App;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\AssignedPainterJob;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PainterJob extends Model
@@ -39,7 +40,8 @@ class PainterJob extends Model
         'brand_id',
         'company_id',
         'assign_painter',
-        'supervisor_id',
+        'assign_companyName',
+        'assign_supervisor',
         'supervisor_id',
         'colors_secound',
         'colors_spec',
@@ -115,6 +117,14 @@ class PainterJob extends Model
     {
         return $this->hasMany(GallaryPlan::class, 'job_id');
     }
+    public function assignedJob()
+    {
+        return $this->belongsTo(AssignedPainterJob::class, 'id', 'job_id');
+    }
+
+
+
+
     /**
      * Get the painter for the job.
      */

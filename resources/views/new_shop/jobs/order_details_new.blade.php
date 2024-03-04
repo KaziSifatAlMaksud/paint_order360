@@ -537,7 +537,7 @@ require  public_path() . '/painter/header.php';
                                                             <div class="jobs_controll_buttons">
                                                                 <div class="decoration-none outside-area-cst  mt-2 mb-2 d_i_b"><a class='area-heading' href="#{{$item->id}}collapseExample" data-bs-toggle="collapse" aria-expanded="false" role="button" aria-controls="{{$item->id}}collapseExample"><strong style="font-size: 20px">{{$item->area}} : </strong> <br></a></div>
                                                             </div>
-                                                            <div class="collapse main-cst" id="{{$item->id}}collapseExample">
+                                                            <div class="collapse main-cst show" id="{{$item->id}}collapseExample">
                                                                 <div class="single_file " style="font-size: 16px;">
                                                                     {{$item->brand? $item->brand->name :''}} - {{$item->color}} <br>
                                                                     {{$item->product}} <br>
@@ -584,7 +584,7 @@ require  public_path() . '/painter/header.php';
                                                        <div  id="card-{{ $garagePaint->id }}" class="row bg-success text-white justify-content-center align-items-center " style="border-radius: 5px; margin-top: 50px;" >
                                                            
                                                             <div class="col-6 text-left">
-                                                                <h3>Use Your Garage Paint</h3>      
+                                                                <p>Use Your Garage Paint</p>      
                                                             </div>
                                                             <div class="col-6 pt-3" >
                                                                <div class="row d-flex justify-content-center align-items-center">
@@ -596,9 +596,11 @@ require  public_path() . '/painter/header.php';
                                                                         @csrf
                                                                         @method('DELETE')
                                                                        <!-- Button with larger icon -->
-                                                                        <button type="button" onclick="confirmDelete({{ $garagePaint->id }})" style="position: absolute; color:red; right: -10px; top: -25px; border-radius: 50%;border:0px solid #fff !important; font-size:100%">
-                                                                            <i class="fas fa-times-circle fa-2x"></i>
+                                                                       <button type="button" onclick="confirmDelete({{ $garagePaint->id }})" style="position: absolute;  right: -25px; top: -25px; background: transparent; border: none;  color: red; padding:10px;">
+                                                                            <i class="fas fa-times-circle fa-1x"></i>
                                                                         </button>
+
+
 
                                                                     </form>
 
@@ -644,7 +646,7 @@ require  public_path() . '/painter/header.php';
                                                         <div class="jobs_controll_buttons">
                                                             <div class="decoration-none inside-area-cst mt-2 mb-2 d_i_b"><a class="area-heading" href="#{{$item->id}}collapseExample" data-bs-toggle="collapse" aria-expanded="false" role="button" aria-controls="{{$item->id}}collapseExample"><strong style="font-size: 20px">{{$item->key}} : </strong> <br></a></div>
                                                         </div>
-                                                        <div class="collapse inside-data-cst-main" id="{{$item->id}}collapseExample">
+                                                        <div class="collapse inside-data-cst-main show" id="{{$item->id}}collapseExample">
                                                             <div class="single_file " style="font-size: 16px;">
                                                                 {{$item->brand? $item->brand->name :''}} - {{$item->color}} <br>
                                                                 {{$item->product}} <br>
@@ -689,7 +691,7 @@ require  public_path() . '/painter/header.php';
                                                    {{-- @if($item->product === $garagePaint->product || ($item->brand && $item->brand->id === $garagePaint->brand_id)) --}}
                                                        <div id="card-{{ $garagePaint->id }}"  class="row bg-success text-white justify-content-center align-items-center mt-5" style="border-radius: 5px;" >
                                                             <div class="col-6 text-left">
-                                                                <h3>Use Your Garage Paint</h3>      
+                                                                <p>Use Your Garage Paint</p>      
                                                             </div>
                                                             <div class="col-6 pt-3" >
                                                                <div class="row d-flex justify-content-center align-items-center">
@@ -701,8 +703,11 @@ require  public_path() . '/painter/header.php';
                                                                         @csrf
                                                                         @method('DELETE')
                                                                        <!-- Button with larger icon -->
-                                                                        <button type="button" onclick="confirmDelete({{ $garagePaint->id }})" style="position: absolute; color:red; right: -10px; top: -25px; border-radius: 50%;border:0px solid #fff !important; font-size:100%">
+                                                                        {{-- <button type="button" onclick="confirmDelete({{ $garagePaint->id }})" style="position: absolute; color:red; right: -10px; top: -25px; border-radius: 50%;border:0px solid #fff !important; font-size:100%">
                                                                             <i class="fas fa-times-circle fa-2x"></i>
+                                                                        </button> --}}
+                                                                         <button type="button" onclick="confirmDelete({{ $garagePaint->id }})" style="position: absolute;  right: -25px; top: -25px; background: transparent; border: none;  color: red; padding:10px;">
+                                                                            <i class="fas fa-times-circle fa-1x"></i>
                                                                         </button>
 
                                                                     </form>

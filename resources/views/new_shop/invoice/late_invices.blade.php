@@ -144,7 +144,9 @@
                                         @endif
                                     </b>
                                     <p class="text-right">{{ $invoice->inv_number }}</p>
-                                    <p class="text-right font-weight-bold">${{ $invoice->total_due }}</p>
+                                    
+                                    <p class="text-right font-weight-bold">${{ number_format((float) str_replace(',', '', $invoice->total_due), 2)}}</p>
+
                                 </div>
                             </div>
                         </a>   

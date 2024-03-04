@@ -19,7 +19,7 @@ return new class extends Migration
             $table->bigInteger('job_id')->unsigned();
             $table->foreign('job_id')->references('id')->on('painter_jobs')->onDelete('cascade');
             $table->integer('batch')->nullable();
-           
+
             $table->integer('ponumber')->nullable();
 
             $table->string('description')->nullable();

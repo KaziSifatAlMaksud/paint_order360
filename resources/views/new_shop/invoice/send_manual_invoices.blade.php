@@ -282,7 +282,7 @@
             <input type="text" name="status" value="1" class="form-control @error('status') is-invalid @enderror" hidden>
         @endif
 
-         <div class="col-12">           
+         <div class="col-12 px-0">           
 
             @if($invoice && $invoice->status == 2)
              

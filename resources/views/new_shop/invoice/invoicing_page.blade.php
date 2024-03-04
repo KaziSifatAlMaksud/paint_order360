@@ -35,6 +35,7 @@
                 Create New Invoices <i class="fa-solid fa-plus ml-3"></i>
             </a>
            </div>
+ 
          <!-- Card Content -->
             <div  class="card" style="padding: 10px 10px 0px 10px; background-color: #fff9c6;">                
               <h4><b>{{ $jobs->address }}</b></h4>
@@ -69,10 +70,45 @@
                     No Invoice is Available
                 </div>
             @endif
+            {{-- {{$jobs}} --}}
 
-       
-   @foreach ($jobs->poItems as $index => $poItem)
-        @if ($poItem->price && $poItem->description && $poItem->ponumber)
+    @if($jobs->assign_painter && $jobs->assign_painter ==  auth()->id())
+        @foreach ($jobs->poItems as $index => $poItem)
+           @if ($poItem->batch >= 5 && $poItem->price && $poItem->description && $poItem->ponumber)
+                <div class="card">
+                    <a href="{{ url('/invoiceing/' . $jobs->id . '/' . $poItem->id . '/'. $poItem->batch.'/create') }}">                         
+                        <div class="row" style="padding: 10px 10px 0px 10px;">
+                            <div class="col-8">    
+                                <p class="text-left showinline">{{ $poItem->description }}</p>  
+                                @php
+                                    $priceIncludingGST = $poItem->price * 1.10; // Adding 10%
+                                @endphp
+                                <p class="text-left showinline"><b>Price inc gst:</b> ${{ number_format($priceIncludingGST, 2) }}</p>
+
+                            </div>
+                            <div class="col-4 text-right font-weight-bold mt-2">
+                                @foreach ($status as $statu)
+                                    @if ($statu->status == 0 || $statu->status == 1 && ($statu->id == $poItem->invoice_id ) )
+                                        <button type="button" class="invoiceReadynotification-button2">Ready</button>
+                                    @elseif ($statu->status == 2 && $statu->id == $poItem->invoice_id)
+                                        <button type="button" class="invoiceReadynotification-unpaid2">Unpaid</button>
+                                        <p style="margin-top: 40px; "> SEND: <?php echo (new DateTime($poItem->updated_at))->format('d-m-Y'); ?></p> 
+                                    @elseif ($statu->status == 3 && $statu->id == $poItem->invoice_id)
+                                        <button type="button" class="invoiceReadynotification-paid2">Paid</button>
+                                        <p style="margin-top: 40px; "> Paid: <?php echo (new DateTime($poItem->updated_at))->format('d-m-Y'); ?></p> 
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    </a>  
+                </div>
+            @endif
+        @endforeach
+    @endif
+
+     @if($jobs->user_id && $jobs->user_id ==  auth()->id())
+      @foreach ($jobs->poItems as $index => $poItem)
+        @if ( $poItem->batch <= 4 && $poItem->price && $poItem->description && $poItem->ponumber)
             <div class="card">
                 <a href="{{ url('/invoiceing/' . $jobs->id . '/' . $poItem->id . '/'. $poItem->batch.'/create') }}">                         
                     <div class="row" style="padding: 10px 10px 0px 10px;">
@@ -84,7 +120,6 @@
 
                             <p class="text-left showinline"><b>Price inc gst:</b> ${{ number_format($priceIncludingGST, 2) }}</p>
                    
-                            {{-- <p class="text-left showinline"><b>Price inc gst:</b> ${{ $poItem->price }}</p> --}}
                         </div>
                         <div class="col-4 text-right font-weight-bold mt-2">
                
@@ -110,7 +145,10 @@
                 </a>  
             </div>
         @endif
-    @endforeach 
+        @endforeach 
+        
+    @endif
+ 
 
 
 {{-- 

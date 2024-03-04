@@ -56,7 +56,7 @@ filters.forEach(function (filter) {
 
 function filterCards() {
     const searchInput = document.getElementById("search-input").value.toLowerCase();
-    const cardTitles = document.querySelectorAll(".card-title");
+    const cardTitles = document.querySelectorAll(".address_text");
     const builderNames = document.querySelectorAll(".bilderName");
 
     cardTitles.forEach(function(cardTitle) {

@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\PainterBoss;
+use App\Models\AssignedPainterJob;
 use App\Models\Customer;
 use App\Models\Invoice;
 use App\Models\BuilderModel;
@@ -54,7 +55,8 @@ class HomeController extends Controller
     {
         $userId = $request->user()->id;
         $company_name = $request->user()->company_name;
-        $jobs = PainterJob::with('gallaryPlan', 'admin_builders', 'superviser', 'poitem', 'users')
+
+        $jobs = PainterJob::with('gallaryPlan', 'admin_builders', 'superviser', 'poitem', 'users', 'assignedJob')
             // ->where('user_id', $request->user()->id)
             ->where(function ($query) use ($userId) {
                 $query->where('user_id', $userId)
@@ -62,9 +64,13 @@ class HomeController extends Controller
             })
             ->whereNull('parent_id')
             ->get();
+        // Counting new, started, and finished jobs
+        $newCount = $jobs->where('status', 1)->count();
+        $startedCount = $jobs->where('status', 2)->count();
+        $finishedCount = $jobs->where('status', 3)->count();
         $admin_builders = BuilderModel::all();
         $pps = JobPp::all();
-        return view('new_shop.navigation', ['jobs' => $jobs, 'admin_builders' => $admin_builders, 'company_name' => $company_name, 'pps' => $pps]);
+        return view('new_shop.navigation', ['jobs' => $jobs, 'admin_builders' => $admin_builders, 'company_name' => $company_name, 'pps' => $pps, 'newCount' => $newCount, 'startedCount' => $startedCount, 'finishedCount' => $finishedCount]);
     }
 
 
@@ -92,7 +98,10 @@ class HomeController extends Controller
                     if ($customer->company_name == $invoice->customer_id) {
                         $dueDate = Carbon::parse($invoice->send_to)->addDays($customer->schedule);
                         if ($today->gt($dueDate)) {
-                            $lateInvoices->push($invoice);
+                            if (!$lateInvoices->contains('id', $invoice->id)) {
+                                $lateInvoices->push($invoice);
+                            }
+                            break;
                         }
                     }
                 }
@@ -144,12 +153,12 @@ class HomeController extends Controller
 
     public function jobs(Request $request)
     {
-        $jobs = PainterJob::with('GallaryPlan', 'builder')
+        $jobs = PainterJob::with('GallaryPlan', 'builder', 'painter', 'superviser')
             ->where('user_id', $request->user()->id)
             ->whereNull('parent_id')
             ->where('start_date', '>=', date('Y-m-d'))
             ->where('status', 1)
-            ->paginate(1); // Paginate the results with 1 job per page
+            ->paginate(1);
 
         return view('new_shop.main', ['jobs' => $jobs]);
     }
@@ -158,12 +167,13 @@ class HomeController extends Controller
     public function show($id)
     {
         $job = PainterJob::with('GallaryPlan', 'admin_builders')->find($id);
+        $assign_job = AssignedPainterJob::where('job_id', $id)->with(['adminBuilder', 'painterJob', 'painter'])->first();
 
         if (!$job) {
             abort(404);
         }
 
-        return view('new_shop.jobshow', ['job' => $job]);
+        return view('new_shop.jobshow', ['job' => $job, 'assign_job' => $assign_job]);
     }
 
 
@@ -506,6 +516,20 @@ class HomeController extends Controller
         }
         return $job;
     }
+    public function assign_painter(Request $request, $id)
+    {
+        if ($request->isMethod('post')) {
+        }
+        if ($request->isMethod('get')) {
+
+            $job = PainterJob::where('id', $id)->with('superviser', 'admin_builders')->first();
+            $users = User::all();
+            return view('new_shop.assing_painter_info', ['job' => $job, 'users' => $users]);
+        }
+        return redirect()->back()->with('error', 'Unexpected request method.');
+    }
+
+
 
     public function updateJob(Request $request, $id)
     {

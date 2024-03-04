@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::table('admin_builders', function (Blueprint $table) {
             $table->string('schedule')->nullable();
+            $table->string('img_log')->nullable();
+            $table->string('builder_name')->nullable();
         });
     }
 
@@ -26,7 +28,9 @@ return new class extends Migration
     public function down()
     {
         Schema::table('admin_builders', function (Blueprint $table) {
-            $table->dropColumn('schedule')->nullable;
+            $table->dropColumn('schedule');
+            $table->dropColumn('img_log');
+            $table->dropColumn('builder_name');
         });
     }
 };
