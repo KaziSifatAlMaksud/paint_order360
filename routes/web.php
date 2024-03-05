@@ -81,14 +81,10 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 
 	Route::post('/invoiceing/{jobs_id}/{poItem_id}/{batch}/store', [InvoiceController::class, 'invoice_savesend'])->name('invoice_savesend');
 
+	Route::get('stripe/checkout', [StripePaymentController::class, 'StripeCheckout'])->name('stripe.checkout');
 
-
-
-
-	// Route::get('stripe/checkout', [StripePaymentController::class, 'StripeCheckout'])->name('stripe.checkout');
-
-	// Route::get('stripe/checkout/success', [StripePaymentController::class, 'stripeCheckoutSuccess'])->name('stripe.checkout.success');
-	// Route::get('stripe/checkout/cancel', [StripePaymentController::class, 'stripeCheckoutCancel'])->name('stripe.checkout.cancel');
+	Route::get('stripe/checkout/success', [StripePaymentController::class, 'stripeCheckoutSuccess'])->name('stripe.checkout.success');
+	Route::get('stripe/checkout/cancel', [StripePaymentController::class, 'stripeCheckoutCancel'])->name('stripe.checkout.cancel');
 
 
 	// Route for GET request

@@ -326,6 +326,12 @@
             @endif
 
               @if($invoice && $invoice->status == 2 && $invoice->status !== 3)
+                         <a class="btn btn-success btn-block btnshow" href="{{ route('stripe.checkout', [
+                                'price' => ($invoice ?? ($poItem->price + ($poItem->price * 0.10))),
+                                'product' => $invoice->address, 'invoice_id'=> $invoice->id,
+                            ]) }}">
+                                Got Paid
+                        </a>
                       <p id="addInvoicePaidLessButton" class="btn btn-block btnshow" style="cursor: pointer; background-color: #12d7b3 !important; color:#fff;">Got Paid Less</p>
             @endif
 
@@ -344,10 +350,10 @@
                         
                     </div>
                     @if($invoice && $invoice->status !== null)
-                    {{-- <div class="col-4">                        
+                    <div class="col-4">                        
                         <button type="submit" name="action" class="btn btn-warning btn-block btnshow" value="update">Edit</button>
 
-                    </div>                    --}}
+                    </div>                   
                      @else 
                      <div class="col-4">                       
                         <button type="submit" name="action" class="btn btn-warning btn-block btnshow" value="save">Save</button>

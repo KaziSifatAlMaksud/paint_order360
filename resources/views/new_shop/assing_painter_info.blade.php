@@ -474,7 +474,7 @@ header {
                     <div class="d-flex flex-column align-items-stretch px-2">
                       <p class="mb-3 text-center fs-6 pt-3 text-decoration-underline">Does the Painter Buy the Paint?</p>
                       <div class="mt-auto d-flex justify-content-between">
-                        <p class="w-25 btn btn-warning" onclick="setAnswer(1, 1)" >Yes</p>
+                        <p class="w-25 btn btn-warning" onclick=" showstartbtn(); setAnswer(1, 1);" >Yes</p>
                         <p onclick="showSecondQues(); setAnswer(1, 0);"  class="w-25 btn btn-danger">No</p>
                       </div>
                   </div>
@@ -482,7 +482,7 @@ header {
                   <div id="quesTwo" class="d-none flex-column align-items-stretch px-2">
                       <p class="mb-3 text-center fs-6 pt-5 text-decoration-underline">Does the Painter orders the paint or me ?</p>
                       <div class="mt-auto d-flex justify-content-between">
-                        <p class="w-25 btn btn-warning" onclick="setAnswer(2, 1)" >Me</p>
+                        <p class="w-25 btn btn-warning"    onclick=" showstartbtn(); setAnswer(2, 1);" >Me</p>
                         <p class="w-25 btn btn-danger" onclick="showThirdQues();setAnswer(2, 0);">Painter</p>
                       </div>
                     </div>
@@ -490,7 +490,7 @@ header {
                     <div id="quesThird" class="d-none flex-column align-items-stretch px-2">
                       <p class="mb-3 text-center fs-6 pt-5 text-decoration-underline">Is Paint order is sent to me or paint shop ?</p>
                       <div class="mt-auto d-flex justify-content-between">
-                        <p class="w-25 btn btn-warning" onclick="setAnswer(3, 1)"  >Me</p>
+                        <p class="w-25 btn btn-warning" onclick=" showstartbtn(); setAnswer(3, 1)"  >Me</p>
                         <p class="w-25 btn btn-danger"  onclick="showThirdQues();setAnswer(3, 0);">Shop</p>
                       </div>
                     </div>
@@ -500,7 +500,7 @@ header {
                     <input type="hidden" name="Q_3" id="answer3">
 
                     <center style="margin-bottom: 20px;">
-                      <P class="btn btn-success" id="addInvoicePaidLessButton">Start</P>
+                      <P class="btn btn-success" hidden id="addInvoicePaidLessButton">Start</P>
                     </center>
               </div>
               </section>
@@ -623,6 +623,11 @@ $(document).ready(function() {
 
 
   <script>
+    function showstartbtn (){
+       var element = document.getElementById('addInvoicePaidLessButton');
+  
+       element.removeAttribute('hidden');
+    }
       function setAnswer(questionNumber, answerValue) {
     document.getElementById(`answer${questionNumber}`).value = answerValue;
     }
