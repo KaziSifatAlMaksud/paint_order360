@@ -28,7 +28,9 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SubcustomerController;
 use App\Http\Controllers\PainterJobPlanController;
 use App\Models\InvoicePayment;
+use Dflydev\DotAccessData\Data;
 use Illuminate\Support\Facades\DB;
+use App\Mail\InvoiceMail;
 
 
 class InvoiceController extends Controller
@@ -137,6 +139,17 @@ class InvoiceController extends Controller
         }
     }
 
+    public function send_statement_by_id(Request $request)
+    {
+        $customer_id = $request->input('customer_id');
+        $invoices = Invoice::where('customer_id', $customer_id)
+            ->where('user_id', $request->user()->id)
+            ->get();
+
+        // You may need to format the data as needed before returning it, for example, convert it to JSON
+        return response()->json($invoices);
+    }
+
 
     public function invoice_send(Request $request, $jobs_id, $poItem_id)
     {
@@ -159,6 +172,61 @@ class InvoiceController extends Controller
 
             return view('new_shop.invoice.send_invices', compact('customers', 'jobs', 'poItem', 'inv_numbers', 'admin_builders', 'invoice'));
         }
+    }
+
+    public function send_statement(Request $request)
+    {
+        $user_id = $request->user()->id;
+
+        $invoices = Invoice::where('user_id', $user_id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        $invoiceSums = DB::table('invoices')
+            ->select('customer_id', DB::raw('SUM(total_due) as total_price'), 'send_email')
+            ->where('user_id', $user_id)
+            ->groupBy('customer_id')
+            ->get();
+
+
+        $inv_numbers = Invoice::max('id') ?? 0;
+        $today = now();
+        $fiveDaysAgo = $today->subDays(3);
+        $due_invoice = Invoice::where('user_id', $user_id)
+            ->where('status', 2)
+            ->whereDate('send_to', '>', $fiveDaysAgo)
+            ->orderBy('updated_at', 'desc')
+            ->count();
+        return view('new_shop.invoice.send_statement', compact('invoices', 'due_invoice', 'invoiceSums', 'inv_numbers'));
+    }
+
+    public function send_statement_detail(Request $request)
+    {
+        $user_id = $request->user()->id;
+
+        $invoices = Invoice::where('user_id', $user_id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        $invoiceSums = DB::table('invoices')
+            ->select('customer_id', DB::raw('SUM(total_due) as total_price'))
+            ->where('user_id', $user_id)
+            ->groupBy('customer_id')
+            ->get();
+
+        $customers = DB::table('invoices')
+            ->select('customer_id', 'send_email')
+            ->where('user_id', $user_id)
+            ->groupBy('customer_id')
+            ->get();
+
+        $inv_numbers = Invoice::max('id') ?? 0;
+        $today = now();
+        $fiveDaysAgo = $today->subDays(3);
+        $due_invoice = Invoice::where('user_id', $user_id)
+            ->where('status', 2)
+            ->whereDate('send_to', '>', $fiveDaysAgo)
+            ->orderBy('updated_at', 'desc')
+            ->count();
+        return view('new_shop.invoice.send_statement_details', compact('invoices', 'due_invoice', 'customers', 'invoiceSums', 'inv_numbers'));
     }
 
     public function invoice_savesend(Request $request, $jobs_id, $poItem_id)
@@ -751,6 +819,95 @@ class InvoiceController extends Controller
         $lateInvoices = 25;
         return view('new_shop.invoice.invices_report', compact('lateInvoices'));
     }
+
+    // public function sendEmail(Request $request)
+    // {
+    //     $request->validate([
+    //         'customer_id' => 'required',
+    //         'email' => 'required|email',
+    //     ]);
+
+    //     $customer_id = $request->input('customer_id');
+    //     // $email = $request->input('email');
+    //     $email = "2019-3-60-050@std.ewubd.edu"; // Hardcoded email for now
+
+    //     $invoices = Invoice::where('customer_id', $customer_id)
+    //         ->where('user_id', $request->user()->id)
+    //         ->get();
+
+    //     if ($invoices->isEmpty()) {
+    //         return response()->json(['message' => 'No invoices found for this customer.'], 404);
+    //     }
+
+    //     $pdf = PDF::loadView('new_shop.invoice.outstanding_pdf', ['invoices' => $invoices]);
+    //     $pdfOutput = $pdf->output();
+
+    //     try {
+    //         Mail::raw('Please find your invoice attached.', function ($message) use ($email, $pdfOutput) {
+    //             $message->to($email)
+    //                 ->subject("Your Invoice")
+    //                 ->attachData($pdfOutput, "invoice.pdf", [
+    //                     'mime' => 'application/pdf',
+    //                 ]);
+    //         });
+
+    //         return redirect()->back()->with('go_back', true)->with('success', 'Invoice sent to email successfully.');
+    //     } catch (\Exception $e) {
+    //         return redirect()->back()->with('go_back', true)->with('error', 'Failed to send email: ' . $e->getMessage());
+    //     }
+    // }
+
+    public function sendEmail(Request $request)
+    {
+        $request->validate([
+            'customer_id' => 'required',
+            'email' => 'required|email',
+        ]);
+
+        $customer_id = $request->input('customer_id');
+        $email = $request->input('email');
+
+        $invoices = Invoice::where('customer_id', $customer_id)
+            ->where('user_id', $request->user()->id)
+            ->get();
+
+        if ($invoices->isEmpty()) {
+            if ($request->ajax()) {
+                return response()->json(['message' => 'No invoices found for this customer.'], 404);
+            } else {
+                return redirect()->back()->with('go_back', true)->with('error', 'No invoices found for this customer.');
+            }
+        }
+
+        $pdf = PDF::loadView('new_shop.invoice.outstanding_pdf', ['invoices' => $invoices]);
+        $pdfOutput = $pdf->output();
+
+        try {
+            Mail::raw('Please find your invoice attached.', function ($message) use ($email, $pdfOutput) {
+                $message->to($email)
+                    ->subject("Your Invoice")
+                    ->attachData($pdfOutput, "invoice.pdf", [
+                        'mime' => 'application/pdf',
+                    ]);
+            });
+
+            if ($request->ajax()) {
+                return response()->json(['message' => 'Invoice sent to email successfully.']);
+            } else {
+                return redirect()->back()->with('go_back', true)->with('success', 'Invoice sent to email successfully.');
+            }
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json(['error' => 'Failed to send email: ' . $e->getMessage()], 500);
+            } else {
+                return redirect()->back()->with('go_back', true)->with('error', 'Failed to send email: ' . $e->getMessage());
+            }
+        }
+    }
+
+
+
+
     public function invoicePayment(Request $request)
     {
 

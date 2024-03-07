@@ -90,19 +90,23 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 	// Route for GET request
 	Route::get('/new_order', 'GaragePaintController@new_order')->name('new_oder');
 	Route::get('/new_order/edit/{id}', 'GaragePaintController@new_order_edit')->name('new_oder.edit');
-
-	// Route for POST request
-
 	Route::post('/new_order/store', [GaragePaintController::class, 'new_order_create'])->name('new_order.create');
-
 	Route::get('/add_gerag', [GaragePaintController::class, 'show_garagepaint'])->name('view_garage');
-	// routes/web.php
-
 	Route::get('/garage-paints/{id}/edit', 'GaragePaintController@edit')->name('garage-paints.edit');
-
 	// Route::put('/garage-paints/{id}', 'GaragePaintController@update')->name('garage-paints.update');
-
 	Route::delete('/add_gerag/{id}', 'GaragePaintController@destroy')->name('garage-paints.destroy');
+
+
+
+	Route::get('/invoices/send_statement', [InvoiceController::class, 'send_statement'])->name('send_statement');
+	Route::get('/invoices/send_statement_detail', [InvoiceController::class, 'send_statement_detail'])->name('send_statement_detail');
+	Route::get('/invoices/send_statement_by_id', [InvoiceController::class, 'send_statement_by_id']);
+
+	// In routes/web.php
+	Route::post('/invoices/send-email', [InvoiceController::class, 'sendEmail'])->name('email_send_outstantind');
+
+
+
 
 
 

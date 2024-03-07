@@ -26,7 +26,7 @@
     />
 
     <link rel="stylesheet" href="{{ asset('css/style10.css') }}">
-    <style>
+<style>
 
 :root {
     --clr: #222327;
