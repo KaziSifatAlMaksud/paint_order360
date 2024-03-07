@@ -221,8 +221,6 @@
                                             <td>
                                                 <div class="d-flex justify-content-end gap-2 align-items-center">
 
-
-
                                                     <!-- Button trigger modal -->
                                                     <button type="button" class="btn1 btn  open-modal"
                                                         data-bs-toggle="modal" data-bs-target="#staticBackdrop"
@@ -230,136 +228,12 @@
                                                         data-customer-email="{{ $customer->send_email }}">
                                                         OPEN
                                                     </button>
-
-                                                    <!-- Modal -->
-                                                    <div class="modal" style="margin-top: 130px;" id="staticBackdrop"
-                                                        data-bs-backdrop="static" data-bs-keyboard="false"
-                                                        tabindex="-1" aria-labelledby="staticBackdropLabel"
-                                                        aria-hidden="true">
-
-                                                        <div class="modal-dialog modal-dialog-scrollable h-50">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title col-8 text-start"
-                                                                        id="title"></h5>
-
-                                                                    <button type="button" class="col-4 btn-close"
-                                                                        data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
-                                                                </div>
-
-                                                                <div class="modal-body">
-                                                                    <div class="row">
-                                                                        <div class="col-6 selected">
-                                                                            <h6>Outstanding Invoices:</h6>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <h6>Late Invoices:</h6>
-                                                                        </div>
-                                                                    </div>
-
-
-                                                                    <div id="outstanding-invoices"
-                                                                        style="display: block;">
-
-                                                                        <!-- table start -->
-                                                                        <table class="table">
-                                                                            <thead class="thead-dark bg-orange">
-                                                                                <tr>
-                                                                                    <th scope="col"
-                                                                                        style="width: 5%;">#
-                                                                                    </th>
-                                                                                    <th scope="col"
-                                                                                        style="text-align: left;">
-                                                                                        Address
-                                                                                        Job</th>
-                                                                                    <th scope="col"
-                                                                                        style="text-align: right;">Paid
-                                                                                    </th>
-                                                                                    <th scope="col"
-                                                                                        style="text-align: right;">Due
-                                                                                    </th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody id="invoiceTableBody"> </tbody>
-
-                                                                        </table>
-
-                                                                    </div>
-
-                                                                    <div id="late-invoices" style="display: none;">
-
-                                                                        <!-- table start -->
-                                                                        <table class="table">
-                                                                            <thead class="thead-dark bg-orange">
-                                                                                <tr>
-                                                                                    <th scope="col"
-                                                                                        style="width: 5%;">
-                                                                                        #</th>
-                                                                                    <th scope="col"
-                                                                                        style="text-align: left;">
-                                                                                        Address
-                                                                                        Job</th>
-                                                                                    <th scope="col"
-                                                                                        style="text-align: right;">Paid
-                                                                                    </th>
-                                                                                    <th scope="col"
-                                                                                        style="text-align: right;">Due
-                                                                                    </th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary"
-                                                                        data-bs-dismiss="modal">Close</button>
-                                                                    <!-- email model -->
-
-                                                                    <form id="send_email_form"
-                                                                        action="{{ route('email_send_outstantind') }}"
-                                                                        method="POST">
-                                                                        @csrf
-
-                                                                        <!-- Add hidden inputs to pass customer_id and customer_email -->
-                                                                        <input type="hidden" name="customer_id"
-                                                                            value="{{ $customer->customer_id }}">
-                                                                        <input type="hidden" name="email"
-                                                                            value="{{ $customer->send_email }}">
-
-                                                                        <!-- Add a submit button -->
-                                                                        <button type="button"
-                                                                            onclick="confirmSendEmail()"
-                                                                            class="btn btn-primary">
-                                                                            Send Email
-                                                                        </button>
-                                                                    </form>
-                                                                    <!-- email model off -->
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
+                                                    {{-- <button type="button" class="btn btn-primary send-email-btn2"
+                                                        data-customer-id="{{ $customer->customer_id }}"
+                                                        data-customer-email="{{ $customer->send_email }}">
+                                                        Send Email
+                                                    </button> --}}
                                                     <!-- Model End -->
-                                                    <form id="send_email_form_{{ $customer->customer_id }}"
-                                                        action="{{ route('email_send_outstantind') }}"
-                                                        method="POST">
-
-                                                        <!-- Add hidden inputs to pass customer_id and customer_email -->
-                                                        <input type="hidden" name="customer_id"
-                                                            value="{{ $customer->customer_id }}">
-                                                        <input type="hidden" name="email"
-                                                            value="{{ $customer->send_email }}">
-                                                        <!-- Add a submit button -->
-                                                        <button type="button" onclick="confirmSendEmail()"
-                                                            class="btn btn2">
-                                                            EMAIL
-                                                        </button>
-                                                    </form>
                                                 </div>
                                             </td>
 
@@ -373,103 +247,97 @@
                         </div>
                     </div>
                 </div>
+            </div>
         </section>
+
+        {{-- Model code..  --}}
+
+
+        <!-- Modal -->
+        <div class="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable h-50">
+                <div class="modal-content" style="margin-top: 120px;">
+                    <div class="modal-header">
+                        <h5 class="modal-title col-8 text-start" id="title"> </h5>
+                        <button type="button" class="col-4 btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-6 selected">
+                                <h6>Outstanding Invoices:</h6>
+                            </div>
+                            <div class="col-6">
+                                <h6>Late Invoices:</h6>
+                            </div>
+                        </div>
+                        <div id="outstanding-invoices" style="display: block;">
+                            <!-- table start -->
+                            <table class="table">
+                                <thead class="thead-dark bg-orange">
+                                    <tr>
+                                        <th scope="col" style="width: 5%;">#</th>
+                                        <th scope="col" style="text-align: left;">Address Job</th>
+                                        <th scope="col" style="text-align: right;">Paid</th>
+                                        <th scope="col" style="text-align: right;">Due</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoiceTableBody"> </tbody>
+                            </table>
+                        </div>
+                        <div id="late-invoices" style="display: none;">
+                            <!-- table start -->
+                            <table class="table">
+                                <thead class="thead-dark bg-orange">
+                                    <tr>
+                                        <th scope="col" style="width: 5%;">#</th>
+                                        <th scope="col" style="text-align: left;">Address Job</th>
+                                        <th scope="col" style="text-align: right;">Paid</th>
+                                        <th scope="col" style="text-align: right;">Due</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <!-- email model -->
+                        <form id="send_email_form" action="{{ route('email_send_outstantind') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="customer_id" value="">
+                            <input type="hidden" name="email" value="">
+                            <button type="submit" class="btn btn-primary">Send Email</button>
+                        </form>
+                        <!-- email model off -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
-    {{-- <script>
-        // Add event listener for buttons to open modal
-        document.addEventListener("DOMContentLoaded", function() {
-            // Add event listeners to open modal buttons
-            document.querySelectorAll('.open-modal').forEach(function(button) {
-                button.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    var customerId = this.getAttribute('data-customer-id');
-                    var customerEmail = this.getAttribute('data-customer-email');
-                    var rowIndex = this.closest('tr').rowIndex;
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('GET', '/invoices/send_statement_by_id?customer_id=' + customerId +
-                        '&customer_email=' + customerEmail, true);
-                    xhr.onload = function() {
-                        if (xhr.status >= 200 && xhr.status < 300) {
-                            var data = JSON.parse(xhr.responseText);
-                            var tableBody = document.getElementById('invoiceTableBody');
-                            var title = document.getElementById('title').innerHTML = data[0]
-                                .customer_id;
-
-                            tableBody.innerHTML = '';
-                            data.forEach(function(invoice, index) {
-
-                                var row = document.createElement('tr');
-                                row.innerHTML = `
-                                <td>${index + 1}</td>
-                                <td style="text-align: left;">${invoice.address}</td>
-                                <td style="text-align: right;">${invoice.amount}</td>
-                                <td style="text-align: right;">${invoice.total_due}</td>
-                            `;
-                                tableBody.appendChild(row);
-                            });
-
-                            var form = document.getElementById('send_email_form');
-                            form.querySelector('input[name="customer_id"]').value = customerId;
-                            form.querySelector('input[name="email"]').value = customerEmail;
-
-                            // Open the modal after fetching and displaying the data
-                            // var myModal = new bootstrap.Modal(document.getElementById(
-                            //     'staticBackdrop'));
-                            // myModal.show();
-                        } else {
-                            console.error('Request failed with status', xhr.status);
-                        }
-                    };
-                    xhr.send();
-                });
-            });
-
-            function confirmSendEmail(customerId) {
-                if (confirm("Are you sure you want to send the email?")) {
-                    var form = document.getElementById('send_email_form_' + customerId);
-                    var formData = new FormData(form);
-                    console.log('Form Data:', formData); // Debugging statement
-                    fetch(form.getAttribute('action'), {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(response => {
-                            console.log('Response:', response); // Debugging statement
-                            if (response.ok) {
-                                console.log('Form submitted successfully.'); // Debugging statement
-                                // Optionally, perform further actions upon successful submission
-                            } else {
-                                console.error('Form submission failed. Status:', response
-                                .status); // Error message
-                            }
-                        })
-                        .catch(error => {
-                            // Handle errors
-                            console.error('Error:', error); // Error message
-                        });
-                } else {
-                    return false;
-                }
-            }
-
-        });
-    </script> --}}
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Add event listener for buttons to open modal
-            document.querySelectorAll('.open-modal').forEach(function(button) {
+            // Event listener for buttons to open modal
+            document.querySelectorAll('.open-modal').forEach(button => {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
-                    var customerId = this.getAttribute('data-customer-id');
-                    var customerEmail = this.getAttribute('data-customer-email');
+                    const customerId = this.getAttribute('data-customer-id');
+                    const customerEmail = this.getAttribute('data-customer-email');
+
+                    // AJAX request to get invoice data
                     var xhr = new XMLHttpRequest();
-                    xhr.open('GET', '/invoices/send_statement_by_id?customer_id=' + customerId +
-                        '&customer_email=' + customerEmail, true);
+                    xhr.open('GET',
+                        `/invoices/send_statement_by_id?customer_id=${customerId}&customer_email=${customerEmail}`,
+                        true);
                     xhr.onload = function() {
                         if (xhr.status >= 200 && xhr.status < 300) {
-                            var data = JSON.parse(xhr.responseText);
+                            const data = JSON.parse(xhr.responseText);
                             populateModal(data, customerId, customerEmail);
                         } else {
                             console.error('Request failed with status', xhr.status);
@@ -478,59 +346,30 @@
                     xhr.send();
                 });
             });
-
-            function populateModal(data, customerId, customerEmail) {
-                var tableBody = document.getElementById('invoiceTableBody');
-                var title = document.getElementById('title').innerHTML = data[0].customer_id;
-
-                tableBody.innerHTML = '';
-                data.forEach(function(invoice, index) {
-                    var row = document.createElement('tr');
-                    row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td style="text-align: left;">${invoice.address}</td>
-                    <td style="text-align: right;">${invoice.amount}</td>
-                    <td style="text-align: right;">${invoice.total_due}</td>
-                `;
-                    tableBody.appendChild(row);
-                });
-
-                var form = document.getElementById('send_email_form');
-                form.querySelector('input[name="customer_id"]').value = customerId;
-                form.querySelector('input[name="email"]').value = customerEmail;
-
-                // var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
-                // myModal.show();
-            }
-
-            function confirmSendEmail() {
-                if (confirm("Are you sure you want to send the email?")) {
-                    var form = document.getElementById('send_email_form');
-                    var formData = new FormData(form);
-                    fetch(form.getAttribute('action'), {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                console.log('Form submitted successfully.');
-                                // Optionally, perform further actions upon successful submission
-                            } else {
-                                console.error('Form submission failed. Status:', response.status);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                } else {
-                    return false;
-                }
-            }
         });
+
+        function populateModal(data, customerId, customerEmail) {
+            // Example of updating the modal's table body with data
+            const tableBody = document.getElementById('invoiceTableBody');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            data.forEach((invoice, index) => {
+                let row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${index + 1}</td>
+                <td style="text-align: left;">${invoice.address}</td>
+                <td style="text-align: right;">${invoice.amount}</td>
+                <td style="text-align: right;">${invoice.total_due}</td>
+            `;
+                tableBody.appendChild(row);
+            });
+
+            // Update form values for sending emails
+            const form = document.getElementById('send_email_form');
+            form.querySelector('input[name="customer_id"]').value = customerId;
+            form.querySelector('input[name="email"]').value = customerEmail;
+        }
     </script>
-
-
-
 
 
 
@@ -554,8 +393,6 @@
                 document.querySelector(".col-6:nth-child(1)").classList.remove("selected");
             });
         });
-    </script>
-
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">

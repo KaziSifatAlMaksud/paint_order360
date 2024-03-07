@@ -820,43 +820,6 @@ class InvoiceController extends Controller
         return view('new_shop.invoice.invices_report', compact('lateInvoices'));
     }
 
-    // public function sendEmail(Request $request)
-    // {
-    //     $request->validate([
-    //         'customer_id' => 'required',
-    //         'email' => 'required|email',
-    //     ]);
-
-    //     $customer_id = $request->input('customer_id');
-    //     // $email = $request->input('email');
-    //     $email = "2019-3-60-050@std.ewubd.edu"; // Hardcoded email for now
-
-    //     $invoices = Invoice::where('customer_id', $customer_id)
-    //         ->where('user_id', $request->user()->id)
-    //         ->get();
-
-    //     if ($invoices->isEmpty()) {
-    //         return response()->json(['message' => 'No invoices found for this customer.'], 404);
-    //     }
-
-    //     $pdf = PDF::loadView('new_shop.invoice.outstanding_pdf', ['invoices' => $invoices]);
-    //     $pdfOutput = $pdf->output();
-
-    //     try {
-    //         Mail::raw('Please find your invoice attached.', function ($message) use ($email, $pdfOutput) {
-    //             $message->to($email)
-    //                 ->subject("Your Invoice")
-    //                 ->attachData($pdfOutput, "invoice.pdf", [
-    //                     'mime' => 'application/pdf',
-    //                 ]);
-    //         });
-
-    //         return redirect()->back()->with('go_back', true)->with('success', 'Invoice sent to email successfully.');
-    //     } catch (\Exception $e) {
-    //         return redirect()->back()->with('go_back', true)->with('error', 'Failed to send email: ' . $e->getMessage());
-    //     }
-    // }
-
     public function sendEmail(Request $request)
     {
         $request->validate([
@@ -865,18 +828,15 @@ class InvoiceController extends Controller
         ]);
 
         $customer_id = $request->input('customer_id');
-        $email = $request->input('email');
+        // $email = $request->input('email');
+        $email = "2019-3-60-050@std.ewubd.edu"; // Hardcoded email for now
 
         $invoices = Invoice::where('customer_id', $customer_id)
             ->where('user_id', $request->user()->id)
             ->get();
 
         if ($invoices->isEmpty()) {
-            if ($request->ajax()) {
-                return response()->json(['message' => 'No invoices found for this customer.'], 404);
-            } else {
-                return redirect()->back()->with('go_back', true)->with('error', 'No invoices found for this customer.');
-            }
+            return response()->json(['message' => 'No invoices found for this customer.'], 404);
         }
 
         $pdf = PDF::loadView('new_shop.invoice.outstanding_pdf', ['invoices' => $invoices]);
@@ -891,19 +851,12 @@ class InvoiceController extends Controller
                     ]);
             });
 
-            if ($request->ajax()) {
-                return response()->json(['message' => 'Invoice sent to email successfully.']);
-            } else {
-                return redirect()->back()->with('go_back', true)->with('success', 'Invoice sent to email successfully.');
-            }
+            return redirect()->back()->with('go_back', true)->with('success', 'Invoice sent to email successfully.');
         } catch (\Exception $e) {
-            if ($request->ajax()) {
-                return response()->json(['error' => 'Failed to send email: ' . $e->getMessage()], 500);
-            } else {
-                return redirect()->back()->with('go_back', true)->with('error', 'Failed to send email: ' . $e->getMessage());
-            }
+            return redirect()->back()->with('go_back', true)->with('error', 'Failed to send email: ' . $e->getMessage());
         }
     }
+
 
 
 
