@@ -38,7 +38,7 @@
 
         .container {
             width: 80%;
-            margin-top: 15%;
+            margin-top: 10%;
             margin-right: auto;
             margin-left: auto;
         }
@@ -114,7 +114,9 @@
 
             <tr>
                 <td style="border: none !important; ">
-                    <h3 style="margin: 0 !important;">Dear Wisdom Homes,</h3>
+                    <h3 style="margin: 0 !important;">
+                        Dear {{ isset($invoices) && count($invoices) > 0 ? $invoices[0]->customer_id : '' }}
+                        ,</h3>
 
                 </td>
             </tr>
@@ -147,8 +149,8 @@
         <div class="body-section">
             <br>
             <table class="table-bordered">
-                <thead>
-                    <tr style="background-color: #da7805; color:#fff;">
+                <thead style="background: #da7805; color:#fff;">
+                    <tr>
                         <th>Job</th>
                         <th>Job Price</th>
                         <th>Paid</th>
@@ -156,42 +158,33 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $totalAddress = 0;
+                        $totalDue = 0;
+                        $totalAfterSubtraction = 0;
+                    @endphp
+
+                    @foreach ($invoices as $invoice)
+                        @php
+                            $totalAddress++;
+                            $totalDue += $invoice->total_due ?? 0;
+                            $totalAfterSubtraction += ($invoice->total_due ?? 0) - 0;
+                        @endphp
+                        <tr>
+                            <td><b>{{ $invoice->address ?? '' }}</b></td>
+                            <td align="right">${{ number_format($invoice->total_due ?? '', 2) }}</td>
+                            <td align="right">$ 0</td>
+                            <td align="right">${{ number_format(($invoice->total_due ?? 0) - 0, 2) }}</td>
+                        </tr>
+                    @endforeach
+
                     <tr>
-                        <td><b> lot 5 mark st liverpool </b> </td>
-                        <td> $500 </td>
-                        <td> $100 </td>
-                        <td> $400 </td>
+                        <td><b>Sub Total:</b></td>
+                        <td align="right"> <b> $ {{ number_format($totalDue, 2) }} </b> </td>
+                        <td align="right"> <b> $0</b></td>
+                        <td align="right"> <b> $ {{ number_format($totalAfterSubtraction, 2) }} </b> </td>
                     </tr>
-                    <tr>
-                        <td><b> Lot 34 no 44 sampeters ave cabrra.. </b> </td>
-                        <td> $500 </td>
-                        <td> $100 </td>
-                        <td> $400 </td>
-                    </tr>
-                    <tr>
-                        <td><b> lot 5 mark st liverpool </b> </td>
-                        <td> $500 </td>
-                        <td> $100 </td>
-                        <td> $400 </td>
-                    </tr>
-                    <tr>
-                        <td><b> Lot 34 no 44 sampeters ave cabrra. </b> </td>
-                        <td> $500 </td>
-                        <td> $100 </td>
-                        <td> $400 </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td> <B> Job Price </B> </td>
-                        <td> <b> Paid </b> </td>
-                        <td> <b> Due </b></td>
-                    </tr>
+
                 </tbody>
             </table>
             <br>

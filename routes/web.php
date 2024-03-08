@@ -106,7 +106,7 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 	Route::post('/invoices/send-email', [InvoiceController::class, 'sendEmail'])->name('email_send_outstantind');
 
 
-
+	Route::get('/view-pdf', [InvoiceController::class, 'pdf']);
 
 
 

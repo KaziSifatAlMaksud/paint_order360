@@ -94,11 +94,13 @@ function filterCards2() {
     cards.forEach(function(card) {
         const cardTitle = card.querySelector("#expandable-title");
         const customerTitle = card.querySelector("#customer-title");
+        const customerinvoice = card.querySelector("#customer-inv");
         
         const cardTitleText = cardTitle ? cardTitle.textContent.toLowerCase() : '';
         const customerTitleText = customerTitle ? customerTitle.textContent.toLowerCase() : '';
+         const customerInvoiceText = customerinvoice ? customerinvoice.textContent.toLowerCase() : '';
 
-        if (cardTitleText.includes(searchInput) || customerTitleText.includes(searchInput)) {
+        if (cardTitleText.includes(searchInput) || customerTitleText.includes(searchInput) || customerInvoiceText.includes(searchInput) ) {
             card.style.display = "block";
         } else {
             card.style.display = "none";

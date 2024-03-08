@@ -829,7 +829,7 @@ class InvoiceController extends Controller
 
         $customer_id = $request->input('customer_id');
         // $email = $request->input('email');
-        $email = "2019-3-60-050@std.ewubd.edu"; // Hardcoded email for now
+        $email = "2019-3-60-050@std.ewubd.edu";
 
         $invoices = Invoice::where('customer_id', $customer_id)
             ->where('user_id', $request->user()->id)
@@ -843,7 +843,7 @@ class InvoiceController extends Controller
         $pdfOutput = $pdf->output();
 
         try {
-            Mail::raw('Please find your invoice attached.', function ($message) use ($email, $pdfOutput) {
+            Mail::raw('Please find your List of outstanding report attached.', function ($message) use ($email, $pdfOutput) {
                 $message->to($email)
                     ->subject("Your Invoice")
                     ->attachData($pdfOutput, "invoice.pdf", [
@@ -887,4 +887,14 @@ class InvoiceController extends Controller
             'message' => 'Customer added successfully!'
         ]);
     }
+
+    // public function pdf()
+    // {
+    //     $customer_id = "Gj Gardener";
+    //     $invoices = Invoice::where('customer_id', $customer_id)
+    //         ->where('user_id', 25)
+    //         ->get();
+
+    //     return view('new_shop.invoice.outstanding_pdf', compact('invoices')); // Assuming 'pdf.view' is the name of your view file
+    // }
 }

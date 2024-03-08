@@ -8,11 +8,8 @@
     <link rel="icon" href="images/favicon.ico" />
 
     <!--icon link -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
     <link rel="stylesheet" href="{{ asset('css/style10.css') }}">
 
     <style>
@@ -59,6 +56,13 @@
             color: white;
 
         }
+
+        .price-content-table th,
+        td {
+            font-size: 17px;
+            padding: 4px;
+        }
+
 
         .header-row {
             margin: 0 5px;
@@ -174,6 +178,7 @@
         }
 
         /* Navigation End Update*/
+
     </style>
 </head>
 
@@ -207,37 +212,42 @@
 
                         <div class="px-4">
                             <table style="width: 100%; border-collapse: collapse; overflow: hidden;">
+                                <thead>
+                                    <tr>
+                                        <th>Builder</th>
+                                        <th style="text-align: right;">Sub-Total</th>
+                                        <th style="text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+
 
                                 <tbody>
 
                                     @foreach ($invoiceSums as $customer)
-                                        <tr data-customer-id="{{ $customer->customer_id }}">
+                                    <tr data-customer-id="{{ $customer->customer_id }}">
 
-                                            <td style="text-align: left;">
-                                                {{ $customer->customer_id }}
-                                            </td>
-                                            <td style="text-align: right;">
-                                                {{ $customer->total_price }}</td>
-                                            <td>
-                                                <div class="d-flex justify-content-end gap-2 align-items-center">
+                                        <td style="text-align: left;">
+                                            {{ $customer->customer_id }}
+                                        </td>
+                                        <td style="text-align: right;">
+                                            {{ $customer->total_price }}</td>
+                                        <td>
+                                            <div class="d-flex justify-content-end gap-2 align-items-center">
 
-                                                    <!-- Button trigger modal -->
-                                                    <button type="button" class="btn1 btn  open-modal"
-                                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn1 btn  open-modal" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-customer-id="{{ $customer->customer_id }}" data-customer-email="{{ $customer->send_email }}">
+                                                    OPEN
+                                                </button>
+                                                {{-- <button type="button" class="btn btn-primary send-email-btn2"
                                                         data-customer-id="{{ $customer->customer_id }}"
-                                                        data-customer-email="{{ $customer->send_email }}">
-                                                        OPEN
-                                                    </button>
-                                                    {{-- <button type="button" class="btn btn-primary send-email-btn2"
-                                                        data-customer-id="{{ $customer->customer_id }}"
-                                                        data-customer-email="{{ $customer->send_email }}">
-                                                        Send Email
-                                                    </button> --}}
-                                                    <!-- Model End -->
-                                                </div>
-                                            </td>
+                                                data-customer-email="{{ $customer->send_email }}">
+                                                Send Email
+                                                </button> --}}
+                                                <!-- Model End -->
+                                            </div>
+                                        </td>
 
-                                        </tr>
+                                    </tr>
                                     @endforeach
                                     </td>
                                     </tr>
@@ -254,14 +264,12 @@
 
 
         <!-- Modal -->
-        <div class="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable h-50">
                 <div class="modal-content" style="margin-top: 120px;">
                     <div class="modal-header">
-                        <h5 class="modal-title col-8 text-start" id="title"> </h5>
-                        <button type="button" class="col-4 btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <h5 class="modal-title col-8 text-start" id="tittle"> </h5>
+                        <button type="button" class="col-4 btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -329,12 +337,13 @@
                     event.preventDefault();
                     const customerId = this.getAttribute('data-customer-id');
                     const customerEmail = this.getAttribute('data-customer-email');
+                    var tittle = document.getElementById('tittle').innerHTML = customerId;
 
                     // AJAX request to get invoice data
                     var xhr = new XMLHttpRequest();
-                    xhr.open('GET',
-                        `/invoices/send_statement_by_id?customer_id=${customerId}&customer_email=${customerEmail}`,
-                        true);
+                    xhr.open('GET'
+                        , `/invoices/send_statement_by_id?customer_id=${customerId}&customer_email=${customerEmail}`
+                        , true);
                     xhr.onload = function() {
                         if (xhr.status >= 200 && xhr.status < 300) {
                             const data = JSON.parse(xhr.responseText);
@@ -369,6 +378,7 @@
             form.querySelector('input[name="customer_id"]').value = customerId;
             form.querySelector('input[name="email"]').value = customerEmail;
         }
+
     </script>
 
 
@@ -393,9 +403,9 @@
                 document.querySelector(".col-6:nth-child(1)").classList.remove("selected");
             });
         });
+
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
     </script>
 </body>
 
