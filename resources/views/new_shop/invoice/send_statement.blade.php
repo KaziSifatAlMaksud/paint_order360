@@ -49,6 +49,15 @@
 
         }
 
+        .btn1:hover {
+            background-color: #ff6207cf;
+            border-radius: 40px;
+            padding: 0px 15px 0px 15px !important;
+            color: white;
+
+        }
+
+
         .btn2 {
             background-color: #15c9c9;
             border-radius: 40px;
@@ -196,11 +205,31 @@
         </div>
     </header>
 
+
+
+
     @include('layouts.partials.footer')
     <main class="position-relative">
         <!-- card -->
+
+
+
         <section class="mt-5" style="margin-top: 100px!important;">
+
+
             <div class="card mx-1 mt-5 shadow rounded-4">
+                @if(session('success'))
+                <div class="alert alert-success mb-4">
+                    {{ session('success') }}
+                </div>
+                @endif
+
+                @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+                @endif
+
                 <div class="card-body">
                     <div id="job-content" class="yearly-page content active">
                         <h3 class="px-4 mt-4 mb-4 ">
@@ -229,8 +258,9 @@
                                         <td style="text-align: left;">
                                             {{ $customer->customer_id }}
                                         </td>
-                                        <td style="text-align: right;">
-                                            {{ $customer->total_price }}</td>
+                                        <td style="text-align: right;">$ {{ number_format($customer->total_price, 2) }}</td>
+
+
                                         <td>
                                             <div class="d-flex justify-content-end gap-2 align-items-center">
 
@@ -364,14 +394,20 @@
 
             data.forEach((invoice, index) => {
                 let row = document.createElement('tr');
+                // Format numbers to two decimal places correctly
+                let formattedAmount = parseFloat(invoice.amount).toFixed(2);
+                let formattedTotalDue = parseFloat(invoice.total_due).toFixed(2);
+
                 row.innerHTML = `
-                <td>${index + 1}</td>
-                <td style="text-align: left;">${invoice.address}</td>
-                <td style="text-align: right;">${invoice.amount}</td>
-                <td style="text-align: right;">${invoice.total_due}</td>
-            `;
+          <td>${index + 1}</td>
+          <td style="text-align: left;">${invoice.address}</td>
+          <td style="text-align: right;">${formattedAmount}</td>
+          <td style="text-align: right;">${formattedTotalDue}</td>
+          `;
                 tableBody.appendChild(row);
             });
+
+
 
             // Update form values for sending emails
             const form = document.getElementById('send_email_form');

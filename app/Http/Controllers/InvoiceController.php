@@ -828,8 +828,8 @@ class InvoiceController extends Controller
         ]);
 
         $customer_id = $request->input('customer_id');
-        // $email = $request->input('email');
-        $email = "2019-3-60-050@std.ewubd.edu";
+        $email = $request->input('email');
+        // $email = "2019-3-60-050@std.ewubd.edu";
 
         $invoices = Invoice::where('customer_id', $customer_id)
             ->where('user_id', $request->user()->id)
@@ -845,13 +845,13 @@ class InvoiceController extends Controller
         try {
             Mail::raw('Please find your List of outstanding report attached.', function ($message) use ($email, $pdfOutput) {
                 $message->to($email)
-                    ->subject("Your Invoice")
+                    ->subject("Your Outstanding Reprot ")
                     ->attachData($pdfOutput, "invoice.pdf", [
                         'mime' => 'application/pdf',
                     ]);
             });
 
-            return redirect()->back()->with('go_back', true)->with('success', 'Invoice sent to email successfully.');
+            return redirect()->back()->with('go_back', true)->with('success', 'Outstanding Statement Sent to Email Successfully.');
         } catch (\Exception $e) {
             return redirect()->back()->with('go_back', true)->with('error', 'Failed to send email: ' . $e->getMessage());
         }
