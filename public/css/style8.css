@@ -3,10 +3,12 @@
     font-family: 'CFMedium';
     src: url('fonts/VisbyRoundCFMedium.ttf') format('truetype');
 }
+
 @font-face {
     font-family: 'CFBold';
     src: url('fonts/VisbyRoundCFBold.ttf') format('truetype');
 }
+
 @font-face {
     font-family: 'CFLight';
     src: url('fonts/VisbyRoundCFLight.ttf') format('truetype');
@@ -18,15 +20,16 @@ Header area start
 ========================
 */
 * {
-    box-sizing:border-box;
-    margin:0;
+    box-sizing: border-box;
+    margin: 0;
 }
-body {	
-    font-family:'CFMedium';
+
+body {
+    font-family: 'CFMedium';
     font-size: 16px;
-    font-weight: 400;    
-	background:#EAEAEA;
-	color:#000000;	
+    font-weight: 400;
+    background: #EAEAEA;
+    color: #000000;
 }
 
 a:hover {
@@ -64,7 +67,7 @@ main area start
 
 .hero-card-item h3 {
     color: #051EFF;
- 
+
     font-size: 23px;
     margin-bottom: 15px;
 }
@@ -127,7 +130,7 @@ main area start
 }
 
 .card-header>h3 {
- 
+
     margin-left: 10px;
     display: flex;
     align-items: center;
@@ -135,7 +138,7 @@ main area start
 }
 
 .card-part2>span {
- 
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -144,7 +147,7 @@ main area start
 }
 
 .card-part3>span {
-  
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -227,6 +230,7 @@ main area start
 .mobile-nav-row ul li a i {
     font-size: 20px;
 }
+
 /*===================== page-2 start ========================*/
 .body_font2 {
     font-family: 'Inter', sans-serif;
@@ -244,7 +248,7 @@ main area start
 .docs_part {
     background: #FFFFFF;
     padding: 10px 10px;
-    border-radius: 13px; 
+    border-radius: 13px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     margin-bottom: 15px;
     display: flex;
@@ -253,7 +257,7 @@ main area start
 }
 
 .docs_prt1 {
-    border: 3px solid #E8E6E6;
+    /* border: 3px solid #E8E6E6; */
     border-radius: 15px;
 }
 
@@ -272,16 +276,16 @@ main area start
 .docs_left h4 {
     font-size: 20px;
     font-weight: 500;
-    color: #000; 
+    color: #000;
     margin-bottom: 6px;
 }
 
 .docs_left p {
     font-size: 16px;
     font-weight: 400;
-    color: #252525; 
+    color: #252525;
     margin-bottom: 0;
-} 
+}
 
 .docs_cnt2 h4 {
     margin-bottom: 32px;
@@ -311,7 +315,7 @@ main area start
 
 .jobs_house img {
     width: 100%;
-    border-radius: 15px; 
+    border-radius: 15px;
 }
 
 .jobs_house {
@@ -330,7 +334,7 @@ main area start
     font-family: 'Inria Serif', serif;
     font-size: 18px;
     font-weight: 700;
-    color: #FFF; 
+    color: #FFF;
     background: #0367FD;
     width: 115px;
     display: block;
@@ -350,7 +354,7 @@ main area start
 .jobs_cnt ul li {
     font-size: 15px;
     font-weight: 400;
-    color: #000; 
+    color: #000;
 }
 
 .jobs_cnt ul li strong {
@@ -365,7 +369,7 @@ main area start
 .jobs_cnt ul .address_text {
     font-size: 21px;
     font-weight: 600;
-    color: #000; 
+    color: #000;
     margin-bottom: 8px;
     width: 300px;
 }
@@ -378,7 +382,7 @@ main area start
 .jobs_part2 .jobs_cnt h4 {
     font-size: 20px;
     font-weight: 500;
-    color: #000; 
+    color: #000;
     margin-bottom: 10px;
 }
 
@@ -408,7 +412,7 @@ main area start
 .job2_area h3 {
     font-size: 32px;
     font-weight: 500;
-    color: #000; 
+    color: #000;
     text-align: center;
     margin-bottom: 10px;
 }
@@ -417,7 +421,7 @@ main area start
     background: #FFF;
     border: 3px solid #D9D3D3;
     border-radius: 15px;
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));   
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
     margin-bottom: 40px;
 }
 
@@ -431,7 +435,7 @@ main area start
 .job2uper_item h4 {
     font-size: 32px;
     font-weight: 500;
-    color: #000; 
+    color: #000;
     margin: 0;
     position: absolute;
     top: 10px;
@@ -450,7 +454,7 @@ main area start
     display: block;
     font-size: 16px;
     font-weight: 500;
-    color: #000; 
+    color: #000;
     background: #C1FFB2;
     padding: 6px 5px;
     padding-left: 16px;
@@ -466,15 +470,14 @@ main area start
 }
 
 .jobitm2_cnt ul li a {
-    background: #FA7F29; 
+    background: #FA7F29;
     padding-left: 10px;
 }
 
 .job3main_box .job2uper_item h4 {
-    color: #FFF; 
+    color: #FFF;
 }
 
 .job3main_box .job2main_item ul li a {
-    background: #2EB8FD; 
+    background: #2EB8FD;
 }
-

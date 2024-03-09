@@ -6,14 +6,16 @@ Global Style
 ====================
 */
 * {
+
   box-sizing: border-box;
   margin: 0;
 }
 
+
+
 body {
-  background-color: #e6e6e6;
+  background-color: #e6e6e6 !important;
   font-family: "Inter", sans-serif;
-  /* font-size: 12px; */
   font-weight: 400;
   font-style: normal;
   font-variation-settings: "slnt" 0;
@@ -27,6 +29,7 @@ body {
   outline: none;
   width: 100%;
 }
+
 :root {
   --clr: #222327;
   --bg: #f5f5f5;
@@ -42,11 +45,12 @@ body {
 
 /* common  */
 
-.custom-border{
+.custom-border {
   border: 3px solid #E8E6E6;
   box-shadow: 1.5px 2px 2px #b8b9b8;
 }
-.showinline{
+
+.showinline {
   white-space: nowrap;
   width: 100%;
   overflow: hidden;
@@ -68,19 +72,23 @@ Profile Page Style
   object-fit: contain;
   cursor: grab;
 }
+
 .zoom-buttons {
   position: absolute;
   top: 10px;
   right: 10px;
 }
+
 .nav-bar div .arrow {
   height: 20px;
   cursor: pointer;
 }
+
 .nav-bar div .logo {
   height: 60px;
   cursor: pointer;
 }
+
 .nav-bar div p {
   font-size: 15px;
   font-weight: 600;
@@ -89,6 +97,7 @@ Profile Page Style
 .toggle-card div img {
   width: 30px;
 }
+
 .toggle-card div {
   cursor: pointer;
   font-weight: 600;
@@ -97,6 +106,7 @@ Profile Page Style
 .toggle-card div p {
   margin-bottom: 1px;
 }
+
 .toggle-card div.active {
   border-bottom: 5px solid var(--yellow);
   transition: 0.15s all ease-out;
@@ -117,9 +127,11 @@ Profile Page Style
 .service-box .service-box-single {
   width: 48%;
 }
+
 .view2 .service-box .service-col {
   width: 23%;
 }
+
 .view2 .service-box h6 {
   font-size: 14px;
 }
@@ -127,6 +139,7 @@ Profile Page Style
 .service-box p {
   font-size: 12px;
 }
+
 .service-box h6 {
   font-size: 16px;
 }
@@ -134,6 +147,7 @@ Profile Page Style
 .mobile-nav-area {
   margin-top: 2rem;
 }
+
 .mobile-nav-area {
   margin-top: 2rem;
 }
@@ -145,14 +159,17 @@ Profile Page Style
   flex-direction: column;
   align-items: center;
 }
+
 .mobile-nav-row div a i {
   font-size: 30px;
   color: var(--clr);
 }
+
 .mobile-nav-row div:hover p {
   color: var(--orange);
   transition: 0.18s all ease-in-out;
 }
+
 .mobile-nav-row div:hover i {
   color: var(--orange);
   transition: 0.18s all ease-in-out;
@@ -166,6 +183,7 @@ Profile Page Style
 .mobile-nav-row div .mobile-nav-active {
   color: var(--orange);
 }
+
 .mobile-nav-row div .mobile-nav-active i {
   color: var(--orange);
 }
@@ -173,6 +191,7 @@ Profile Page Style
 .view1 {
   display: block;
 }
+
 .view2 {
   display: none;
 }
@@ -183,10 +202,12 @@ Profile Page Style
     height: 15px;
     cursor: pointer;
   }
+
   .nav-bar div .logo {
     height: 80px;
     cursor: pointer;
   }
+
   .nav-bar div p {
     font-size: 15px;
     font-weight: bold;
@@ -195,6 +216,7 @@ Profile Page Style
   .toggle-card div img {
     width: 50px;
   }
+
   .toggle-card div {
     cursor: pointer;
     font-weight: 600;
@@ -204,6 +226,7 @@ Profile Page Style
     font-size: 16px;
     margin-bottom: 1px;
   }
+
   .toggle-card div.active {
     border-bottom: 8px solid var(--yellow);
     transition: 0.15s all ease-out;
@@ -216,6 +239,7 @@ Profile Page Style
   .company-logo {
     height: 50px !important;
   }
+
   .content p {
     font-size: 18px;
     font-weight: 500;
@@ -228,10 +252,12 @@ Profile Page Style
   .service-box p {
     font-size: 18px !important;
   }
+
   .service-box h6 {
     font-size: 24px;
     font-weight: 600;
   }
+
   .custom-card div div img {
     height: 60px !important;
   }
@@ -239,6 +265,7 @@ Profile Page Style
   .mobile-nav-area {
     margin-top: 2rem;
   }
+
   .mobile-nav-area {
     margin-top: 2rem;
   }
@@ -250,14 +277,17 @@ Profile Page Style
     flex-direction: column;
     align-items: center;
   }
+
   .mobile-nav-row div a i {
     font-size: 30px;
     color: var(--clr);
   }
+
   .mobile-nav-row div:hover p {
     color: var(--orange);
     transition: 0.18s all ease-in-out;
   }
+
   .mobile-nav-row div:hover i {
     color: var(--orange);
     transition: 0.18s all ease-in-out;
@@ -271,6 +301,7 @@ Profile Page Style
   .mobile-nav-row div .mobile-nav-active {
     color: var(--orange);
   }
+
   .mobile-nav-row div .mobile-nav-active i {
     color: var(--orange);
   }
@@ -278,6 +309,7 @@ Profile Page Style
   .view1 {
     display: block;
   }
+
   .view1 p {
     font-size: 18px;
     font-weight: 500;
@@ -293,14 +325,17 @@ Profile Page Style
   .custom-card div div img {
     height: 60px !important;
   }
+
   .nav-bar div .arrow {
     height: 40px;
     cursor: pointer;
   }
+
   .nav-bar div .logo {
     height: 100px;
     cursor: pointer;
   }
+
   .nav-bar div p {
     font-size: 18px;
     font-weight: bold;
@@ -309,13 +344,16 @@ Profile Page Style
   .toggle-card div img {
     width: 60px;
   }
+
   .toggle-card div {
     cursor: pointer;
     font-weight: 600;
   }
+
   .toggle-card div p {
     font-size: 24px;
   }
+
   .job-btn {
     height: 130px !important;
   }
@@ -339,6 +377,7 @@ Reports & statements Page Style
 .yearly-page p {
   font-size: 16px;
 }
+
 .single-customer p {
   margin-bottom: 4px;
 }
@@ -355,6 +394,7 @@ Reports & statements Page Style
   font-size: 17px;
   margin-bottom: 15px;
 }
+
 .Quarterly p {
   font-size: 16px;
 }
@@ -385,6 +425,7 @@ Reports & statements Page Style
 td:not(:first-child) {
   text-align: center;
 }
+
 .price-content-table th,
 td {
   font-size: 12px;
@@ -417,7 +458,7 @@ Invoice Page Style
 }
 
 .docs_prt1 {
-  border: 3px solid #e8e6e6;
+  /* border: 3px solid #e8e6e6; */
   border-radius: 15px;
 }
 
@@ -502,15 +543,18 @@ See-Invoice Page Style
   font-weight: 500;
   color: var(--orange);
 }
+
 .search-input::placeholder {
   color: var(--orang);
   text-align: center;
   font-size: 20px;
   margin-left: 50px;
 }
+
 .fa-search {
   margin-right: 5px;
 }
+
 .search-input {
   width: 100%;
 }
@@ -561,12 +605,14 @@ See-Invoice Page Style
   justify-content: center;
   width: 100%;
 }
-.filter td{
+
+.filter td {
   font-size: 20px;
   font-weight: 600;
   color: var(--orange);
 }
-.filter td span{
+
+.filter td span {
   border: 2px solid var(--orange);
   padding: 1px 5px;
   border-radius: 40px;
@@ -577,8 +623,10 @@ See-Invoice Page Style
   margin: 0 auto;
   list-style: none;
   border-radius: 40px;
-  justify-content: space-between; /* Distribute items evenly */
-  padding: 0; /* Remove padding */
+  justify-content: space-between;
+  /* Distribute items evenly */
+  padding: 0;
+  /* Remove padding */
 }
 
 /* .portfolio-flters li {
@@ -629,10 +677,12 @@ See-Invoice Page Style
 .status {
   font-size: 16px;
   margin: 10px;
+  padding: 2px 10px;
   border-radius: 100px;
   background-color: #ff9800;
- 
+
 }
+
 .status a {
   color: #f5f5f5;
   text-decoration: none;
@@ -642,48 +692,56 @@ See-Invoice Page Style
 .status-sent {
   font-size: 16px;
   margin: 10px;
-  padding: 0px 1px;
+  padding: 2px 10px;
   border-radius: 100px;
   background-color: #009EB4;
 }
+
 .status-sent a {
   color: #f5f5f5;
   text-decoration: none;
   font-weight: 600;
 }
+
 .status-late {
   font-size: 16px;
   margin: 10px;
-  padding: 4px 20px;
+  padding: 2px 10px;
   border-radius: 100px;
   background-color: #FF0000;
 }
+
 .status-late a {
   color: #f5f5f5;
   text-decoration: none;
   font-weight: 600;
 }
+
 .status-paid {
   font-size: 16px;
   margin: 10px;
-  padding: 0px 1px;
+  padding: 2px 10px;
   border-radius: 100px;
   background-color: #07C607;
 }
+
 .status-paid a {
   color: #f5f5f5;
   text-decoration: none;
   font-weight: 600;
 }
-.invoice-cart-border{
+
+.invoice-cart-border {
   border: 2px solid #90909027;
   margin: 10px 2px;
 }
+
 .invoice-cart .text2 {
   color: #4e4949;
   font-size: 16px;
-  margin-bottom: 5px;
+  margin-bottom: 1px;
 }
+
 .invoice-cart .text3 {
   margin-bottom: 1px;
   font-size: 16px;
@@ -692,13 +750,13 @@ See-Invoice Page Style
 .invoice-doc .docs_part1 {
   background: #FFFFFF;
   padding: 10px 10px;
-  border-radius: 13px; 
+  border-radius: 13px;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
   margin-bottom: 15px;
 }
 
 .docs_prt1 {
-  border: 3px solid #E8E6E6;
+  /* border: 3px solid #E8E6E6; */
   border-radius: 15px;
 }
 
@@ -709,17 +767,17 @@ Billing Page Style
 ================================
 */
 
-.billing{
+.billing {
   margin-top: 90px;
 }
 
-.billing .title{
-  font-size:  16px;
+.billing .title {
+  font-size: 16px;
   font-weight: 500;
   margin-bottom: 30px;
 }
 
-.billing form div label{
+.billing form div label {
   font-size: 15px;
 }
 
@@ -729,18 +787,19 @@ package Page Style
 ================================
 */
 
-.package .package-title{
+.package .package-title {
   font-size: 14px;
   font-weight: 400;
   margin-bottom: 1px;
 }
-.package h6{
+
+.package h6 {
   font-size: 20px;
   font-weight: 600;
   text-align: center;
 }
 
-.package .starter-btn{
+.package .starter-btn {
   background-color: rgb(15, 119, 167);
   color: white;
   font-size: 14px;
@@ -750,7 +809,8 @@ package Page Style
   border-radius: 2px;
   width: 100%;
 }
-.package .standard-btn{
+
+.package .standard-btn {
   color: rgb(15, 119, 167);
   background-color: white;
   font-size: 14px;
@@ -761,10 +821,11 @@ package Page Style
   width: 100%;
 }
 
-.package .offer{
+.package .offer {
   font-size: 14px;
 }
-.package i{
+
+.package i {
   font-size: 20px;
 }
 
@@ -774,7 +835,7 @@ job Page Style
 ================================
 */
 
-.job-list p{
+.job-list p {
   color: var(--orange);
   font-weight: 700;
   cursor: pointer;
@@ -783,37 +844,41 @@ job Page Style
 .status-new {
   font-size: 16px;
   margin-left: -20px;
-  padding: 0px 1px;
+  padding: 2px 10px;
   border-radius: 100px;
   background-color: var(--orange);
 }
+
 .status-new a {
   color: #f5f5f5;
   text-decoration: none;
   font-weight: 600;
 }
+
 .status-finished {
   font-size: 16px;
   margin: 10px;
-  padding: 0px 1px;
+  padding: 2px 10px;
   border-radius: 100px;
   background-color: #0085FF;
 }
+
 .status-finished a {
   color: #f5f5f5;
   text-decoration: none;
   font-weight: 600;
 }
+
 .status-started {
   font-size: 16px;
   margin: 10px;
-  padding: 0px 1px;
+  padding: 2px 10px;
   border-radius: 100px;
   background-color: #17AA1D;
 }
+
 .status-started a {
   color: #f5f5f5;
   text-decoration: none;
   font-weight: 600;
 }
-

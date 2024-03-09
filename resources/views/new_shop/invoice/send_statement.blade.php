@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>360 Painting</title>
-    <link rel="icon" href="images/favicon.ico" />
+    <title>| Shop</title>
 
+    <link rel="icon" href="images/favicon.ico" />
     <!--icon link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
@@ -40,6 +40,18 @@
             margin-bottom: 10px;
             z-index: 10;
         }
+
+        .selected {
+            border-bottom: 5px solid #ff6107;
+            font-size: blod;
+
+            text-align: center;
+            transition: 0.15s all ease-out;
+        }
+
+
+
+
 
         .btn1 {
             background-color: #ff6107;
@@ -193,13 +205,17 @@
 
 
 
-<body>
+<body style="background-color: #e6e6e6!imporant;">
 
-    <header style="margin-top: -100px!important;">
+
+
+    <header style=" margin-top: -100px!important;">
         <div class="header-row">
             <div class="header-item">
-                <a href="<?php echo '/invoice'; ?>"> <i class="fa-solid fa-arrow-left"></i> </a>
-                <span> Report </span>
+                <a href="{{ route('invoice')}}"> <i class="fa-solid fa-arrow-left"></i> </a>
+
+                <span> Outstanding Report </span>
+
                 <a href="<?php echo '/main'; ?>"> <img src="/image/logo-phone.png" alt="Logo"> </a>
             </div>
         </div>
@@ -210,6 +226,7 @@
 
     @include('layouts.partials.footer')
     <main class="position-relative">
+
         <!-- card -->
 
 
@@ -232,15 +249,16 @@
 
                 <div class="card-body">
                     <div id="job-content" class="yearly-page content active">
-                        <h3 class="px-4 mt-4 mb-4 ">
+                        <h3 class="mt-2">
                             Outstanding Statement
                         </h3>
-                        <p class="px-4 mb-1 fw-bold">Outstanding by Customer</p>
+                        <p class=" mb-4 ">Outstanding by Customer</p>
 
                         <!--------  this is the table for outstanding by customer statement -  ---->
 
-                        <div class="px-4">
-                            <table style="width: 100%; border-collapse: collapse; overflow: hidden;">
+                        <div>
+                            <table class="table responsive-table" style="width: 100%; border-collapse: collapse; overflow: hidden;">
+
                                 <thead>
                                     <tr>
                                         <th>Builder</th>
@@ -268,12 +286,6 @@
                                                 <button type="button" class="btn1 btn  open-modal" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-customer-id="{{ $customer->customer_id }}" data-customer-email="{{ $customer->send_email }}">
                                                     OPEN
                                                 </button>
-                                                {{-- <button type="button" class="btn btn-primary send-email-btn2"
-                                                        data-customer-id="{{ $customer->customer_id }}"
-                                                data-customer-email="{{ $customer->send_email }}">
-                                                Send Email
-                                                </button> --}}
-                                                <!-- Model End -->
                                             </div>
                                         </td>
 
@@ -303,16 +315,16 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-                            <div class="col-6 selected">
-                                <h6>Outstanding Invoices:</h6>
+                            <div class="col-6 text-center selected pb-2 fw-bold"> Outstanding Invoices
+
                             </div>
-                            <div class="col-6">
-                                <h6>Late Invoices:</h6>
+                            <div class="col-6 text-center pb-3 fw-bold">
+                                Late Invoices
                             </div>
                         </div>
                         <div id="outstanding-invoices" style="display: block;">
                             <!-- table start -->
-                            <table class="table">
+                            <table class="table responsive-table">
                                 <thead class="thead-dark bg-orange">
                                     <tr>
                                         <th scope="col" style="width: 5%;">#</th>
@@ -326,7 +338,7 @@
                         </div>
                         <div id="late-invoices" style="display: none;">
                             <!-- table start -->
-                            <table class="table">
+                            <table class="table responsive-table">
                                 <thead class="thead-dark bg-orange">
                                     <tr>
                                         <th scope="col" style="width: 5%;">#</th>
@@ -400,7 +412,8 @@
 
                 row.innerHTML = `
           <td>${index + 1}</td>
-          <td style="text-align: left;">${invoice.address}</td>
+       <td style="text-align: left; ">${invoice.address}</td>
+
           <td style="text-align: right;">${formattedAmount}</td>
           <td style="text-align: right;">${formattedTotalDue}</td>
           `;

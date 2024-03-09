@@ -810,7 +810,55 @@ class InvoiceController extends Controller
             ->whereDate('send_to', '>', $fiveDaysAgo)
             ->orderBy('updated_at', 'desc')
             ->count();
-        return view('new_shop.invoice.main_invices', compact('invoices', 'due_invoice', 'inv_numbers'));
+
+        $read_invoice_total = Invoice::where('user_id', $user_id)
+            ->where('status', 1)
+            ->sum('total_due');
+        $send_invoice_total = Invoice::where('user_id', $user_id)
+            ->where('status', 2)
+            ->sum('total_due');
+        $today =  Carbon::now();
+        $user_id = $request->user()->id;
+        $lateInvoices = collect();
+        $totalLateInvoicesAmount = 0;
+
+        // Fetch data from admin_builders and customers
+        $admin_builders = BuilderModel::select('id', 'company_name', 'builder_email as email', 'phone_number as mobile', 'address as billingAddress', 'abn', 'gate', 'schedule')->get();
+        $customers = Customer::where('user_id', $user_id)->select('id', 'companyName as company_name', 'email', 'mobile', 'billingAddress', 'abn', 'gst as gate', 'schedule')->get();
+
+        // Combine results from admin_builders and customers
+        $results = $customers->merge($admin_builders)->unique('id');
+        // $results = $customers->merge($admin_builders)->keyBy('company_name');
+
+        // Retrieve invoices ordered by last update
+        $invoices = Invoice::where('user_id', $user_id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        foreach ($invoices as $invoice) {
+            if ($invoice->status == 2) { // Assuming status 2 signifies a particular condition
+                foreach ($results as $customer) {
+                    if ($customer->company_name == $invoice->customer_id) {
+                        $dueDate = Carbon::parse($invoice->send_to)->addDays($customer->schedule);
+                        if ($today->gt($dueDate)) {
+                            if (!$lateInvoices->contains('id', $invoice->id)) {
+                                $lateInvoices->push($invoice);
+                                $totalLateInvoicesAmount += $invoice->total_due;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $totalLateInvoices = $lateInvoices->count();
+
+        $ready_invoice_count =  Invoice::where('user_id', $user_id)
+            ->where('status', 1)->count();
+        $send_invoice_count =  Invoice::where('user_id', $user_id)
+            ->where('status', 2)->count();
+        $paid_invoice_count =  Invoice::where('user_id', $user_id)
+            ->where('status', 3)->count();
+        return view('new_shop.invoice.main_invices', compact('invoices', 'due_invoice', 'inv_numbers', 'read_invoice_total', 'send_invoice_total',  'ready_invoice_count', 'send_invoice_count', 'totalLateInvoices', 'totalLateInvoicesAmount'));
     }
 
 
@@ -845,8 +893,8 @@ class InvoiceController extends Controller
         try {
             Mail::raw('Please find your List of outstanding report attached.', function ($message) use ($email, $pdfOutput) {
                 $message->to($email)
-                    ->subject("Your Outstanding Reprot ")
-                    ->attachData($pdfOutput, "invoice.pdf", [
+                    ->subject("Your Outstanding Report ")
+                    ->attachData($pdfOutput, "Outstanding-invoices.pdf", [
                         'mime' => 'application/pdf',
                     ]);
             });
@@ -888,13 +936,13 @@ class InvoiceController extends Controller
         ]);
     }
 
-    // public function pdf()
-    // {
-    //     $customer_id = "Gj Gardener";
-    //     $invoices = Invoice::where('customer_id', $customer_id)
-    //         ->where('user_id', 25)
-    //         ->get();
+    public function pdf()
+    {
+        $customer_id = "Gj Gardener";
+        $invoices = Invoice::where('customer_id', $customer_id)
+            ->where('user_id', 25)
+            ->get();
 
-    //     return view('new_shop.invoice.outstanding_pdf', compact('invoices')); // Assuming 'pdf.view' is the name of your view file
-    // }
+        return view('new_shop.invoice.outstanding_pdf', compact('invoices')); // Assuming 'pdf.view' is the name of your view file
+    }
 }

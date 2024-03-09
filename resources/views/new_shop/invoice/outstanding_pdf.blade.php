@@ -69,8 +69,9 @@
 
         .sub-heading {
             color: #262626;
-            margin-bottom: 05px;
-            border-bottom: 5px solid #da7805;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 4px solid #da7805;
         }
 
         .table-bordered {
@@ -102,6 +103,7 @@
         .float-right {
             float: right;
         }
+
     </style>
 </head>
 
@@ -109,8 +111,7 @@
 
     <div class="container">
 
-        <table
-            style="margin-bottom: 20px!; border-collapse: collapse; border: none !important; width: 100%; margin-top: 40px;">
+        <table style="margin-bottom: 20px!; border-collapse: collapse; border: none !important; width: 100%; margin-top: 40px;">
 
             <tr>
                 <td style="border: none !important; ">
@@ -159,26 +160,34 @@
                 </thead>
                 <tbody>
                     @php
-                        $totalAddress = 0;
-                        $totalDue = 0;
-                        $totalAfterSubtraction = 0;
+                    $totalAddress = 0;
+                    $totalDue = 0;
+                    $totalAfterSubtraction = 0;
                     @endphp
 
                     @foreach ($invoices as $invoice)
-                        @php
-                            $totalAddress++;
-                            $totalDue += $invoice->total_due ?? 0;
-                            $totalAfterSubtraction += ($invoice->total_due ?? 0) - 0;
-                        @endphp
-                        <tr>
-                            <td><b>{{ $invoice->address ?? '' }}</b></td>
-                            <td align="right">${{ number_format($invoice->total_due ?? '', 2) }}</td>
-                            <td align="right">$ 0</td>
-                            <td align="right">${{ number_format(($invoice->total_due ?? 0) - 0, 2) }}</td>
-                        </tr>
-                    @endforeach
-
+                    @php
+                    $totalAddress++;
+                    $totalDue += $invoice->total_due ?? 0;
+                    $totalAfterSubtraction += ($invoice->total_due ?? 0) - 0;
+                    @endphp
                     <tr>
+                        <td>{{ $invoice->address ?? '' }}</td>
+                        <td align="right">${{ number_format($invoice->total_due ?? '', 2) }}</td>
+                        <td align="right">$ 0</td>
+                        <td align="right">${{ number_format(($invoice->total_due ?? 0) - 0, 2) }}</td>
+                    </tr>
+                    @endforeach
+                    <tr style="background: ">
+                        <td></td>
+                        <td align="right"> </td>
+                        <td align="right"></td>
+                        <td align="right"></td>
+                    </tr>
+
+
+                    <tr style="background: ; border-top: 2px solid #da7805;">
+
                         <td><b>Sub Total:</b></td>
                         <td align="right"> <b> $ {{ number_format($totalDue, 2) }} </b> </td>
                         <td align="right"> <b> $0</b></td>
@@ -189,7 +198,7 @@
             </table>
             <br>
             <br>
-            <div style="background-color: #da7805; height: 2px; width: 80%; margin: 0 auto;"></div>
+
 
             <br>
             <br>

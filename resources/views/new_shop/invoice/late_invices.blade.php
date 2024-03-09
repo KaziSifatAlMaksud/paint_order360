@@ -9,172 +9,124 @@
     <link rel="stylesheet" href="{{ asset('css/style8.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style77.css') }}">
     <style>
-    /* CSS for fixed position */
-    .fixed-top {
-        position: fixed;
-        top: 0;
-        margin-top: 75px; 
-        width: 100%;
-        z-index: 999;
-    }
-</style>
+        /* CSS for fixed position */
+        .fixed-top {
+            position: fixed;
+            top: 0;
+            margin-top: 75px;
+            width: 100%;
+            z-index: 999;
+        }
+
+    </style>
 </head>
 <body>
-    
- 
-    	<header>
-			<div class="header-row">
-				<div class="header-item">
-				 <a href="<?php echo '/invoice' ?>"> <i class="fa-solid fa-arrow-left"></i> </a>	
-					<span> Late Invoices </span>
-					<a href="<?php echo '/main' ?>">   <img src="/image/logo-phone.png" alt="Logo"> </a>   
-				</div>
-			</div>
-		</header>
- 
 
 
-@include('layouts.partials.footer')  
-        
-      
+    <header>
+        <div class="header-row">
+            <div class="header-item">
+                <a href="<?php echo '/invoice' ?>"> <i class="fa-solid fa-arrow-left"></i> </a>
+                <span> Late Invoices </span>
+                <a href="<?php echo '/main' ?>"> <img src="/image/logo-phone.png" alt="Logo"> </a>
+            </div>
+        </div>
+    </header>
+
+
+
+    @include('layouts.partials.footer')
+
+
 
     <div class="container" style="padding-top: 30px">
-          
-    
-        <div class="search-bar" >
+
+
+        <div class="search-bar">
             <i class="fas fa-search search-icon"></i>
             <input type="text" class="search-input" id="search-invoice" placeholder="Search Here" oninput="filterCards2()">
         </div>
-   
-    {{-- {{$results}}
-    {{$customerInvoices}} --}}
+
+        {{-- {{$results}}
+        {{$customerInvoices}} --}}
         <div class="portfolio-container">
             <!-- Card Content -->
-{{-- {{$lateInvoices}} --}}
-@foreach($lateInvoices as $invoice)
-    @if($invoice->status == 2)
-     @php
-        $sendDate = new DateTime($invoice->send_to);
-        $currentDate = new DateTime();
-        $customerFound = false;
-        $daysLate = 0;
-
-        foreach ($results as $customer) {
-            if ($invoice->customer_id === $customer->company_name) {
-                $scheduleDays = (int) $customer->schedule; // Cast to integer and ensure it's a valid number
-                if ($scheduleDays > 0) {
-                    $dueDate = clone $sendDate;
-                    $dueDate->modify("+$scheduleDays days"); // Proper concatenation
-                    $interval = $currentDate->diff($dueDate);
-                    $daysLate = $interval->days;
-
-                    if ($currentDate >= $dueDate) {
-                        $customerFound = true;
-                        break; // Break the loop if the matching customer is found
-                    }
-                }
-            }
-        }
-    @endphp
-
-
-        <div class="card InvoicePortfolio invoice-item filter-unpaid">
-            <a href="{{ '/manual_invoice/' . $invoice->id }}">
-                <div class="cardhaderInvoice-unpaid">
-                    <h5 class="text-left ml-2 mt-1 showinline" style="width: 70%" id="expandable-title">{{ $invoice->address }}</h5>
-                    <button type="button" class="invoiceReadynotification-unpaid">Unpaid</button>
-                </div>
-                <p class="text-center mt-2">waiting for payment, if paid click received</p>
-                <div class="row p-1">
-                    <h6 class="col-12 text-left"><b>SENT: </b>{{ $sendDate->format('d-m-Y') }}</h6>
-                    <div class="col-6 reduced-line-height">
-                        <p class="text-left showinline">{{ $invoice->customer_id }}</p>
-                        <p class="text-left showinline">{{ $invoice->description }}</p>
-                    </div>
-                    <div class="col-6 reduced-line-height">
-                        <b>
-                            {{ $daysLate }} days late
-                        </b>
-                        <p class="text-right">{{ $invoice->inv_number }}</p>
-                        <p class="text-right font-weight-bold">${{ $invoice->total_due }}</p>
-                    </div>
-                </div>
-            </a>   
-        </div>
-    @endif
-@endforeach
-
-            
-{{--         
-        @foreach($lateInvoices as $invoice)
+            {{-- {{$lateInvoices}} --}}
+            @foreach($lateInvoices as $invoice)
             @if($invoice->status == 2)
-                @php
-                    $sendDate = new DateTime($invoice->send_to);
-                    $currentDate = new DateTime();
-                    $interval = $currentDate->diff($sendDate);
-                    $days = $interval->days;
-                @endphp
+            @php
+            $sendDate = new DateTime($invoice->send_to);
+            $currentDate = new DateTime();
+            $customerFound = false;
+            $daysLate = 0;
 
-                @if($days >= 2)
-                    <div class="card InvoicePortfolio invoice-item filter-unpaid">
-                        <a href="{{ '/manual_invoice/' . $invoice->id }}">
-                            <div class="cardhaderInvoice-unpaid">
-                                <h5 class="text-left ml-2 mt-1 showinline" style="width: 70%" id="expandable-title">{{ $invoice->address }}</h5>
-                                <button type="button" class="invoiceReadynotification-unpaid">Unpaid</button>
-                            </div>
-                            <p class="text-center mt-2">waiting for payment, if paid click received</p>
-                            <div class="row p-1">
-                                <h6 class="col-12 text-left"><b>SENT: </b>{{ (new DateTime($invoice->send_to))->format('d-m-Y') }}</h6>
-                                <div class="col-6 reduced-line-height">
-                                    <p class="text-left showinline">{{ $invoice->customer_id }}</p>
-                                    <p class="text-left showinline">{{ $invoice->description }}</p>
-                                </div>
-                                <div class="col-6 reduced-line-height">
-                                    <b>
-                                        @if($days <= 5)
-                                            5 days or less
-                                        @elseif($days <= 7)
-                                            1 week
-                                        @elseif($days <= 14)
-                                            2 weeks
-                                        @elseif($days <= 21)
-                                            3 weeks
-                                        @elseif($days > 21)
-                                            1 month or more
-                                        @endif
-                                    </b>
-                                    <p class="text-right">{{ $invoice->inv_number }}</p>
-                                    
-                                    <p class="text-right font-weight-bold">${{ number_format((float) str_replace(',', '', $invoice->total_due), 2)}}</p>
+            foreach ($results as $customer) {
+            if ($invoice->customer_id === $customer->company_name) {
+            $scheduleDays = (int) $customer->schedule; // Cast to integer and ensure it's a valid number
+            if ($scheduleDays > 0) {
+            $dueDate = clone $sendDate;
+            $dueDate->modify("+$scheduleDays days"); // Proper concatenation
+            $interval = $currentDate->diff($dueDate);
+            $daysLate = $interval->days;
 
-                                </div>
-                            </div>
-                        </a>   
+            if ($currentDate >= $dueDate) {
+            $customerFound = true;
+            break; // Break the loop if the matching customer is found
+            }
+            }
+            }
+            }
+            @endphp
+
+
+            <div class="card InvoicePortfolio invoice-item filter-unpaid">
+                <a href="{{ '/manual_invoice/' . $invoice->id }}">
+                    <div class="cardhaderInvoice-unpaid">
+                        <h5 class="text-left ml-2 mt-1 showinline" style="width: 70%" id="expandable-title">{{ $invoice->address }}</h5>
+                        <button type="button" class="invoiceReadynotification-unpaid">Unpaid</button>
                     </div>
-                @endif
+                    <p class="text-center mt-2">waiting for payment, if paid click received</p>
+                    <div class="row p-1">
+                        <h6 class="col-12 text-left"><b>SENT: </b>{{ $sendDate->format('d-m-Y') }}</h6>
+                        <div class="col-6 reduced-line-height">
+                            <p class="text-left showinline" id="customer-title">{{ $invoice->customer_id }}</p>
+
+                            <p class="text-left showinline">{{ $invoice->description }}</p>
+                        </div>
+                        <div class="col-6 reduced-line-height">
+                            <b>
+                                {{ $daysLate }} days late
+                            </b>
+                            <p class="text-right" id="customer-inv">{{ $invoice->inv_number }}</p>
+
+                            <p class="text-right font-weight-bold">${{ $invoice->total_due }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
             @endif
-        @endforeach --}}
+            @endforeach
 
-          
 
-           
-            <!-- End Card Section -->   
+
+            <!-- End Card Section -->
         </div>
         <div style="margin: 20px 0px 300px 0px;"></div>
     </div>
     <script>
-    window.addEventListener('scroll', function() {
-        var headerHeight = document.querySelector('.header-row').offsetHeight;
-        var filterElement = document.querySelector('.filter');
-        var searchBarElement = document.querySelector('.search-bar');
-        if (window.pageYOffset > headerHeight) {           
-            filterElement.classList.add('fixed-top');
-            searchBarElement.classList.add('fixed-top');
-        } else {
-            filterElement.classList.remove('fixed-top');
-            searchBarElement.classList.remove('fixed-top');
-        }
-    });
+        window.addEventListener('scroll', function() {
+            var headerHeight = document.querySelector('.header-row').offsetHeight;
+            var filterElement = document.querySelector('.filter');
+            var searchBarElement = document.querySelector('.search-bar');
+            if (window.pageYOffset > headerHeight) {
+                filterElement.classList.add('fixed-top');
+                searchBarElement.classList.add('fixed-top');
+            } else {
+                filterElement.classList.remove('fixed-top');
+                searchBarElement.classList.remove('fixed-top');
+            }
+        });
+
     </script>
 
 

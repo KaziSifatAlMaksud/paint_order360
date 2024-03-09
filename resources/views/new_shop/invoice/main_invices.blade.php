@@ -184,25 +184,29 @@
                     <tbody>
                         <tr>
                             <td>Ready to send</td>
-                            <td><span>3</span></td>
-                            <td> = $2,0000.00</td>
+                            <td><span>{{ $ready_invoice_count ? $ready_invoice_count : 0 }}</span></td>
+                            <td> = ${{ $read_invoice_total ? number_format($read_invoice_total, 2) : 0 }}</td>
+
+
                         </tr>
                         <tr>
                             <td>Sent out</td>
-                            <td><span>15</span></td>
-                            <td> = $14,0000.00</td>
+                            <td><span>{{ $send_invoice_count ? $send_invoice_count : 0 }}</span></td>
+                            <td> = ${{ $send_invoice_total ? number_format($send_invoice_total, 2) : 0 }}</td>
                         </tr>
                         <tr>
                             <td>Late invoices</td>
-                            <td><span>2</span></td>
-                            <td> = $3,0000.00</td>
+                            <td><span>{{ $totalLateInvoices ? $totalLateInvoices : 0 }}</span></td>
+                            <td> = $ {{ $totalLateInvoicesAmount ? number_format($totalLateInvoicesAmount, 2) : 0 }}</td>
+
+
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="search-bar">
+            <div class="search-bar mt-2">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input " style="background:#EEEEEE;" id="search-input" placeholder="Search Address or Customer" oninput="filterCards()">
+                <input type="text" class="search-input " id="search-input" placeholder="Search Address or Customer" oninput="filterCards()">
             </div>
             @if (session('success'))
             <div class="alert alert-success">
@@ -213,10 +217,6 @@
         </section>
 
         <section class="invoice-doc jobs_area">
-
-            <div class="jobs_house">
-                <img src="images/house.png" alt="">
-            </div>
             @foreach ($invoices as $invoice)
             <a href="{{ '/manual_invoice/' . $invoice->id }}" style="text-decoration: none; color:black;">
                 <div class="docs_part1 docs_prt1 position-relative portfolio-item" style="line-height: 1;">
@@ -224,13 +224,27 @@
                         <h5 class="address_text mt-2 showinline">{{ $invoice->address }}</h5>
                         <div class="invoice-cart-border"></div>
                         <p class="text2">{{ $invoice->description }} </p>
+                        <p class="docs_right jobs_right position-absolute end-0" style="margin: -10px 10px 0px 0px;" id="customer-inv">{{ $invoice->inv_number }}</p>
+
                         <div>
+
+
                             <p class="text3">${{ number_format($invoice->total_due, 2) }}inc gst</p>
-                            <p class="text3 bilderName"><strong> {{ $invoice->customer_id }} </strong></p>
+                            <p class="text3 bilderName"> {{ $invoice->customer_id }} </p>
+
+
                         </div>
                     </div>
+
+
                     @if ($invoice->status == 1)
+
+
+
+
                     <div class="status docs_right jobs_right position-absolute bottom-0 end-0">
+
+
                         <a class="map_btn" href="#">Ready</a>
                     </div>
                     @endif
@@ -238,13 +252,6 @@
                     <div class="status-sent docs_right jobs_right position-absolute bottom-0 end-0">
                         <a class="map_btn" href="#">Sent</a>
                     </div>
-
-                    {{-- <div class="px-3 d-flex align-items-center docs_right jobs_right position-absolute bottom-0 end-0">
-                        <div class="status-late">
-                            <a class="map_btn" href="#">Late</a>
-                        </div>
-                        <p class="mb-0 fw-bold">3 days</p>
-                        </div> --}}
                     @endif
                     @if ($invoice->status == 3)
                     <div class=" docs_right jobs_right position-absolute bottom-0 end-0">
