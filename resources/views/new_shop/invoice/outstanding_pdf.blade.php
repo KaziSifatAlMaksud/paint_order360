@@ -160,22 +160,22 @@
                 </thead>
                 <tbody>
                     @php
-                    $totalAddress = 0;
                     $totalDue = 0;
+                    $totalPaid = 0;
                     $totalAfterSubtraction = 0;
                     @endphp
 
                     @foreach ($invoices as $invoice)
                     @php
-                    $totalAddress++;
                     $totalDue += $invoice->total_due ?? 0;
-                    $totalAfterSubtraction += ($invoice->total_due ?? 0) - 0;
+                    $totalPaid += $invoice->total_payments ?? 0;
+                    $totalAfterSubtraction += ($invoice->total_due ?? 0) - $invoice->total_payments;
                     @endphp
                     <tr>
                         <td>{{ $invoice->address ?? '' }}</td>
                         <td align="right">${{ number_format($invoice->total_due ?? '', 2) }}</td>
-                        <td align="right">$ 0</td>
-                        <td align="right">${{ number_format(($invoice->total_due ?? 0) - 0, 2) }}</td>
+                        <td align="right">$ {{ number_format($invoice->total_payments ?? '', 2) }} </td>
+                        <td align="right">${{ number_format(($invoice->total_due ?? 0) - ($invoice->total_payments ?? 0), 2) }}</td>
                     </tr>
                     @endforeach
                     <tr style="background: ">
@@ -190,7 +190,8 @@
 
                         <td><b>Sub Total:</b></td>
                         <td align="right"> <b> $ {{ number_format($totalDue, 2) }} </b> </td>
-                        <td align="right"> <b> $0</b></td>
+                        <td align="right"> <b> $ {{ number_format( $totalPaid, 2) }}</b></td>
+
                         <td align="right"> <b> $ {{ number_format($totalAfterSubtraction, 2) }} </b> </td>
                     </tr>
 

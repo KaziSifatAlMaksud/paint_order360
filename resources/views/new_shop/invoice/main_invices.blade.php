@@ -221,18 +221,14 @@
             <a href="{{ '/manual_invoice/' . $invoice->id }}" style="text-decoration: none; color:black;">
                 <div class="docs_part1 docs_prt1 position-relative portfolio-item" style="line-height: 1;">
                     <div class="invoice-cart">
-                        <h5 class="address_text mt-2 showinline">{{ $invoice->address }}</h5>
+                        <h5 class="address_text mt-2 showinline" id="expandable-title">{{ $invoice->address }}</h5>
+
                         <div class="invoice-cart-border"></div>
                         <p class="text2">{{ $invoice->description }} </p>
                         <p class="docs_right jobs_right position-absolute end-0" style="margin: -10px 10px 0px 0px;" id="customer-inv">{{ $invoice->inv_number }}</p>
-
                         <div>
-
-
                             <p class="text3">${{ number_format($invoice->total_due, 2) }}inc gst</p>
                             <p class="text3 bilderName"> {{ $invoice->customer_id }} </p>
-
-
                         </div>
                     </div>
 

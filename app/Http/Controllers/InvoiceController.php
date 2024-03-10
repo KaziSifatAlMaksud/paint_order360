@@ -108,16 +108,6 @@ class InvoiceController extends Controller
                         $message->attach($fullPath);
                     }
                 });
-
-                // Mail::send('new_shop.invoice.invices_pdf', $data, function ($message) use ($data, $pdf, $attachmentPath) {
-                //     $message->to($data["send_email"])
-                //         ->subject("Your Invoice - " . $data['address'])
-                //         ->attachData($pdf->output(), "invoice.pdf");
-                //     if ($attachmentPath) {
-                //         $fullPath = public_path('uploads/' . $attachmentPath);
-                //         $message->attach($fullPath);
-                //     }
-                // });
                 $validatedData['status'] = 2;
                 $validatedData['send_to'] = Carbon::now()->format('d-m-Y H:i:s');
                 $invoice = Invoice::create($validatedData);
@@ -142,13 +132,12 @@ class InvoiceController extends Controller
     public function send_statement_by_id(Request $request)
     {
         $customer_id = $request->input('customer_id');
-        $invoices = Invoice::where('customer_id', $customer_id)
+        $invoices = Invoice::with('invoicePayments')->where('customer_id', $customer_id)
             ->where('user_id', $request->user()->id)
             ->get();
-
-        // You may need to format the data as needed before returning it, for example, convert it to JSON
         return response()->json($invoices);
     }
+
 
 
     public function invoice_send(Request $request, $jobs_id, $poItem_id)
@@ -178,9 +167,15 @@ class InvoiceController extends Controller
     {
         $user_id = $request->user()->id;
 
-        $invoices = Invoice::where('user_id', $user_id)
+        $invoices = Invoice::with('invoicePayments')
+            ->where('user_id', $user_id)
             ->orderBy('updated_at', 'desc')
             ->get();
+        foreach ($invoices as $invoice) {
+            // Calculate the sum of amount_main for each invoice's payments
+            $invoice->total_payments = $invoice->invoicePayments->sum('amount_main');
+        }
+
         $invoiceSums = DB::table('invoices')
             ->select('customer_id', DB::raw('SUM(total_due) as total_price'), 'send_email')
             ->where('user_id', $user_id)
@@ -828,9 +823,7 @@ class InvoiceController extends Controller
 
         // Combine results from admin_builders and customers
         $results = $customers->merge($admin_builders)->unique('id');
-        // $results = $customers->merge($admin_builders)->keyBy('company_name');
 
-        // Retrieve invoices ordered by last update
         $invoices = Invoice::where('user_id', $user_id)
             ->orderBy('updated_at', 'desc')
             ->get();
@@ -865,6 +858,7 @@ class InvoiceController extends Controller
     public function report(Request $request)
     {
         $lateInvoices = 25;
+
         return view('new_shop.invoice.invices_report', compact('lateInvoices'));
     }
 
@@ -877,6 +871,7 @@ class InvoiceController extends Controller
 
         $customer_id = $request->input('customer_id');
         $email = $request->input('email');
+        $user_email = $request->user()->email;
         // $email = "2019-3-60-050@std.ewubd.edu";
 
         $invoices = Invoice::where('customer_id', $customer_id)
@@ -893,7 +888,15 @@ class InvoiceController extends Controller
         try {
             Mail::raw('Please find your List of outstanding report attached.', function ($message) use ($email, $pdfOutput) {
                 $message->to($email)
-                    ->subject("Your Outstanding Report ")
+                    ->subject("Your Outstanding Report")
+                    ->attachData($pdfOutput, "Outstanding-invoices.pdf", [
+                        'mime' => 'application/pdf',
+                    ]);
+            });
+
+            Mail::raw('Please find the attached outstanding report for the customer.', function ($message) use ($user_email, $pdfOutput) {
+                $message->to($user_email)
+                    ->subject("Customer Outstanding Report")
                     ->attachData($pdfOutput, "Outstanding-invoices.pdf", [
                         'mime' => 'application/pdf',
                     ]);

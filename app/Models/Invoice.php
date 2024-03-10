@@ -19,4 +19,15 @@ class Invoice extends Model
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
+    protected $appends = ['total_payments'];
+    public function getTotalPaymentsAttribute()
+    {
+        if (!array_key_exists('invoicePayments', $this->relations)) $this->load('invoicePayments');
+        return $this->invoicePayments->sum('amount_main');
+    }
+
+    public function invoicePayments()
+    {
+        return $this->hasMany(InvoicePayment::class, 'invoice_id');
+    }
 }

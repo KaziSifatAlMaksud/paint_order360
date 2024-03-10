@@ -41,6 +41,11 @@
             z-index: 10;
         }
 
+        .modal-dialog-scrollable .modal-content {
+            max-height: 150% !important;
+        }
+
+
         .selected {
             border-bottom: 5px solid #ff6107;
             font-size: blod;
@@ -308,12 +313,15 @@
         <!-- Modal -->
         <div class="modal" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable h-50">
-                <div class="modal-content" style="margin-top: 120px;">
+                <div class="modal-content" style="margin-top: 40px;">
+
                     <div class="modal-header">
                         <h5 class="modal-title col-8 text-start" id="tittle"> </h5>
                         <button type="button" class="col-4 btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+
+
                         <div class="row">
                             <div class="col-6 text-center selected pb-2 fw-bold"> Outstanding Invoices
 
@@ -327,7 +335,6 @@
                             <table class="table responsive-table">
                                 <thead class="thead-dark bg-orange">
                                     <tr>
-                                        <th scope="col" style="width: 5%;">#</th>
                                         <th scope="col" style="text-align: left;">Address Job</th>
                                         <th scope="col" style="text-align: right;">Paid</th>
                                         <th scope="col" style="text-align: right;">Due</th>
@@ -341,7 +348,6 @@
                             <table class="table responsive-table">
                                 <thead class="thead-dark bg-orange">
                                     <tr>
-                                        <th scope="col" style="width: 5%;">#</th>
                                         <th scope="col" style="text-align: left;">Address Job</th>
                                         <th scope="col" style="text-align: right;">Paid</th>
                                         <th scope="col" style="text-align: right;">Due</th>
@@ -400,20 +406,17 @@
         });
 
         function populateModal(data, customerId, customerEmail) {
-            // Example of updating the modal's table body with data
             const tableBody = document.getElementById('invoiceTableBody');
             tableBody.innerHTML = ''; // Clear existing rows
 
             data.forEach((invoice, index) => {
                 let row = document.createElement('tr');
-                // Format numbers to two decimal places correctly
-                let formattedAmount = parseFloat(invoice.amount).toFixed(2);
-                let formattedTotalDue = parseFloat(invoice.total_due).toFixed(2);
+                let formattedAmount = parseFloat(invoice.total_payments).toFixed(2);
+
+                let formattedTotalDue = parseFloat(invoice.total_due - invoice.total_payments).toFixed(2);
 
                 row.innerHTML = `
-          <td>${index + 1}</td>
-       <td style="text-align: left; ">${invoice.address}</td>
-
+          <td style="text-align: left; ">${invoice.address}</td>
           <td style="text-align: right;">${formattedAmount}</td>
           <td style="text-align: right;">${formattedTotalDue}</td>
           `;
