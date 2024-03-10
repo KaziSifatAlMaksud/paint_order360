@@ -205,35 +205,37 @@
                         <h6 class="text-center mt-4">
                             Yearly report of Profit and costs from 1st jan
                         </h6>
-                        <p class="px-4 mb-1 fw-bold">Income by customer</p>
-                        <div class="customers-income px-4 mb-4">
-                            <div class="single-customer d-flex justify-content-between">
-                                <p class="cus-name">Mac jones homes</p>
-                                <p class="cus-income">$<span>107.00</span></p>
-                            </div>
-                            <div class="single-customer d-flex justify-content-between">
-                                <p class="cus-name">jones homes</p>
-                                <p class="cus-income">$<span>540.00</span></p>
-                            </div>
-                            <div class="single-customer d-flex justify-content-between">
-                                <p class="cus-name">Sunny</p>
-                                <p class="cus-income">$<span>780.00</span></p>
-                            </div>
-                            <div class="single-customer d-flex justify-content-between">
-                                <p class="cus-name">Mac jones homes</p>
-                                <p class="cus-income">$<span>170.00</span></p>
-                            </div>
-                        </div>
+                        <p class="mb-2 fw-bold">Income by customer</p>
 
-                        <div class="total-income px-4 d-flex justify-content-between">
-                            <p class="cus-name fw-bold mb-0">Total income</p>
-                            <p class="cus-income mb-0">$<span>170.00</span></p>
-                        </div>
-                        <p class="date px-4 mb-4">1st jan to today yearly</p>
+                        <table class="table responsive-table" style="width: 100%; border-collapse: collapse; overflow: hidden;">
 
-                        <div class="px-3 shadow my-4">
+                            <thead>
+                                <tr>
+                                    <th class="fs-6">Builder Name</th>
+                                    <th class="fs-6" style="text-align: right;">Sub-Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($invoiceSums as $customer)
+                                <tr data-customer-id="{{ $customer->customer_id }}">
+                                    <td class="fs-6" style="text-align: left;"> {{ $customer->customer_id }} </td>
+                                    <td class="fs-6" style="text-align: right;">$ {{ number_format($customer->total_price, 2) }}</td>
+                                </tr>
+                                @endforeach
+                                <tr data-customer-id="{{ $customer->customer_id }}">
+                                    <td class="fs-6" style="text-align: left;"> <b> Total Income: </b> <br>
+                                        <p class="date mb-4">1st jan to today yearly</p>
+
+                                    </td>
+                                    <td class="fs-6" style="text-align: right;"> <b> $ {{ number_format($customer->total_price, 2) }} </b> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                        {{-- <div class="px-3 shadow my-4">
                             <hr />
-                        </div>
+                        </div> --}}
 
                         <div class="total-expense">
                             <p class="px-4 mb-1 fw-bold">Total expense and profit</p>

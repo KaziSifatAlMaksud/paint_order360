@@ -133,6 +133,7 @@ class InvoiceController extends Controller
     {
         $customer_id = $request->input('customer_id');
         $invoices = Invoice::with('invoicePayments')->where('customer_id', $customer_id)
+            ->where('status', 2)
             ->where('user_id', $request->user()->id)
             ->get();
         return response()->json($invoices);
@@ -168,6 +169,7 @@ class InvoiceController extends Controller
         $user_id = $request->user()->id;
 
         $invoices = Invoice::with('invoicePayments')
+            ->where('status', 2)
             ->where('user_id', $user_id)
             ->orderBy('updated_at', 'desc')
             ->get();
@@ -178,6 +180,7 @@ class InvoiceController extends Controller
 
         $invoiceSums = DB::table('invoices')
             ->select('customer_id', DB::raw('SUM(total_due) as total_price'), 'send_email')
+            ->where('status', 2)
             ->where('user_id', $user_id)
             ->groupBy('customer_id')
             ->get();
@@ -857,9 +860,33 @@ class InvoiceController extends Controller
 
     public function report(Request $request)
     {
-        $lateInvoices = 25;
+        $user_id = $request->user()->id;
 
-        return view('new_shop.invoice.invices_report', compact('lateInvoices'));
+        $invoices = Invoice::with('invoicePayments')
+            ->where('user_id', $user_id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        foreach ($invoices as $invoice) {
+            // Calculate the sum of amount_main for each invoice's payments
+            $invoice->total_payments = $invoice->invoicePayments->sum('amount_main');
+        }
+
+        $invoiceSums = DB::table('invoices')
+            ->select('customer_id', DB::raw('SUM(total_due) as total_price'), 'send_email')
+            ->where('user_id', $user_id)
+            ->groupBy('customer_id')
+            ->get();
+
+
+        $inv_numbers = Invoice::max('id') ?? 0;
+        $today = now();
+        $fiveDaysAgo = $today->subDays(3);
+        $due_invoice = Invoice::where('user_id', $user_id)
+            ->where('status', 2)
+            ->whereDate('send_to', '>', $fiveDaysAgo)
+            ->orderBy('updated_at', 'desc')
+            ->count();
+        return view('new_shop.invoice.invices_report', compact('invoices', 'due_invoice', 'invoiceSums', 'inv_numbers'));
     }
 
     public function sendEmail(Request $request)

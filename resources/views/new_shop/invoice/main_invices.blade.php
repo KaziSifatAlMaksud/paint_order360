@@ -206,7 +206,7 @@
             </div>
             <div class="search-bar mt-2">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input " id="search-input" placeholder="Search Address or Customer" oninput="filterCards()">
+                <input type="text" class="search-input" id="search-input" placeholder=" Search Address or Customer" oninput="filterCards()">
             </div>
             @if (session('success'))
             <div class="alert alert-success">
@@ -216,28 +216,34 @@
             <div class="px-2 border-custom"></div>
         </section>
 
-        <section class="invoice-doc jobs_area">
+        <section class="invoice-doc jobs_area InvoicePortfolio">
             @foreach ($invoices as $invoice)
             <a href="{{ '/manual_invoice/' . $invoice->id }}" style="text-decoration: none; color:black;">
                 <div class="docs_part1 docs_prt1 position-relative portfolio-item" style="line-height: 1;">
                     <div class="invoice-cart">
-                        <h5 class="address_text mt-2 showinline" id="expandable-title">{{ $invoice->address }}</h5>
+                        <h5 class="addressText mt-2 showinline address_text">{{ $invoice->address }}</h5>
+
+
 
                         <div class="invoice-cart-border"></div>
                         <p class="text2">{{ $invoice->description }} </p>
-                        <p class="docs_right jobs_right position-absolute end-0" style="margin: -10px 10px 0px 0px;" id="customer-inv">{{ $invoice->inv_number }}</p>
+                        <p class="docs_right jobs_right position-absolute end-0 customerInv " style="margin: -10px 10px 0px 0px;">{{ $invoice->inv_number }}</p>
+
+
+
                         <div>
-                            <p class="text3">${{ number_format($invoice->total_due, 2) }}inc gst</p>
-                            <p class="text3 bilderName"> {{ $invoice->customer_id }} </p>
+                            <p class="text3"> <b> ${{ number_format($invoice->total_due, 2) }}inc gst </b></p>
+
+                            <p class="text3 bilderName"> <b> {{ $invoice->customer_id }} </b> </p>
+
+
+
+
                         </div>
                     </div>
 
 
                     @if ($invoice->status == 1)
-
-
-
-
                     <div class="status docs_right jobs_right position-absolute bottom-0 end-0">
 
 
