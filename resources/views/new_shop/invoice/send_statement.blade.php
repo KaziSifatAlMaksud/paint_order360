@@ -266,10 +266,8 @@
 
                                 <thead>
                                     <tr>
-                                        <th width="40%">Builder</th>
-
-                                        <th width="40%" style="text-align: right;">Sub-Total</th>
-
+                                        <th>Builder</th>
+                                        <th style="text-align: right;">Sub-Total</th>
                                         <th style="text-align: right;">Action</th>
                                     </tr>
                                 </thead>

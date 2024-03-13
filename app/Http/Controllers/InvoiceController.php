@@ -906,6 +906,7 @@ class InvoiceController extends Controller
         $email = $request->input('email');
         $user_email = $request->user()->email;
         // $email = "2019-3-60-050@std.ewubd.edu";
+        // $user_email = "kazi.sifat2013@gmail.com";
 
         $invoices = Invoice::where('customer_id', $customer_id)
             ->where('user_id', $request->user()->id)
