@@ -252,7 +252,7 @@
                 </div>
                 @endif
 
-                <div class="card-body">
+                <div class="card-body px-2">
                     <div id="job-content" class="yearly-page content active">
                         <h3 class="mt-2">
                             Outstanding Statement
@@ -266,8 +266,10 @@
 
                                 <thead>
                                     <tr>
-                                        <th>Builder</th>
-                                        <th style="text-align: right;">Sub-Total</th>
+                                        <th width="40%">Builder</th>
+
+                                        <th width="40%" style="text-align: right;">Sub-Total</th>
+
                                         <th style="text-align: right;">Action</th>
                                     </tr>
                                 </thead>
@@ -332,15 +334,21 @@
                         </div>
                         <div id="outstanding-invoices" style="display: block;">
                             <!-- table start -->
-                            <table class="table responsive-table">
+                            <table class="table responsive-table" style="font-size: 16px;">
+
+
                                 <thead class="thead-dark bg-orange">
                                     <tr>
-                                        <th scope="col" style="text-align: left;">Address Job</th>
-                                        <th scope="col" style="text-align: right;">Paid</th>
-                                        <th scope="col" style="text-align: right;">Due</th>
+                                        <th scope="col" width="35%" style="text-align: left;">Address Job</th>
+
+                                        <th scope="col" width="30%" style="text-align: right;">Invoice ID</th>
+
+                                        <th scope="col" width="40%" style="text-align: right;">Due</th>
+
                                     </tr>
                                 </thead>
-                                <tbody id="invoiceTableBody"> </tbody>
+                                <tbody style="font-size: 10px;" id="invoiceTableBody"> </tbody>
+
                             </table>
                         </div>
                         <div id="late-invoices" style="display: none;">
@@ -349,7 +357,7 @@
                                 <thead class="thead-dark bg-orange">
                                     <tr>
                                         <th scope="col" style="text-align: left;">Address Job</th>
-                                        <th scope="col" style="text-align: right;">Paid</th>
+                                        <th scope="col" style="text-align: right;">Invoice ID</th>
                                         <th scope="col" style="text-align: right;">Due</th>
                                     </tr>
                                 </thead>
@@ -411,14 +419,16 @@
 
             data.forEach((invoice, index) => {
                 let row = document.createElement('tr');
-                let formattedAmount = parseFloat(invoice.total_payments).toFixed(2);
-
                 let formattedTotalDue = parseFloat(invoice.total_due - invoice.total_payments).toFixed(2);
+                formattedTotalDue = '$ ' + formattedTotalDue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
                 row.innerHTML = `
-          <td style="text-align: left; ">${invoice.address}</td>
-          <td style="text-align: right;">${formattedAmount}</td>
-          <td style="text-align: right;">${formattedTotalDue}</td>
+          <td style="text-align: left; font-size: 15px; ">${invoice.address}</td>
+
+          <td style="text-align: right; font-size: 15px;">${invoice.inv_number}</td>
+
+          <td style="text-align: right; font-size: 15px;">${formattedTotalDue}</td>
+
           `;
                 tableBody.appendChild(row);
             });

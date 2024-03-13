@@ -105,7 +105,7 @@ require public_path() . '/admin/header.blade.php';
                 </div>
                 {{-- main Painter Job Price --}}
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">Job Price :
+                    <label class="col-sm-3 control-label">Job Price Ex Gst:
                         {{-- inc gst --}}
                     </label>
                     <div class="col-sm-9">
@@ -358,7 +358,7 @@ require public_path() . '/admin/header.blade.php';
 
     {{-- Assign Painter Job Price --}}
     <div class="form-group">
-        <label class="col-sm-3 control-label">Price for Job:
+        <label class="col-sm-3 control-label">Price for Job Ex Gst:
             {{-- inc gst --}}
         </label>
         <div class="col-sm-9">

@@ -153,9 +153,11 @@
                 <thead style="background: #da7805; color:#fff;">
                     <tr>
                         <th>Job</th>
-                        <th>Job Price</th>
-                        <th>Paid</th>
-                        <th>Due</th>
+                        <th>Invoice Number</th>
+                        <th style="text-align: right;">Paid</th>
+
+                        <th style="text-align: right;">Due</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -167,15 +169,21 @@
 
                     @foreach ($invoices as $invoice)
                     @php
-                    $totalDue += $invoice->total_due ?? 0;
+                    // $totalDue += $invoice->total_due ?? 0;
                     $totalPaid += $invoice->total_payments ?? 0;
                     $totalAfterSubtraction += ($invoice->total_due ?? 0) - $invoice->total_payments;
                     @endphp
                     <tr>
                         <td>{{ $invoice->address ?? '' }}</td>
-                        <td align="right">${{ number_format($invoice->total_due ?? '', 2) }}</td>
-                        <td align="right">$ {{ number_format($invoice->total_payments ?? '', 2) }} </td>
-                        <td align="right">${{ number_format(($invoice->total_due ?? 0) - ($invoice->total_payments ?? 0), 2) }}</td>
+
+
+                        {{-- <td align="right">${{ number_format($invoice->total_due ?? '', 2) }}</td> --}}
+                        <td align="right"> {{$invoice->inv_number}} </td>
+
+                        <td style="text-align: right;">$ {{ number_format($invoice->total_payments ?? '', 2) }} </td>
+
+                        <td style="text-align: right;">${{ number_format(($invoice->total_due ?? 0) - ($invoice->total_payments ?? 0), 2) }}</td>
+
                     </tr>
                     @endforeach
                     <tr style="background: ">
@@ -189,10 +197,10 @@
                     <tr style="background: ; border-top: 2px solid #da7805;">
 
                         <td><b>Sub Total:</b></td>
-                        <td align="right"> <b> $ {{ number_format($totalDue, 2) }} </b> </td>
-                        <td align="right"> <b> $ {{ number_format( $totalPaid, 2) }}</b></td>
-
-                        <td align="right"> <b> $ {{ number_format($totalAfterSubtraction, 2) }} </b> </td>
+                        <td></td>
+                        {{-- <td align="right"> <b> $ {{ number_format($totalDue, 2) }} </b> </td> --}}
+                        <td style="text-align: right;"> <b> $ {{ number_format( $totalPaid, 2) }}</b></td>
+                        <td style="text-align: right;"> <b> $ {{ number_format($totalAfterSubtraction, 2) }} </b> </td>
                     </tr>
 
                 </tbody>

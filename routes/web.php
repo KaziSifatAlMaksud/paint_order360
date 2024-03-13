@@ -106,6 +106,10 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 	Route::post('/invoices/send-email', [InvoiceController::class, 'sendEmail'])->name('email_send_outstantind');
 
 
+	Route::get('/invoices/report/price_data', 'InvoiceController@price_data');
+	Route::get('/your-endpoint-for-percentage-data', 'YourController@percentageData');
+
+
 	Route::get('/view-pdf', [InvoiceController::class, 'pdf']);
 
 
@@ -133,7 +137,6 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 
 
 Route::get('/pdf', function () {
-
 	return view('new_shop.invoice.invices_pdf');
 });
 

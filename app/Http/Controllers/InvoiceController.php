@@ -862,8 +862,11 @@ class InvoiceController extends Controller
     {
         $user_id = $request->user()->id;
 
+        $jobs = PainterJob::with('assignedJob')->where('user_id', $user_id)->get();
+
         $invoices = Invoice::with('invoicePayments')
             ->where('user_id', $user_id)
+            ->where('status', 3)
             ->orderBy('updated_at', 'desc')
             ->get();
         foreach ($invoices as $invoice) {
@@ -873,6 +876,7 @@ class InvoiceController extends Controller
 
         $invoiceSums = DB::table('invoices')
             ->select('customer_id', DB::raw('SUM(total_due) as total_price'), 'send_email')
+            ->where('status', 3)
             ->where('user_id', $user_id)
             ->groupBy('customer_id')
             ->get();
@@ -886,7 +890,9 @@ class InvoiceController extends Controller
             ->whereDate('send_to', '>', $fiveDaysAgo)
             ->orderBy('updated_at', 'desc')
             ->count();
-        return view('new_shop.invoice.invices_report', compact('invoices', 'due_invoice', 'invoiceSums', 'inv_numbers'));
+
+
+        return view('new_shop.invoice.invices_report', compact('invoices', 'jobs', 'due_invoice', 'invoiceSums', 'inv_numbers'));
     }
 
     public function sendEmail(Request $request)
@@ -903,6 +909,7 @@ class InvoiceController extends Controller
 
         $invoices = Invoice::where('customer_id', $customer_id)
             ->where('user_id', $request->user()->id)
+            ->where('status', 2)
             ->get();
 
         if ($invoices->isEmpty()) {
@@ -966,12 +973,39 @@ class InvoiceController extends Controller
         ]);
     }
 
+
+    public function price_data(Request $request)
+    {
+        $user_id = $request->user()->id;
+        $invoices = Invoice::where('user_id', $user_id)->get();
+
+        // Start HTML string
+        $html = '';
+
+        foreach ($invoices as $invoice) {
+
+            $html .= "<tr>
+                    <td>{$invoice->address}</td>
+                    <td align='center'>\${$invoice->amount}</td>
+                    <td>{$invoice->labour}</td>
+                    <td>{$invoice->total_due}</td>
+                  </tr>";
+        }
+
+        return response()->json(['html' => $html]);
+    }
+
+
+
+
     public function pdf()
     {
         $customer_id = "Gj Gardener";
         $invoices = Invoice::where('customer_id', $customer_id)
             ->where('user_id', 25)
             ->get();
+
+
 
         return view('new_shop.invoice.outstanding_pdf', compact('invoices')); // Assuming 'pdf.view' is the name of your view file
     }

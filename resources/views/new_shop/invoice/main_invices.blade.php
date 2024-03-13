@@ -179,6 +179,11 @@
 
         <!-- card -->
         <section style="padding-top: 90px;">
+            <div class="search-bar mt-2">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="search-input" placeholder=" Search Address or Customer" oninput="filterCards()">
+            </div>
+
             <div class="filter custom-border rounded-4">
                 <table class="align-middle">
                     <tbody>
@@ -204,10 +209,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="search-bar mt-2">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" id="search-input" placeholder=" Search Address or Customer" oninput="filterCards()">
-            </div>
+
             @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}

@@ -34,7 +34,7 @@ class AssignedPainterJob extends Model
     }
     public function painterJob()
     {
-        return $this->belongsTo(PainterJob::class, 'job_id');
+        return $this->belongsTo(PainterJob::class, 'job_id', 'id');
     }
     public function painter()
     {

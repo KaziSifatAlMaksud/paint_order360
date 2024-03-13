@@ -187,7 +187,8 @@
             <div class="card mx-1 shadow rounded-4" style="margin-top: 90px;">
                 <div class="card-body">
                     <div class="cart-btn d-flex align-items-center justify-content-between toggle-card" style="height: 60px">
-                        <div class="d-flex flex-column align-items-center" id="job">
+                        <div class="d-flex flex-column align-items-center active" id="job">
+
                             <img src="/image/icon1/calendar.png" alt="calendar.png" />
                             <p>Yearly Page</p>
                         </div>
@@ -204,6 +205,8 @@
                     <div id="job-content" class="yearly-page content active">
                         <h6 class="text-center mt-4">
                             Yearly report of Profit and costs from 1st jan
+
+
                         </h6>
                         <p class="mb-2 fw-bold">Income by customer</p>
 
@@ -237,7 +240,7 @@
                             <hr />
                         </div> --}}
 
-                        <div class="total-expense">
+                        {{-- <div class="total-expense">
                             <p class="px-4 mb-1 fw-bold">Total expense and profit</p>
                             <div class="px-4 mb-4">
                                 <div class="d-flex w-100">
@@ -257,7 +260,7 @@
                                     <p class="">$<span>170.00</span></p>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <!-- ------ Quarterly ----- -->
@@ -310,13 +313,37 @@
                             <table class="price-content-table" style="width:100%">
                                 <tr>
                                     <th style="width:50%">Job</th>
-                                    <th>Job Price</th>
-                                    <th>Paint</th>
-                                    <th>Labour</th>
-                                    <th>Profit</th>
+                                    <th style="text-align: right;">Job Price</th>
+
+                                    <th style="text-align: right;">Paint</th>
+
+                                    <th style="text-align: right;">Labour</th>
+
+                                    <th style="text-align: right;">Profit</th>
+
                                 </tr>
-                                <tbody id="dataBody"></tbody>
+                                <tbody id="">
+                                    @foreach($jobs as $job )
+                                    <tr>
+                                        <td>{{ $job ? $job->address : '' }}</td>
+                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price, 2) : '' }}</td>
+                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price * 0.3, 2) : '' }}</td>
+                                        <td style="text-align: right;">$ {{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job, 2) : 0.00 }}</td>
+                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price - (($job->price * 0.3) + ($job && $job->assignedJob ? $job->assignedJob->assign_price_job : 0.00)), 2) : '' }}</td>
+
+
+                                    </tr>
+
+
+                                    @endforeach
+
+                                    <tr>
+                                        <td> <b> Sub Total : </b> </td>
+                                    </tr>
+                                </tbody>
                             </table>
+
+
 
                             <div class="mx-auto pt-4">
                                 <table style="width:100%">
@@ -377,6 +404,28 @@
     </main>
     <div style="margin: 20px 0px 300px 0px;"></div>
     <script src="{{ asset('js/profile.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        function randomData() {
+            $.ajax({
+                url: '/invoices/report/price_data'
+                , type: 'GET'
+                , success: function(response) {
+                    // Assuming 'response' contains an 'html' key with the table rows as its value
+                    $('#dataBody').html(response.html); // Set the table body's HTML to the received HTML
+                }
+                , error: function(xhr, status, error) {
+                    console.error("Error fetching data: ", xhr, status, error);
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            randomData(); // Load data when the document is ready
+        });
+
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 </body>

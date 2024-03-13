@@ -68,7 +68,7 @@ function toggleTab(tabId) {
     priceTab.classList.remove("active");
     percentageTab.classList.add("active");
   }
-if (!percentageDataCalled) {
+  if (!percentageDataCalled) {
     PercentageData();
     percentageDataCalled = true;
   }
@@ -98,18 +98,10 @@ function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-const jobNames = [
-  "lot 5 mark st liverpool",
-  "Lot 34 no 44 sampeters .",
-  "Lot 34 no 44 sampeters ave cabrra",
-  "244 markstantrmost..",
-  "Rampura",
-  "liverpool",
-  "ot 5 mark st liverpool",
-  "Lot 34 no 44 sampeters ave cabrra",
-  "244 markstantrmost peterson ave",
-  "244 markstantrmost peterson ave.",
-];
+
+
+
+
 function randomData() {
   const dataBody = document.getElementById("dataBody");
 
@@ -128,21 +120,21 @@ function randomData() {
 }
 randomData();
 
-function PercentageData() {
-  const dataBody = document.getElementById("percentageBody");
+// function PercentageData() {
+//   const dataBody = document.getElementById("percentageBody");
 
-  for (let i = 0; i < 10; i++) {
-    const newRow = document.createElement("tr");
+//   for (let i = 0; i < 10; i++) {
+//     const newRow = document.createElement("tr");
 
-    for (let j = 0; j < 5; j++) {
-      const newCell = document.createElement("td");
-      const randomValue = getRandomNumber(100, 1000);
-      newCell.textContent = j === 0 ? jobNames[i] : `${randomValue}%`;
-      newRow.appendChild(newCell);
-    }
+//     for (let j = 0; j < 5; j++) {
+//       const newCell = document.createElement("td");
+//       const randomValue = getRandomNumber(100, 1000);
+//       newCell.textContent = j === 0 ? jobNames[i] : `${randomValue}%`;
+//       newRow.appendChild(newCell);
+//     }
 
-    dataBody.appendChild(newRow);
-  }
-}
+//     dataBody.appendChild(newRow);
+//   }
+// }
 
 
