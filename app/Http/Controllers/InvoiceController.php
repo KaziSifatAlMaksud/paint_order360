@@ -32,6 +32,7 @@ use Dflydev\DotAccessData\Data;
 use Illuminate\Support\Facades\DB;
 use App\Mail\InvoiceMail;
 
+use DateTime;
 
 class InvoiceController extends Controller
 {
@@ -129,15 +130,64 @@ class InvoiceController extends Controller
         }
     }
 
+    // public function send_statement_by_id(Request $request)
+    // {
+    //     $customer_id = $request->input('customer_id');
+    //     $invoices = Invoice::with('invoicePayments', 'customer')->where('customer_id', $customer_id)
+    //         ->where('status', 2)
+    //         ->where('user_id', $request->user()->id)
+    //         ->get();
+    //     return response()->json($invoices);
+    // }
+
     public function send_statement_by_id(Request $request)
     {
+        $today = now();
         $customer_id = $request->input('customer_id');
-        $invoices = Invoice::with('invoicePayments')->where('customer_id', $customer_id)
+        $invoices = Invoice::with('invoicePayments', 'customer')
+            ->where('customer_id', $customer_id)
             ->where('status', 2)
             ->where('user_id', $request->user()->id)
             ->get();
-        return response()->json($invoices);
+        $user_id = $request->user()->id;
+        $admin_builders = BuilderModel::select('id', 'company_name', 'builder_email as email', 'phone_number as mobile', 'address as billingAddress', 'abn', 'gate', 'schedule')->get();
+        $customers = Customer::where('user_id', $user_id)->select('id', 'companyName as company_name', 'email', 'mobile', 'billingAddress', 'abn', 'gst as gate', 'schedule')->get();
+
+        $results = $customers->merge($admin_builders)->unique('id');
+
+        $invoicesWithLateAttribute = [];
+
+        foreach ($invoices as $invoice) {
+            $sendDate = new DateTime($invoice->send_to);
+            $customerFound = false;
+            $isLate = true;
+
+            foreach ($results as $customer) {
+                if ($invoice->customer_id === $customer->company_name) {
+                    $customerFound = true;
+                    $lateDate = Carbon::parse($invoice->send_to)->addDays($customer->schedule);
+                    if ($today->gt($lateDate)) {
+                        $isLate = true;
+                    } else {
+                        $isLate = false;
+                    }
+                    break;
+                }
+            }
+            if (!$customerFound) {
+                $isLate = false;
+            }
+
+            // Convert Invoice object to array, add isLate attribute, and then convert back to object
+            $invoiceArray = $invoice->toArray();
+            $invoiceArray['isLate'] = $isLate;
+            $invoicesWithLateAttribute[] = (object) $invoiceArray;
+        }
+
+        return response()->json(['invoices' => $invoicesWithLateAttribute]);
     }
+
+
 
 
 
@@ -177,7 +227,6 @@ class InvoiceController extends Controller
             // Calculate the sum of amount_main for each invoice's payments
             $invoice->total_payments = $invoice->invoicePayments->sum('amount_main');
         }
-
         $invoiceSums = DB::table('invoices')
             ->select('customer_id', DB::raw('SUM(total_due) as total_price'), 'send_email')
             ->where('status', 2)
@@ -903,21 +952,58 @@ class InvoiceController extends Controller
         ]);
 
         $customer_id = $request->input('customer_id');
-        $email = $request->input('email');
-        $user_email = $request->user()->email;
-        // $email = "2019-3-60-050@std.ewubd.edu";
-        // $user_email = "kazi.sifat2013@gmail.com";
-
-        $invoices = Invoice::where('customer_id', $customer_id)
-            ->where('user_id', $request->user()->id)
+        // $email = $request->input('email');
+        // $user_email = $request->user()->email;
+        $email = "2019-3-60-050@std.ewubd.edu";
+        $user_email = "kazi.sifat2013@gmail.com";
+        $today = now();
+        $customer_id = $request->input('customer_id');
+        $invoices = Invoice::with('invoicePayments', 'customer')
+            ->where('customer_id', $customer_id)
             ->where('status', 2)
+            ->where('user_id', $request->user()->id)
             ->get();
+
+        $user_id = $request->user()->id;
+        $admin_builders = BuilderModel::select('id', 'company_name', 'builder_email as email', 'phone_number as mobile', 'address as billingAddress', 'abn', 'gate', 'schedule')->get();
+        $customers = Customer::where('user_id', $user_id)->select('id', 'companyName as company_name', 'email', 'mobile', 'billingAddress', 'abn', 'gst as gate', 'schedule')->get();
+
+        $results = $customers->merge($admin_builders)->unique('id');
+
+        $invoicesWithLateAttribute = [];
+
+        foreach ($invoices as $invoice) {
+
+            $customerFound = false;
+            $isLate = true;
+
+            foreach ($results as $customer) {
+                if ($invoice->customer_id === $customer->company_name) {
+                    $customerFound = true;
+                    $lateDate = Carbon::parse($invoice->send_to)->addDays($customer->schedule);
+                    if ($today->gt($lateDate)) {
+                        $isLate = true;
+                    } else {
+                        $isLate = false;
+                    }
+                    break;
+                }
+            }
+            if (!$customerFound) {
+                $isLate = false;
+            }
+
+            // Dynamically add a property 'isLate' to the invoice object
+            $invoice->setAttribute('isLate', $isLate);
+
+            $invoicesWithLateAttribute[] = $invoice;
+        }
 
         if ($invoices->isEmpty()) {
             return response()->json(['message' => 'No invoices found for this customer.'], 404);
         }
 
-        $pdf = PDF::loadView('new_shop.invoice.outstanding_pdf', ['invoices' => $invoices]);
+        $pdf = PDF::loadView('new_shop.invoice.outstanding_pdf', ['invoices' => $invoicesWithLateAttribute]);
         $pdfOutput = $pdf->output();
 
         try {

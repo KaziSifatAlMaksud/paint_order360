@@ -270,7 +270,9 @@
 
 
                                 <div style="display: flex;  align-items: flex-end; margin-bottom: 5px">
-                                    @if($job->assign_painter && $job->assignedJob->assigned_painter_name == auth()->id())
+                                    @if($job->assign_painter && $job->assignedJob && $job->assignedJob->assigned_painter_name == auth()->id())
+
+                                    {{-- @if( $job->assign_painter && $job->assignedJob->assigned_painter_name == auth()->id()) --}}
                                     <div class="red-dot" style="background: green;"></div>
                                     @endif
 

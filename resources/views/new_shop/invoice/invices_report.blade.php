@@ -327,8 +327,10 @@
                                     <tr>
                                         <td>{{ $job ? $job->address : '' }}</td>
                                         <td style="text-align: right;">$ {{ $job ? number_format($job->price, 2) : '' }}</td>
-                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price * 0.3, 2) : '' }}</td>
-                                        <td style="text-align: right;">$ {{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job, 2) : 0.00 }}</td>
+                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price * 0.3 , 2) : '' }}</td>
+
+                                        <td style="text-align: right;">$ {{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job / $job->price * 100  , 2) : 0.00 }}</td>
+
                                         <td style="text-align: right;">$ {{ $job ? number_format($job->price - (($job->price * 0.3) + ($job && $job->assignedJob ? $job->assignedJob->assign_price_job : 0.00)), 2) : '' }}</td>
 
 
@@ -373,7 +375,23 @@
                                     <th>Labour</th>
                                     <th>Profit</th>
                                 </tr>
-                                <tbody id="percentageBody"></tbody>
+                                <tbody id="percentageBody">
+
+                                    @foreach($jobs as $job )
+                                    <tr>
+                                        <td>{{ $job ? $job->address : '' }}</td>
+                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price, 2) : '' }}</td>
+                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price * 0.3, 2) : '' }}</td>
+                                        <td style="text-align: right;">$ {{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job, 2) : 0.00 }}</td>
+                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price - (($job->price * 0.3) + ($job && $job->assignedJob ? $job->assignedJob->assign_price_job : 0.00)), 2) : '' }}</td>
+
+
+                                    </tr>
+
+
+                                    @endforeach
+
+                                </tbody>
                             </table>
 
                             <div class="mx-auto pt-4">

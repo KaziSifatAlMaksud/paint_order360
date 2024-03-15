@@ -303,7 +303,7 @@
                         </div>
                         <div class="d-flex flex-column align-items-center">
                             <img class="company-logo" src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png" style="height: 30px" />
-                            <p>Gate Code: {{$job->admin_builders->gate ? $job->admin_builders->gate : ' ' }} </p>
+                            <p>Gate Code: {{$job->admin_builders ? $job->admin_builders->gate : ' ' }} </p>
                             <p class="text-center">Supervisor : {{$job->superviser ? $job->superviser->name : ''}} </p>
                         </div>
                     </div>
@@ -387,8 +387,8 @@
 
                             @csrf {{-- Include CSRF token for security --}}
                             <div class="mb-3">
-                                <label for="assigned_painter_name" class="form-label">Select Painter</label>
-                                <select name="assigned_painter_name" id="assigned_painter_name" class="custom-input">
+                                <label for="assigned_painter_name" class="form-label">Select Painter:<span style="color: red;">*</span></label>
+                                <select name="assigned_painter_name" id="assigned_painter_name" class="custom-input" required>
                                     <option value="" selected>Select an option</option>
                                     @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->first_name }} - {{ $user->company_name }}</option>
@@ -396,12 +396,12 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="newPrice" class="form-label">New Price inc GST</label>
+                                <label for="newPrice" class="form-label">New Price inc GST: <span style="color: red;">*</span> </label>
                                 <input type="number" id="newPrice" name="assign_price_job" class="custom-input" placeholder="Enter new price" value="{{ old('assign_price_job') }}">
                             </div>
                             <div class="mb-3">
                                 <label for="paintCost" class="form-label">Paint Cost</label>
-                                <input type="number" id="paintCost" name="paint_cost" placeholder="Paint Cost" class="custom-input" value="{{ old('paint_cost') }}">
+                                <input type="number" id="paintCost" name="paint_cost" placeholder="Paint Cost" class="custom-input" value="{{ old('paint_cost') }}" readonly>
                             </div>
                             <div class="mb-3">
                                 <label for="extrasMessage" class="form-label">Extras Message to Painter (optional)</label>
@@ -471,7 +471,8 @@
                         <p class="mb-3 text-center fs-6 pt-5 text-decoration-underline">Is Paint order is sent to me or paint shop ?</p>
                         <div class="mt-auto d-flex justify-content-between">
                             <p class="w-25 btn btn-warning" onclick=" showstartbtn(); setAnswer(3, 1)">Me</p>
-                            <p class="w-25 btn btn-danger" onclick="showThirdQues();setAnswer(3, 0);">Shop</p>
+                            <p class="w-25 btn btn-danger" onclick="showstartbtn();setAnswer(3, 0);">Shop</p>
+
                         </div>
                     </div>
                     <input type="hidden" name="status" value="1">
@@ -552,7 +553,7 @@
                         <button type="submit" class="btn btn-success btn-lg">Yes</button>
                     </div>
                     <div class="col-6 text-center">
-                        <button class="btn btn-danger btn-lg nobtn" onclick="closebtn()">No</button>
+                        <p class="btn btn-danger btn-lg nobtn" onclick="closebtn()">No</p>
                     </div>
                 </div>
             </div>
@@ -562,81 +563,54 @@
     </form>
     <div style="margin: 20px 0px 300px 0px;"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-
-    {{-- <script>
-$(document).ready(function() {    
-    $('#form1').submit(function(e) {
-        e.preventDefault(); // Prevent default form submission
-
-        var formData = new FormData(this); // Create FormData object
-
-        // Correctly define the URL outside of the $.ajax call
-        var url = '/jobs/' + {{$job->id}} + '/assign_painter/assign';
-
-    $.ajax({
-    url: url, // Use the variable
-    type: 'POST',
-    data: formData,
-    processData: false,
-    contentType: false,
-    headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
-    },
-    success: function(response) {
-    console.log(response);
-    alert("Form submitted successfully!");
-    $('#amountNotesModal').modal('hide');
-    $('#nextbtnsubmit').prop('disabled', true);
-
-    // Optionally, redirect the user or refresh the page
-    },
-    error: function(xhr, status, error) {
-    console.log(xhr.responseText); // Handle error
-    // Optionally, display an error message to the user
-    }
-    });
-    });
-    });
-    </script> --}}
-
-
-
     <script>
+        // Function to show the second question
+        function showSecondQues() {
+            var quesTwo = document.getElementById("quesTwo");
+            quesTwo.classList.remove("d-none");
+            quesTwo.classList.add("d-flex");
+        }
+
+        // Function to show the third question
+        function showThirdQues() {
+            var quesThird = document.getElementById("quesThird");
+            quesThird.classList.remove("d-none");
+            quesThird.classList.add("d-flex");
+        }
+
+        // Function to show the start button
         function showstartbtn() {
             var element = document.getElementById('addInvoicePaidLessButton');
-
             element.removeAttribute('hidden');
         }
 
+        // Function to set answer
         function setAnswer(questionNumber, answerValue) {
             document.getElementById(`answer${questionNumber}`).value = answerValue;
         }
 
+        // Function to handle close button
         function closebtn() {
             var span = document.getElementsByClassName("nobtn")[0];
             span.onclick = function() {
                 modal.style.display = "none";
             }
+            modal.style.display = "none";
+
         }
+
         document.addEventListener("DOMContentLoaded", function() {
             // Initially hide the sectionfirst
             var sectionFirst = document.getElementById("sectionfirst");
-
-
-            // Flag to control section visibility
             var sectionVisible = false;
 
-            // Function to show the sectionfirst
             function showSectionFirst() {
                 sectionFirst.style.display = "block";
                 sectionVisible = true;
             }
 
-            // Get the "Next" button element by its ID
             var nextButton = document.getElementById("nextButton");
 
-            // Add a click event listener to the "Next" button
             nextButton.addEventListener("click", function() {
                 if (!sectionVisible) {
                     showSectionFirst();
@@ -644,16 +618,25 @@ $(document).ready(function() {
             });
         });
 
+        // Function to show cost section and calculate paint cost
         function showCostSection() {
-            document.getElementById("cost").classList.remove("d-none");
-            document.getElementById("first-q").classList.remove("d-none");
+            var costSection = document.getElementById("cost");
+            var firstQ = document.getElementById("first-q");
+            costSection.classList.remove("d-none");
+            firstQ.classList.remove("d-none");
         }
 
-    </script>
+        // Event listener to calculate paint cost based on new price
+        document.getElementById('newPrice').addEventListener('input', function() {
+            var newPrice = parseFloat(this.value);
+            if (!isNaN(newPrice)) {
+                document.getElementById('paintCost').value = newPrice * 0.30;
+            } else {
+                document.getElementById('paintCost').value = '';
+            }
+        });
 
-
-
-    <script>
+        // Function to handle modal display
         var modal = document.getElementById("amountNotesModal");
         var btn = document.getElementById("addInvoicePaidLessButton");
         var span = document.getElementsByClassName("close")[0];
@@ -663,60 +646,46 @@ $(document).ready(function() {
 
         span.onclick = function() {
             modal.style.display = "none";
-
         }
 
         window.onclick = function(event) {
             if (event.target == modal) {
-                modal.style.display = "block";
+                modal.style.display = "none";
             }
         }
 
-
-
+        // Event listener to handle form submission
         document.getElementById('nextbtnsubmit').addEventListener('click', function(event) {
             // Prevent form submission
             event.preventDefault();
+
+            // Get values from form inputs
             const painterPrice = parseFloat(document.getElementById('newPrice').value);
             const paintCost = parseFloat(document.getElementById('paintCost').value);
             const extrasMessage = document.getElementById('extrasMessage').value;
-
-            // Format numbers with commas as thousands separators and two decimal places
             const formatter = new Intl.NumberFormat('en-US', {
                 style: 'decimal'
                 , minimumFractionDigits: 2
                 , maximumFractionDigits: 2
             , });
 
-            // Display values
+            // Display calculated values
             document.getElementById('displayPainterPrice').innerText = `$${formatter.format(painterPrice)}`;
             document.getElementById('displayPaintCost').innerText = `$${formatter.format(paintCost)}`;
             document.getElementById('displayPainterPrice2').innerText = `$${formatter.format(painterPrice)}`;
             document.getElementById('displayPaintCost2').innerText = `$${formatter.format(paintCost)}`;
             document.getElementById('extrasMessages').innerText = extrasMessage;
 
-            const jobPrice = parseFloat({
-                {
-                    $job - > price ? $job - > price : '0'
-                }
-            }); // Adjust this line to ensure jobPrice is a valid JS variable
+            // Calculate total profit
+            const jobPrice = parseFloat('{{ $job->price ?? '
+                0 ' }}'); // Ensure jobPrice is a valid JS variable
             const totalProfit = jobPrice - (painterPrice + paintCost);
             document.getElementById('displayTotalProfit').innerText = `$${formatter.format(totalProfit)}`;
         });
 
-        function showSecondQues() {
-            var quesTwo = document.getElementById("quesTwo");
-            quesTwo.classList.remove("d-none");
-            quesTwo.classList.add("d-flex");
-        }
-
-        function showThirdQues() {
-            var quesThird = document.getElementById("quesThird");
-            quesThird.classList.remove("d-none");
-            quesThird.classList.add("d-flex");
-        }
-
     </script>
+
+
 
 
 

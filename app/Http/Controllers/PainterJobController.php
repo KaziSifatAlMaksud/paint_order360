@@ -131,12 +131,14 @@ class PainterJobController extends Controller
     public function unassign($id)
     {
         $job = PainterJob::find($id);
-        $assign_job = AssignedPainterJob::where('job_id', $id)->first();
 
         if ($job) {
             $job->assign_painter = null;
             $job->save();
         }
+        $assign_job = AssignedPainterJob::where('job_id', $id)->first();
+
+
         if ($assign_job) {
             $assign_job->delete();
         }
@@ -184,7 +186,8 @@ class PainterJobController extends Controller
 
 
         $painterjob->fill($data)->save();
-        if ($request->has('assigned_painter_name')) {
+        if (!empty($request->assigned_painter_name) && !empty($request->assign_company_id)) {
+            // if ($request->has('assigned_painter_name') && $request->has('assign_company_id')) {
             AssignedPainterJob::create([
                 'assigned_painter_name' => $request->assigned_painter_name,
                 'assign_company_id' => $request->assign_company_id,

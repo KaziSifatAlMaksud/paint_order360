@@ -38,7 +38,7 @@
 
         .container {
             width: 80%;
-            margin-top: 10%;
+            margin-top: 5%;
             margin-right: auto;
             margin-left: auto;
         }
@@ -91,6 +91,16 @@
             background-color: #dddddd;
         } */
 
+        .redDot {
+            position: absolute;
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: -10px;
+            background-color: red;
+        }
+
 
         .text-right {
             text-align: end;
@@ -115,28 +125,30 @@
 
             <tr>
                 <td style="border: none !important; ">
-                    <h3 style="margin: 0 !important;">
-                        Dear {{ isset($invoices) && count($invoices) > 0 ? $invoices[0]->customer_id : '' }}
-                        ,</h3>
+                    <h4 style="margin: 0 !important;">
+                        To {{ isset($invoices) && count($invoices) > 0 ? $invoices[0]->customer_id : '' }}
+                        ,</h4> <Br><br>
+
 
                 </td>
             </tr>
             <tr>
                 <td style="border: none !important; ">
+                    <h3>Statement of sent Invoices & late Invoices:</h3>
+                    <p style="margin: 0 !important;">Red dot indicates over due invoices: <span style="margin: 0px;" class="redDot"></span> </p>
 
-                    <p style="margin: 0 !important;">This is a list of outstanding amounts due.</p>
 
                 </td>
             </tr>
         </table>
         <br>
         <br>
-        <div style="background-color: #da7805; height: 2px; width: 80%; margin: 0 auto;"></div>
+        {{-- <div style="background-color: #da7805; height: 2px; width: 80%; margin: 0 auto;"></div> --}}
 
         <br>
         <Br>
 
-        <div class="body-section">
+        {{-- <div class="body-section">
             <div class="row">
                 <div class="col-8">
                     <h2 class="sub-heading"> Outstanding Invoices </h2>
@@ -145,12 +157,12 @@
 
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="body-section">
             <br>
             <table class="table-bordered">
-                <thead style="background: #da7805; color:#fff;">
+                <thead>
                     <tr>
                         <th>Job</th>
                         <th>Invoice Number</th>
@@ -161,22 +173,27 @@
                     </tr>
                 </thead>
                 <tbody>
+
+
                     @php
                     $totalDue = 0;
                     $totalPaid = 0;
                     $totalAfterSubtraction = 0;
                     @endphp
 
+
                     @foreach ($invoices as $invoice)
                     @php
+
+                    $redDotHtml = ($invoice->isLate) ? '<span class="redDot"></span>' : '';
+
+
                     // $totalDue += $invoice->total_due ?? 0;
                     $totalPaid += $invoice->total_payments ?? 0;
                     $totalAfterSubtraction += ($invoice->total_due ?? 0) - $invoice->total_payments;
                     @endphp
                     <tr>
-                        <td>{{ $invoice->address ?? '' }}</td>
-
-
+                        <td>{!! $redDotHtml !!} {{ $invoice->address ?? '' }}</td>
                         {{-- <td align="right">${{ number_format($invoice->total_due ?? '', 2) }}</td> --}}
                         <td align="right"> {{$invoice->inv_number}} </td>
 
@@ -194,13 +211,17 @@
                     </tr>
 
 
-                    <tr style="background: ; border-top: 2px solid #da7805;">
+                    <tr>
 
-                        <td><b>Sub Total:</b></td>
+                        {{-- <td><b>Sub Total:</b></td> --}}
+                        <td><b>Total Due :</b></td>
+
                         <td></td>
                         {{-- <td align="right"> <b> $ {{ number_format($totalDue, 2) }} </b> </td> --}}
-                        <td style="text-align: right;"> <b> $ {{ number_format( $totalPaid, 2) }}</b></td>
-                        <td style="text-align: right;"> <b> $ {{ number_format($totalAfterSubtraction, 2) }} </b> </td>
+                        <td style="text-align: right;">
+                            {{-- <b> $ {{ number_format( $totalPaid, 2) }}</b> --}}
+                        </td>
+                        <td style="text-align: right;" colspan="3"> <b> $ {{ number_format($totalAfterSubtraction, 2) }} </b> </td>
                     </tr>
 
                 </tbody>

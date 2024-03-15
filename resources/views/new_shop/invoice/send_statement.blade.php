@@ -106,6 +106,18 @@
             font-size: 30px;
         }
 
+        .redDot {
+
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: red;
+        }
+
+
+
         .header-item span {
             font-size: 25px;
             text-shadow: 0px 4px 5px rgba(0, 0, 0, 0.25);
@@ -257,7 +269,7 @@
                         <h3 class="mt-2">
                             Outstanding Statement
                         </h3>
-                        <p class=" mb-4 ">Outstanding by Customer</p>
+                        <p class=" mb-4 ">Sent invoices and Late invoice</p>
 
                         <!--------  this is the table for outstanding by customer statement -  ---->
 
@@ -274,6 +286,9 @@
 
 
                                 <tbody>
+                                    @php
+                                    $total = 0;
+                                    @endphp
 
                                     @foreach ($invoiceSums as $customer)
                                     <tr data-customer-id="{{ $customer->customer_id }}">
@@ -283,6 +298,10 @@
                                         </td>
                                         <td style="text-align: right;">$ {{ number_format($customer->total_price, 2) }}</td>
 
+                                        @php
+                                        $total += $customer->total_price;
+
+                                        @endphp
 
                                         <td>
                                             <div class="d-flex justify-content-end gap-2 align-items-center">
@@ -296,7 +315,13 @@
 
                                     </tr>
                                     @endforeach
-                                    </td>
+                                    <tr>
+                                        <td style="text-align: left"> <b>Total: </b> </td>
+                                        <td style="text-align: right"> <b> $ {{ number_format($total, 2) }} </b> </td>
+
+
+                                        <td></td>
+                                    </tr>
                                     </tr>
                                     <!-- Add more rows as needed -->
                                 </tbody>
@@ -323,13 +348,12 @@
 
 
                         <div class="row">
-                            <div class="col-6 text-center selected pb-2 fw-bold"> Outstanding Invoices
-
-                            </div>
-                            <div class="col-6 text-center pb-3 fw-bold">
-                                Late Invoices
+                            <div class="col-12 pb-2">
+                                <p><b>Statement of sent Invoices & Late Invoices:</b><br>Red dot indicates late invoices: <span style="margin: 0px;" class="redDot"></span></p>
                             </div>
                         </div>
+
+
                         <div id="outstanding-invoices" style="display: block;">
                             <!-- table start -->
                             <table class="table responsive-table" style="font-size: 16px;">
@@ -415,23 +439,28 @@
             const tableBody = document.getElementById('invoiceTableBody');
             tableBody.innerHTML = ''; // Clear existing rows
 
-            data.forEach((invoice, index) => {
+            data.invoices.forEach((invoice, index) => {
                 let row = document.createElement('tr');
                 let formattedTotalDue = parseFloat(invoice.total_due - invoice.total_payments).toFixed(2);
                 formattedTotalDue = '$ ' + formattedTotalDue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+                let redDotHtml = ''; // Initialize redDotHtml
+
+                if (invoice.isLate) {
+                    // Add a red dot if the invoice is late
+                    redDotHtml = '<span class="redDot"></span>';
+                }
+
                 row.innerHTML = `
-          <td style="text-align: left; font-size: 15px; ">${invoice.address}</td>
+     <td style="text-align: left; font-size: 15px;">${redDotHtml}${invoice.address} </td>
 
-          <td style="text-align: right; font-size: 15px;">${invoice.inv_number}</td>
 
-          <td style="text-align: right; font-size: 15px;">${formattedTotalDue}</td>
+     <td style="text-align: right; font-size: 15px;">${invoice.inv_number}</td>
+     <td style="text-align: right; font-size: 15px;">${formattedTotalDue}</td>
+     `;
 
-          `;
                 tableBody.appendChild(row);
             });
-
-
 
             // Update form values for sending emails
             const form = document.getElementById('send_email_form');
@@ -444,25 +473,25 @@
 
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const outstandingInvoices = document.getElementById("outstanding-invoices");
-            const lateInvoices = document.getElementById("late-invoices");
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     const outstandingInvoices = document.getElementById("outstanding-invoices");
+        //     const lateInvoices = document.getElementById("late-invoices");
 
-            // Toggle visibility of cards and manage selected class
-            document.querySelector(".col-6:nth-child(1)").addEventListener("click", function() {
-                outstandingInvoices.style.display = "block";
-                lateInvoices.style.display = "none";
-                document.querySelector(".col-6:nth-child(1)").classList.add("selected");
-                document.querySelector(".col-6:nth-child(2)").classList.remove("selected");
-            });
+        //     // Toggle visibility of cards and manage selected class
+        //     document.querySelector(".col-6:nth-child(1)").addEventListener("click", function() {
+        //         outstandingInvoices.style.display = "block";
+        //         lateInvoices.style.display = "none";
+        //         document.querySelector(".col-6:nth-child(1)").classList.add("selected");
+        //         document.querySelector(".col-6:nth-child(2)").classList.remove("selected");
+        //     });
 
-            document.querySelector(".col-6:nth-child(2)").addEventListener("click", function() {
-                outstandingInvoices.style.display = "none";
-                lateInvoices.style.display = "block";
-                document.querySelector(".col-6:nth-child(2)").classList.add("selected");
-                document.querySelector(".col-6:nth-child(1)").classList.remove("selected");
-            });
-        });
+        //     document.querySelector(".col-6:nth-child(2)").addEventListener("click", function() {
+        //         outstandingInvoices.style.display = "none";
+        //         lateInvoices.style.display = "block";
+        //         document.querySelector(".col-6:nth-child(2)").classList.add("selected");
+        //         document.querySelector(".col-6:nth-child(1)").classList.remove("selected");
+        //     });
+        // });
 
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
