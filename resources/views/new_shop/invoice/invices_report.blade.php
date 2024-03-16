@@ -218,21 +218,37 @@
                                     <th class="fs-6" style="text-align: right;">Sub-Total</th>
                                 </tr>
                             </thead>
+
+
                             <tbody>
-                                @foreach ($invoiceSums as $customer)
+                                @if(!empty($invoiceSums))
+                                @foreach($invoiceSums as $customer)
                                 <tr data-customer-id="{{ $customer->customer_id }}">
-                                    <td class="fs-6" style="text-align: left;"> {{ $customer->customer_id }} </td>
+                                    <td class="fs-6" style="text-align: left;">{{ $customer->customer_id ?? 'N/A' }}</td>
                                     <td class="fs-6" style="text-align: right;">$ {{ number_format($customer->total_price, 2) }}</td>
                                 </tr>
                                 @endforeach
-                                <tr data-customer-id="{{ $customer->customer_id }}">
-                                    <td class="fs-6" style="text-align: left;"> <b> Total Income: </b> <br>
-                                        <p class="date mb-4">1st jan to today yearly</p>
 
+                                {{-- Ensure $totalIncome is treated as a number even when null --}}
+                                <tr>
+                                    <td class="fs-6" style="text-align: left;"> <b> Total Income: </b> <br>
+                                        <p class="date mb-4">1st Jan to today yearly</p>
                                     </td>
-                                    <td class="fs-6" style="text-align: right;"> <b> $ {{ number_format($customer->total_price, 2) }} </b> </td>
+                                    <td class="fs-6" style="text-align: right;">
+                                        <b> $ {{ number_format($totalIncome ?? 0, 2) }} </b> {{-- Use 0 as a default --}}
+                                    </td>
                                 </tr>
+                                @else
+                                {{-- Display something if $invoiceSums is empty --}}
+                                <tr>
+                                    <td colspan="2" class="fs-6" style="text-align: center;">No data available</td>
+                                </tr>
+                                @endif
                             </tbody>
+
+
+
+
                         </table>
 
 
@@ -331,7 +347,15 @@
 
                                         <td style="text-align: right;">$ {{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job / $job->price * 100  , 2) : 0.00 }}</td>
 
-                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price - (($job->price * 0.3) + ($job && $job->assignedJob ? $job->assignedJob->assign_price_job : 0.00)), 2) : '' }}</td>
+                                        {{-- <td style="text-align: right;">$ {{ $job ? number_format($job->price - (($job->price * 0.3) + ($job && $job->assignedJob ? $job->assignedJob->assign_price_job : 0.00)), 2) : '' }}</td>
+                                        --}}
+                                        <td style="text-align: right;">
+                                            $ {{
+                                                    $job && $job->assignedJob && $job->price > 0
+                                                    ? number_format($job->assignedJob->assign_price_job / $job->price * 100, 2)
+                                                    : '0.00'
+                                                }}
+                                        </td>
 
 
                                     </tr>

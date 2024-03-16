@@ -136,9 +136,8 @@ class HomeController extends Controller
     {
         $customers = Customer::all()->where('user_id', $request->user()->id);
         $admin_buliders = BuilderModel::all();
-        $jobs = PainterJob::with('gallaryPlan',  'superviser', 'poitem')
+        $jobs = PainterJob::with('users', 'poitem', 'assignedJob')
             ->where('id', $jobs_id)
-            ->where('user_id', $request->user()->id)
             ->whereNull('parent_id')
             ->get()->first();
         $job_number = $jobs_id;
@@ -193,13 +192,15 @@ class HomeController extends Controller
     }
     public function showinvoiceing($id, Request $request)
     {
-        $jobs = PainterJob::findOrFail($id);
+        $jobs = PainterJob::with('assignedJob', 'users')->findOrFail($id);
         $status = Invoice::all();
         $invoices = Invoice::where('job_id', $id)->whereNull('batch')
             ->orderBy('updated_at', 'desc')
             ->get();
         return view('new_shop.invoice.invoicing_page', compact('jobs', 'status', 'invoices'));
     }
+
+
 
 
     public function login(Request $request)

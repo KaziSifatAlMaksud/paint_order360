@@ -249,24 +249,20 @@
                                         <span> {{ $job->builder_company_name }} </span>
                                         @endif
                                     </p>
-                                    @if(isset($job->assignedJob) && $job->assignedJob->assigned_painter_name == auth()->id())
-                                    <p class="text2 showinline">${{ number_format(floatval($job->assignedJob->assign_price_job ?? '0'), 2) }} inc gst</p>
-
-
-
-                                    @else
-                                    <p class="text2 showinline">${{ number_format(floatval($job->price ?? '0'), 2) }} inc gst </p>
-                                    @endif
-
+                                    <p class="text2 showinline">
+                                        {{ $job ? \Carbon\Carbon::parse($job->start_date)->format('d/m/Y') : '' }}
+                                    </p>
 
                                     <p class="text2 bilderName showinline" style="display: flex; align-items: center; white-space: nowrap;">
                                         @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
-                                        {{ $job->admin_builders->company_name }}
+                                        Gate Code: {{ $job->admin_builders->gate }}
+
                                         @endif
-
-
                                     </p>
                                 </div>
+                                {{-- @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
+                                {{ $job->admin_builders }}
+                                @endif --}}
 
 
                                 <div style="display: flex;  align-items: flex-end; margin-bottom: 5px">

@@ -381,7 +381,36 @@
                     <div id="page-content" class="content active">
                         <div class="d-flex justify-content-between py-2 mb-4">
                             <h3>Cost & Profit on This Job </h3>
-                            {{-- <button type="button">ADD Painter</button> <!-- Changed from <a> to <button> for better semantic meaning --> --}}
+
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                ADD Painter
+                            </button>
+
+
+                            <div class="modal " style="z-index: 999999;" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ...
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Understood</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            {{-- end the model here  --}}
+
+
                         </div>
                         <div class="fw-medium">
 
@@ -399,7 +428,7 @@
                                 <label for="newPrice" class="form-label">New Price inc GST: <span style="color: red;">*</span> </label>
                                 <input type="number" id="newPrice" name="assign_price_job" class="custom-input" placeholder="Enter new price" value="{{ old('assign_price_job') }}">
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3" hidden>
                                 <label for="paintCost" class="form-label">Paint Cost</label>
                                 <input type="number" id="paintCost" name="paint_cost" placeholder="Paint Cost" class="custom-input" value="{{ old('paint_cost') }}" readonly>
                             </div>
@@ -418,6 +447,9 @@
                 </div>
             </div>
         </section>
+
+        <!-- Modal -->
+
 
 
 
@@ -562,6 +594,8 @@
 
     </form>
     <div style="margin: 20px 0px 300px 0px;"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         // Function to show the second question

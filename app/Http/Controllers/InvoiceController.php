@@ -927,8 +927,10 @@ class InvoiceController extends Controller
             ->select('customer_id', DB::raw('SUM(total_due) as total_price'), 'send_email')
             ->where('status', 3)
             ->where('user_id', $user_id)
+            ->whereNotNull('customer_id') // Exclude records where customer_id is null
             ->groupBy('customer_id')
             ->get();
+
 
 
         $inv_numbers = Invoice::max('id') ?? 0;
