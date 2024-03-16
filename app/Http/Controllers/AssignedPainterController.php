@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AssignedPainterJob;
 use App\Models\PainterJob;
+use App\Models\Invoice;
+use App\Models\User;
 use Illuminate\Support\Facades\Redirect;
 
 class AssignedPainterController extends Controller
@@ -48,6 +50,36 @@ class AssignedPainterController extends Controller
                 'Q_3' => $ans3,
 
             ]);
+
+            // Find the painter user
+            $user = User::findOrFail($painterId);
+            $max_invoice_number = Invoice::max('id') + 1; // Adjusted the incorrect syntax here
+
+            // Prepare the invoice data
+            $data = [
+                'user_id' => $painterId,
+                'company_name' => $user->company_name,
+                'user_address' => $user->address,
+                'user_name' => $user->first_name,
+                'user_phone' => $user->phone,
+                'abn' => $user->abn,
+                'customer_id' => $request->user()->id, // Assuming you want the user ID here
+                'send_email' => $request->user()->email,
+                'inv_number' => $max_invoice_number,
+                'date' => now()->toDateString(), // Adjusted to use the Laravel helper for the current date
+                'purchase_order' => null, // Use null for actual null values
+                'job_id' => $id,
+                'description' => '',
+                'address' => $painterJob->address, // Assuming $painterJob has an address field
+                'job_details' => $extrasMessage,
+                'amount' => $assign_job_price * 0.10,
+                'gst' => $assign_job_price * 0.10, // Fixed GST calculation to 10% of the job price
+                'total_due' => $assign_job_price,
+                'status' => 1,
+            ];
+
+            // Create the invoice
+            $invoice = Invoice::create($data);
             // Return a JSON response
             return Redirect::route('main')->withErrors(['success' => 'Assign Successfully successfully.!']);
         } else {

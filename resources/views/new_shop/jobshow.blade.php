@@ -650,7 +650,9 @@
                 </div>
             </form>
         </div>
-        @elseif($job->assign_painter && $job->assignedJob->assigned_painter_name == auth()->id())
+        @elseif($job->assign_painter && $job->assignedJob && !is_null($job->assignedJob) && $job->assignedJob->assigned_painter_name == auth()->id())
+
+
 
         @else
         <div class="service-box-single col-6 mb-3 px-0">
@@ -895,7 +897,8 @@
             </form>
 
         </div>
-        @elseif($job->assign_painter && $job->assignedJob->assigned_painter_name == auth()->id())
+        @elseif($job->assign_painter && $job->assignedJob && !is_null($job->assignedJob) && $job->assignedJob->assigned_painter_name == auth()->id())
+
         @else
         <div class="service-col col-3 mb-3 px-0">
             <a href="{{ route('assign_painter_info', ['id' => $job->id]) }}" style="text-decoration:none">
