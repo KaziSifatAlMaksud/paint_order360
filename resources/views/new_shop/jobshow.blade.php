@@ -251,7 +251,7 @@
                         <p><b>From: </b> {{$job->painter->first_name ? $job->painter->first_name . " " . $job->painter->last_name : ''}} <br>
 
                             <b>Company: </b> {{$job->painter->company_name ? $job->painter->company_name : '' }} <br>
-                            <b>Supervisor: </b>{{$job->superviser->name ? $job->superviser->name : '' }} </p>
+                            <b>Supervisor: </b>{{$job->superviser ? $job->superviser->name : '' }} </p>
                     </div>
 
                     <div class="d-flex gap-2 justify-content-between">
@@ -394,12 +394,13 @@
                         </div>
                         <div class="d-flex flex-column align-items-center">
 
-                            <img class="company-logo" src="/uploads/  " style="height: 60px;" />
+
 
 
 
 
                             @if(isset($assign_job_info->admin_builder) && isset($assign_job_info->assigned_painter_name) && $assign_job_info->assigned_painter_name == auth()->id())
+
                             <p> <b> Gate Code: </b> {{ $assign_job_info->admin_builder->gate }} <br>
                                 <b> Supervisor : </b>
 
@@ -412,6 +413,9 @@
                                 @endif
                             </p>
                             @else
+                            <img class="company-logo" src="{{ asset('uploads/' . $job->admin_builders->img_log) }}" style="height: 60px;" alt="Company Logo" />
+
+
 
                             <p> <b> Gate Code: </b> @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
                                 {{ $job->admin_builders->gate }}

@@ -109,7 +109,7 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 
 
 	Route::get('/invoices/report/price_data', 'InvoiceController@price_data');
-	Route::get('/your-endpoint-for-percentage-data', 'YourController@percentageData');
+	// Route::get('/your-endpoint-for-percentage-data', 'YourController@percentageData');
 
 
 	Route::get('/view-pdf', [InvoiceController::class, 'pdf']);
@@ -243,28 +243,19 @@ Route::group(['middleware' => ['auth:admin'], 'as' => 'admins.', 'prefix' => 'ad
 	Route::resource('painterJob', PainterJobController::class);
 	Route::get('delete_painter/{id}', array('uses' => 'PainterJobController@delete_painter'));
 	Route::resource('painterJob/{painterJob}/plans', PainterJobPlanController::class);
-	// Route::get('/admin/file', [FileController::class, 'index'])->name('file');
-	// Route::post('/admin/file', [FileController::class, 'store'])->name('file.store');
-
-
 	Route::resource('{painter}/accounts', AdminAccountController::class);
-
-	// Route::get('/assign_builder', [BuilderController::class, 'showPage'])->name('admin.assign_builder');
-	// Route::post('/assign_builder/store', [BuilderController::class, 'handlePost'])->name('assign_builder_store');
-
 	Route::match(['get', 'post', 'delete'], 'assign_builder', [BuilderController::class, 'handleRequest'])->name('assign_builder');
-
-	// Route declaration
 
 	Route::delete('admin/assign_builder/{id}', [BuilderController::class, 'deleteCustomer'])->name('delete_customer');
 
 
-	// Route::delete('assign_builder/{customerId}', [::class, 'delete'])->name('customer.destroy');
 
-	Route::resource('admin_builder', BuilderController::class);
+	Route::resource('admin_builder', 'App\Http\Controllers\BuilderController');
+
 
 	Route::get('', array('uses' => 'AdminController@shops'))->name('shops');
 });
+Route::resource('admin_builder', 'App\Http\Controllers\BuilderController');
 
 
 // Shop Routes

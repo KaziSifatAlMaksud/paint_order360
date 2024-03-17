@@ -11,14 +11,15 @@ require  public_path() . '/admin/header.blade.php';
         <div class="col-sm-9">
 
             <div class="row">
-                <form method="post" id="add_builder" action="{{route('admins.admin_builder.store')}}">
+                <form method="post" id="add_builder" action="{{ route('admins.admin_builder.store') }}" enctype="multipart/form-data">
                     @csrf
+
                     <!-- Icon Image Upload Field -->
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Icon Image</label>
-                       
+
                         <div class="col-sm-9">
-                            <input type="file" class="form-control"  id="img_log" name="img_log">
+                            <input type="file" class="form-control" id="img_log" name="img_log">
                         </div>
                     </div>
 
@@ -31,7 +32,7 @@ require  public_path() . '/admin/header.blade.php';
                             <input type="text" class="form-control" name="company_name" placeholder="Company Name" required>
                         </div>
                     </div>
-                     <div class="form-group">
+                    <div class="form-group">
                         <label class="col-sm-3 control-label">Builder Name </label>
                         @if ($errors->has('builder_name'))
                         <p class="error">{{ $errors->first('builder_name') }}</p>
@@ -57,11 +58,11 @@ require  public_path() . '/admin/header.blade.php';
                         <div class="col-sm-9">
                             <select class="form-control" name="brand_id" required>
                                 @foreach ($brands as $brand)
-                                
-                                 <option value={{$brand->id}}>{{$brand->name }}</option>
+
+                                <option value={{$brand->id}}>{{$brand->name }}</option>
                                 @endforeach
-                              
-                                
+
+
                             </select>
                         </div>
                     </div>
@@ -92,7 +93,7 @@ require  public_path() . '/admin/header.blade.php';
                             <input type="text" class="form-control" name="abn" placeholder="Abn" required>
                         </div>
                     </div>
-                     <div class="form-group">
+                    <div class="form-group">
                         <label class="col-sm-3 control-label">Gate Code: </label>
                         @if ($errors->has('abn'))
                         <p class="error">{{ $errors->first('abn') }}</p>

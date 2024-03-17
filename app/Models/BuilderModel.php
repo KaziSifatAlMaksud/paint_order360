@@ -12,7 +12,7 @@ class BuilderModel extends Model
 
     protected $fillable =
     [
-        'icon_img',
+        'img_log',
         'company_name',
         'builder_name',
         'builder_email',

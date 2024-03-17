@@ -11,15 +11,31 @@ require  public_path() . '/admin/header.blade.php';
         <div class="col-sm-9">
 
             <div class="row">
-                <form id="add_builder" action="javascript:void(0)">
+
+                {{-- <form id="add_builder" action="javascript:void(0)">
+                    @csrf --}}
+                {{-- <input type="hidden" name="_method" value="PUT"> --}}
+                <form id="add_builder" action="{{ route('admin_builder.update', $builders->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                             <!-- Icon Image Upload Field -->
-                   <div class="form-group row"> <!-- Added row class for proper alignment with Bootstrap if you're using it -->
-                        <label for="img_log" class="col-sm-3 col-form-label">Icon Image</label> <!-- Added 'for' attribute and updated class to 'col-form-label' -->
+                    @method('PUT')
+                    @if($builders->img_log)
+                    <!-- Display existing image if it exists -->
+                    <div style="margin-top: 10px;">
+
+                        <center>
+                            <img src="{{ asset('uploads/' . $builders->img_log) }}" alt="Builder Image" style="max-width: 100px; max-height: 100px;">
+
+                        </center>
+                    </div>
+                    @endif
+
+                    <div class="form-group">
+                        <label for="img_log" class="col-sm-3 col-form-label">Icon Image</label>
                         <div class="col-sm-9">
                             <input type="file" class="form-control" value="{{old('img_log',$builders->img_log)}}" name="img_log" id="img_log">
                         </div>
                     </div>
+
 
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Company Name </label>
@@ -27,9 +43,9 @@ require  public_path() . '/admin/header.blade.php';
                             <input type="text" class="form-control" name="company_name" value="{{old('company_name',$builders->company_name)}}" placeholder="Company Name" required>
                         </div>
                     </div>
-                      <div class="form-group">
+                    <div class="form-group">
                         <label class="col-sm-3 control-label">Builder Name </label>
-                   
+
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="builder_name" value="{{old('builder_name',$builders->builder_name)}}" placeholder="Builder Name" required>
                         </div>
@@ -73,7 +89,7 @@ require  public_path() . '/admin/header.blade.php';
                             <input type="text" class="form-control" name="abn" value="{{old('abn',$builders->abn)}}" placeholder="Abn" required>
                         </div>
                     </div>
-                      <div class="form-group">
+                    <div class="form-group">
                         <label class="col-sm-3 control-label">Gate Code: </label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="gate" value="{{old('gate',$builders->gate)}}" placeholder="Gate Code" required>
@@ -110,24 +126,70 @@ require  public_path() . '/admin/header.blade.php';
     </div>
 </div>
 
+
 <?php
 require  public_path() . '/admin/footer.blade.php';
 ?>
- <script>
+
+
+{{-- <script>
     $(document).on('click', '.builder-update-button', function(e) {
+        e.preventDefault();
+
         var id = $(this).data("builder-id");
         var url = "{{route('admins.admin_builder.update',['admin_builder' =>'_id_'])}}";
-        url = url.replace('_id_', id);
-        var form = $("#add_builder");
-        $.ajax(url, {
-            type: 'PUT', // http method 
-            data: form.serialize(), // http method 
-            success: function(data, status, xhr) {
-                location.href = "{{route('admins.admin_builder.index')}}"
-            },
-            error: function(jqXhr, textStatus, errorMessage) {
-                // $('p').append('Error' + errorMessage);
+url = url.replace('_id_', id);
+var form = $("#add_builder");
+$.ajax(url, {
+type: 'PUT', // http method
+data: form.serialize(), // http method
+success: function(data, status, xhr) {
+location.href = "{{route('admins.admin_builder.index')}}"
+}
+, error: function(jqXhr, textStatus, errorMessage) {
+$('p').append('Error' + errorMessage);
+}
+});
+});
+
+</script> --}}
+{{--
+<script>
+    $(document).on('click', '.builder-update-button', function(e) {
+        e.preventDefault(); // Prevent the default form submission.
+
+        var form = $('#add_builder')[0]; // Get the form as a DOM element.
+        var formData = new FormData(form); // Create a FormData object from the form.
+
+        // Include Laravel's expected _method parameter for PUT requests.
+        formData.append('_method', 'PUT');
+
+        // Retrieve the CSRF token from the meta tag and append it to the formData.
+        formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+
+        var id = $(this).data("builder-id"); // Get the builder ID set in the data attribute of the button.
+
+        // Update the URL to include the correct ID, ensuring you have defined the correct route in your web.php.
+        // Note: This placeholder will not work as expected in external JS files since Blade directives are not processed there.
+        var url = "/admin_builder/" + id + "/edit"; // Adjust the URL pattern to match your actual routing.
+
+
+
+
+        $.ajax({
+            url: url
+            , type: 'POST', // Use 'POST' because FormData with files doesn't work well with 'PUT' directly.
+            data: formData
+            , contentType: false, // Necessary for FormData with file upload.
+            processData: false, // Necessary for FormData with file upload.
+            success: function(response) {
+                alert('Builder updated successfully.');
+                window.location.href = "/path-to-redirect-after-success"; // Adjust as necessary.
+            }
+            , error: function(xhr, status, error) {
+                alert('An error occurred: ' + xhr.status + ' ' + error);
             }
         });
     });
-</script>
+
+</script> --}}

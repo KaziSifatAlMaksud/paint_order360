@@ -53,9 +53,9 @@ class AssignedPainterController extends Controller
 
             // Find the painter user
             $user = User::findOrFail($painterId);
-            $max_invoice_number = Invoice::max('id') + 1; // Adjusted the incorrect syntax here
-
-            // Prepare the invoice data
+            $maxId = Invoice::max('id');
+            $nextId = $maxId + 1;
+            $maxInvoiceNumber = sprintf('INV: %04d', $nextId);
             $data = [
                 'user_id' => $painterId,
                 'company_name' => $user->company_name,
@@ -63,17 +63,17 @@ class AssignedPainterController extends Controller
                 'user_name' => $user->first_name,
                 'user_phone' => $user->phone,
                 'abn' => $user->abn,
-                'customer_id' => $request->user()->id, // Assuming you want the user ID here
+                'customer_id' => $request->user()->company_name,
                 'send_email' => $request->user()->email,
-                'inv_number' => $max_invoice_number,
-                'date' => now()->toDateString(), // Adjusted to use the Laravel helper for the current date
-                'purchase_order' => null, // Use null for actual null values
+                'inv_number' => $maxInvoiceNumber,
+                'date' => now()->toDateString(),
+                'purchase_order' => null,
                 'job_id' => $id,
                 'description' => '',
-                'address' => $painterJob->address, // Assuming $painterJob has an address field
+                'address' => $painterJob->address,
                 'job_details' => $extrasMessage,
                 'amount' => $assign_job_price * 0.10,
-                'gst' => $assign_job_price * 0.10, // Fixed GST calculation to 10% of the job price
+                'gst' => $assign_job_price * 0.10,
                 'total_due' => $assign_job_price,
                 'status' => 1,
             ];
