@@ -540,26 +540,17 @@
                         </p>
                         <p>
                             <strong> Total Profit: </strong> $ {{ $assign_job ? number_format(($job->price - (($assign_job->assign_price_job ? $assign_job->assign_price_job : 0) + ($assign_job->assign_price_job ? $assign_job->assign_price_job * 0.30 : 0))), 2) : 0 }}
-
-
-
-
                         </p>
-
-
                     </div>
                 </div>
-
                 @endif
             </div>
         </div>
     </section>
-
     <!-- ====== job view1 ====== -->
     <section class="view1 mt-4" style="display:block;">
         <div class="row service-box justify-content-between mx-3">
             @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
-
             <!-- 1 -->
             <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}" style="text-decoration: none;">
                 <div class="service-box-single col-6 mb-3 px-0">
@@ -576,7 +567,6 @@
                                             {{ $job->supervisor->name }}
                                             @else
                                             {{''}}
-
                                             @endif
                                         </span></p>
                                 </div>
@@ -1115,10 +1105,9 @@
     }
 
     function confimtoAccept() {
-        var confirmation = confirm("Do you really want to Accept this job?");
-        if (confirmation) {
-            document.getElementById('AcceptJobForm').submit();
-        }
+
+        document.getElementById('AcceptJobForm').submit();
+
     }
 
     function denyjob() {

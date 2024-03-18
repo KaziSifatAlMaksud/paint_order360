@@ -302,7 +302,7 @@
                             </div>
                         </div>
                         <div class="d-flex flex-column align-items-center">
-                            <img class="company-logo" src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png" style="height: 30px" />
+                            {{-- <img class="company-logo" src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png" style="height: 30px" /> --}}
                             <p>Gate Code: {{$job->admin_builders ? $job->admin_builders->gate : ' ' }} </p>
                             <p class="text-center">Supervisor : {{$job->superviser ? $job->superviser->name : ''}} </p>
                         </div>
@@ -334,7 +334,7 @@
                             </div>
                         </div>
                         <div class="d-flex flex-column align-items-center">
-                            <img class="company-logo" src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png" style="height: 30px" />
+                            {{-- <img class="company-logo" src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png" style="height: 30px" /> --}}
                         </div>
                     </div>
                     <div class="pt-2">
@@ -351,7 +351,7 @@
                 <div id="page-content" class="content">
                     <div class="d-flex justify-content-between py-2 mb-4">
                         <h3>Cost & profit on this job</h3>
-                        <img class="company-logo" src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png" style="height: 30px" />
+                        {{-- <img class="company-logo" src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png" style="height: 30px" /> --}}
                     </div>
                     <div class="fw-medium">
                         <p>
@@ -380,8 +380,7 @@
                 <div class="card-body">
                     <div id="page-content" class="content active">
                         <div class="d-flex justify-content-between py-2 mb-4">
-                            <h3>Cost & Profit on This Job </h3>
-
+                            <h3>Cost & Profit on This Job</h3>
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                 ADD Painter
@@ -460,17 +459,16 @@
                     <div id="page-content" class="content active">
                         <div class="d-flex justify-content-between py-2 mb-4">
                             <h3>Cost & profit on this job</h3>
-                            <img class="company-logo" src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png" style="height: 30px" />
+                            {{-- <img class="company-logo" src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png" style="height: 30px" /> --}}
                         </div>
                         <div class="fw-medium">
                             <p>
-                                Your Price:
-                                <span> ${{$job->price ? $job->price : '' }} </span>
+                                Your Price: $<span> {{$job->price ? number_format($job->price , 2) : '' }} </span>
                             </p>
                             <p>Painter Price : <span id="displayPainterPrice"></span></p>
                             <p>Paint Cost : <span id="displayPaintCost"></span></p>
                             <p>
-                                Total Profit : <span id="displayTotalProfit"></span>
+                                Total Profit : <span id="displayTotalProfit1"></span>
                             </p>
                         </div>
                     </div>
@@ -536,29 +534,35 @@
 
                             <div class="d-flex align-items-center gap-2">
                                 <img src="/image/icon1/126169 1.png" style="height: 25px" />
-                                <p class="mb-0">Original Price: <span>{{ $job->price ? number_format($job->price, 2) : '' }}</span> inc gst</p>
+
+                                <p class="mb-0">Profit: $ <span id="profit_amount"> </span></p>
 
                             </div>
-
                             <div class="d-flex align-items-center gap-2">
-                                <img src="/image/icon1/126169 1.png" style="height: 25px" />
-                                <p class="mb-0">Painter Price: <span id="displayPainterPrice2"></span></p>
+                                <img src="/image/icon1/1painter.png" style="height: 25px" />
+                                <p class="mb-0"> Painter: <span id="painterName"></span> </p>
                             </div>
 
-                            <div class="d-flex align-items-center gap-2">
-                                <img src="/image/icon1/126169 1.png" style="height: 25px" />
-                                <p class="mb-0">Paint Cost: <span id="displayPaintCost2"></span></p>
 
+                            <div class=" d-flex flex-column align-items-left">
+                                <div class="d-flex pb-0 mb-0">
+                                    <p id="displayQ1"></p>
+                                </div>
+                                <div class="d-flex py-0 my-0">
+                                    <p id="displayQ2"></p>
+                                </div>
+                                <div class="d-flex py-0 my-0">
+                                    <p id="displayQ3"></p>
+                                </div>
                             </div>
+
+
                             <div class="d-flex align-items-center gap-2">
                                 <img src="/image/icon1/4793321 1.png" style="height: 25px" />
                                 <p class="mb-0">{{date('j M, Y', strtotime( $job->start_date))}} </p>
 
                             </div>
-                            <div class="d-flex align-items-center gap-2">
-                                <img src="/image/icon1/meter.png" style="height: 25px" />
-                                <p class="mb-0"> {{$job->house_size}}</p>
-                            </div>
+
                             <div>
                                 <p>
                                     <b>Job Details: </b> <br>
@@ -605,25 +609,21 @@
             quesTwo.classList.add("d-flex");
         }
 
-        // Function to show the third question
         function showThirdQues() {
             var quesThird = document.getElementById("quesThird");
             quesThird.classList.remove("d-none");
             quesThird.classList.add("d-flex");
         }
 
-        // Function to show the start button
         function showstartbtn() {
             var element = document.getElementById('addInvoicePaidLessButton');
             element.removeAttribute('hidden');
         }
 
-        // Function to set answer
         function setAnswer(questionNumber, answerValue) {
             document.getElementById(`answer${questionNumber}`).value = answerValue;
         }
 
-        // Function to handle close button
         function closebtn() {
             var span = document.getElementsByClassName("nobtn")[0];
             span.onclick = function() {
@@ -633,8 +633,17 @@
 
         }
 
+        document.getElementById('newPrice').addEventListener('input', function() {
+            var newPrice = parseFloat(this.value);
+            if (!isNaN(newPrice)) {
+                document.getElementById('paintCost').value = newPrice * 0.30;
+            } else {
+                document.getElementById('paintCost').value = '';
+            }
+        });
+
+
         document.addEventListener("DOMContentLoaded", function() {
-            // Initially hide the sectionfirst
             var sectionFirst = document.getElementById("sectionfirst");
             var sectionVisible = false;
 
@@ -644,14 +653,12 @@
             }
 
             var nextButton = document.getElementById("nextButton");
-
             nextButton.addEventListener("click", function() {
                 if (!sectionVisible) {
                     showSectionFirst();
                 }
             });
         });
-
         // Function to show cost section and calculate paint cost
         function showCostSection() {
             var costSection = document.getElementById("cost");
@@ -661,14 +668,7 @@
         }
 
         // Event listener to calculate paint cost based on new price
-        document.getElementById('newPrice').addEventListener('input', function() {
-            var newPrice = parseFloat(this.value);
-            if (!isNaN(newPrice)) {
-                document.getElementById('paintCost').value = newPrice * 0.30;
-            } else {
-                document.getElementById('paintCost').value = '';
-            }
-        });
+
 
         // Function to handle modal display
         var modal = document.getElementById("amountNotesModal");
@@ -688,40 +688,68 @@
             }
         }
 
-        // Event listener to handle form submission
-        document.getElementById('nextbtnsubmit').addEventListener('click', function(event) {
-            // Prevent form submission
-            event.preventDefault();
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Separate event listener for the dropdown change
+            var selectElement = document.getElementById('assigned_painter_name');
+            selectElement.addEventListener('change', function() {
+                var selectedOption = this.options[this.selectedIndex];
+                // Update the "painterName" element with the selected option's text
+                document.getElementById('painterName').textContent = selectedOption.text;
+            });
 
-            // Get values from form inputs
-            const painterPrice = parseFloat(document.getElementById('newPrice').value);
-            const paintCost = parseFloat(document.getElementById('paintCost').value);
-            const extrasMessage = document.getElementById('extrasMessage').value;
-            const formatter = new Intl.NumberFormat('en-US', {
-                style: 'decimal'
-                , minimumFractionDigits: 2
-                , maximumFractionDigits: 2
-            , });
+            // Event listener to handle form submission
+            document.getElementById('nextbtnsubmit').addEventListener('click', function(event) {
+                // Prevent form submission
+                event.preventDefault();
 
-            // Display calculated values
-            document.getElementById('displayPainterPrice').innerText = `$${formatter.format(painterPrice)}`;
-            document.getElementById('displayPaintCost').innerText = `$${formatter.format(paintCost)}`;
-            document.getElementById('displayPainterPrice2').innerText = `$${formatter.format(painterPrice)}`;
-            document.getElementById('displayPaintCost2').innerText = `$${formatter.format(paintCost)}`;
-            document.getElementById('extrasMessages').innerText = extrasMessage;
+                // Get values from form inputs
+                const painterPrice = parseFloat(document.getElementById('newPrice').value) || 0;
+                const paintCost = parseFloat(document.getElementById('paintCost').value) || 0;
+                const extrasMessage = document.getElementById('extrasMessage').value;
+                const formatter = new Intl.NumberFormat('en-US', {
+                    style: 'currency'
+                    , currency: 'USD'
+                    , minimumFractionDigits: 2
+                    , maximumFractionDigits: 2
+                , });
 
-            // Calculate total profit
-            const jobPrice = parseFloat('{{ $job->price ?? '
-                0 ' }}'); // Ensure jobPrice is a valid JS variable
-            const totalProfit = jobPrice - (painterPrice + paintCost);
-            document.getElementById('displayTotalProfit').innerText = `$${formatter.format(totalProfit)}`;
+                // Display calculated values
+                document.getElementById('displayPainterPrice').innerText = formatter.format(painterPrice);
+                document.getElementById('displayPaintCost').innerText = formatter.format(paintCost);
+                document.getElementById('extrasMessages').innerText = extrasMessage;
+
+                // Calculate total profit
+                const jobPrice = parseFloat('{{ $job->price ?? 0 }}') || 0;
+                const totalProfit = jobPrice - (painterPrice + paintCost);
+
+                document.getElementById('displayTotalProfit1').innerText = formatter.format(totalProfit);
+                document.getElementById('profit_amount').innerText = formatter.format(totalProfit);
+            });
+        });
+
+        document.getElementById('addInvoicePaidLessButton').addEventListener('click', function() {
+            // Fetch values from hidden inputs
+            var q1 = document.getElementById('answer1').value;
+            var q2 = document.getElementById('answer2').value;
+            var q3 = document.getElementById('answer3').value;
+
+            if (q1 === "0") {
+                document.getElementById('displayQ1').innerText = "*Painter Buys the paint";
+
+            }
+            if (q2 === "0") {
+                document.getElementById('displayQ2').innerText = "*the Painter orders the paint ";
+
+            }
+            if (q3 === "0") {
+                document.getElementById('displayQ3').innerText = "*Paint order is sent to paint shop";
+
+            }
         });
 
     </script>
-
-
-
-
 
 </body>
 </html>
