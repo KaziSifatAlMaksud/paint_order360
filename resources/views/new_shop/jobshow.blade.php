@@ -208,8 +208,6 @@
             z-index: 2;
         }
 
-        /* Navigation End Update*/
-
     </style>
 
 
@@ -415,7 +413,7 @@
                             @else
 
                             @if($job->admin_builders)
-                            <img class="company-logo" src="{{ asset('uploads/' . $job->admin_builders->img_log) }}" style="height: 60px;" alt="Company Logo" />
+                            <img class="company-logo" src="{{ asset('uploads/' . $job->admin_builders->img_log) }}" alt="Company Logo" />
                             @endif
 
 
@@ -531,15 +529,20 @@
                     </div>
                     <div class="fw-medium">
                         <p>
-                            <b> Original Price: </b>
-                            <span>${{$job ? number_format($job->price, 2 ) : ''}} </span>
+                            <strong> Original Price: </strong>
+
+                            $ {{$job ? number_format($job->price, 2 ) : ''}}
                         </p>
-                        <p> <strong>Painter Price : <strong> <span> {{$job ? number_format($assign_job->assign_price_job, 2 ) : ''}}</span></p>
-                        <p>Paint Cost : <span>
-                                {{$assign_job ? number_format($assign_job->paint_cost, 2 ) : ''}}
-                            </span></p>
+                        <p> <strong>Painter Price : </strong> $ {{$job ? number_format($assign_job->assign_price_job, 2 ) : ''}}</p>
+                        <p> <strong> Paint Cost : </strong>
+                            $ {{$assign_job ? number_format($assign_job->assign_price_job * 0.30, 2 ) : ''}}
+
+                        </p>
                         <p>
-                            Total Profit: $ {{ $assign_job ? number_format(($job->price - (($assign_job->assign_price_job ? $assign_job->assign_price_job : 0) + ($assign_job->paint_cost ? $assign_job->paint_cost : 0))), 2) : 0 }}
+                            <strong> Total Profit: </strong> $ {{ $assign_job ? number_format(($job->price - (($assign_job->assign_price_job ? $assign_job->assign_price_job : 0) + ($assign_job->assign_price_job ? $assign_job->assign_price_job * 0.30 : 0))), 2) : 0 }}
+
+
+
 
                         </p>
 
@@ -555,6 +558,8 @@
     <!-- ====== job view1 ====== -->
     <section class="view1 mt-4" style="display:block;">
         <div class="row service-box justify-content-between mx-3">
+            @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
+
             <!-- 1 -->
             <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}" style="text-decoration: none;">
                 <div class="service-box-single col-6 mb-3 px-0">
@@ -582,7 +587,7 @@
         </div>
         <!-- 2 -->
         {{-- //this is for Assign  Painter Call  --}}
-        @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
+
         <div class="service-box-single col-6 mb-3 px-0">
             <a href="tel:{{ $assign_job->painter ? $assign_job->painter->phone : '' }}" style="text-decoration: none;">
 

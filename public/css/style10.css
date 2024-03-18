@@ -196,6 +196,11 @@ Profile Page Style
   display: none;
 }
 
+.company-logo {
+  /* width: 100px !important; */
+  height: 100px !important;
+}
+
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
   .nav-bar div .arrow {
@@ -236,9 +241,7 @@ Profile Page Style
     height: 80px !important;
   }
 
-  .company-logo {
-    height: 50px !important;
-  }
+
 
   .content p {
     font-size: 18px;

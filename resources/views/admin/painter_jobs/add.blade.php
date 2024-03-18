@@ -167,6 +167,15 @@ require public_path() . '/admin/header.blade.php';
     </div>
 </div>
 
+<div class="form-group">
+    <label class="col-sm-3 control-label">My job notes( only you will see ):</label>
+
+    <div class="col-sm-9">
+        <input name="assign_job_description" type="text" class="form-control" value="{{ old('assign_job_description') ?? ($assign_painter ? $assign_painter->assign_job_description : '') }}">
+    </div>
+</div>
+
+
 {{-- <div class="form-group">
                             <label class="col-sm-3 control-label">Stairs stained:</label>
                             <div class="col-sm-9">
@@ -337,7 +346,7 @@ require public_path() . '/admin/header.blade.php';
     </div>
 
 
-
+    {{--
     <div class="form-group">
         <label class="col-sm-3 control-label">A. Supervisor:</label>
         <div class="col-sm-9">
@@ -345,45 +354,40 @@ require public_path() . '/admin/header.blade.php';
                 <option class="empty_supervisor2" value="" selected>Select</option>
                 @foreach ($supervisors as $supervisor)
                 <option value="{{ $supervisor->id }}" class="all_supervisors supervisor_{{ $supervisor->builder_id }}" {{ $assign_painter !== null && $supervisor->id == old('assigned_supervisor', $assign_painter->assign_company_id) ? 'selected' : '' }}>
-                    {{ $supervisor->name }}
-                </option>
-                @endforeach
-            </select>
-        </div>
+    {{ $supervisor->name }}
+    </option>
+    @endforeach
+    </select>
+</div>
+</div> --}}
+
+
+
+
+
+{{-- Assign Painter Job Price --}}
+<div class="form-group">
+    <label class="col-sm-3 control-label">Price for Job Ex Gst:
+        {{-- inc gst --}}
+    </label>
+    <div class="col-sm-9">
+        <input name="assign_price_job" value="{{ old('assign_job_description') ?? ($assign_painter ? $assign_painter->assign_price_job : '') }}" min="1" max="50000000000000" type="number" step="0.01" class="form-control form-control-lg" onblur="formatPrice()">
+
     </div>
+</div>
 
 
 
+{{-- Here is the question will be there..  --}}
 
-
-    {{-- Assign Painter Job Price --}}
-    <div class="form-group">
-        <label class="col-sm-3 control-label">Price for Job Ex Gst:
-            {{-- inc gst --}}
-        </label>
-        <div class="col-sm-9">
-            <input name="assign_price_job" value="{{ old('assign_job_description') ?? ($assign_painter ? $assign_painter->assign_price_job : '') }}" min="1" max="50000000000000" type="number" step="0.01" class="form-control form-control-lg" onblur="formatPrice()">
-
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-sm-3 control-label">Extra Job Description: </label>
-        <div class="col-sm-9">
-            <input name="assign_job_description" type="text" class="form-control" value="{{ old('assign_job_description') ?? ($assign_painter ? $assign_painter->assign_job_description : '') }}">
-        </div>
-    </div>
-
-
-    {{-- Here is the question will be there..  --}}
-
-    {{-- <div class="form-group">
+{{-- <div class="form-group">
                             <label class="col-sm-12 control-label">Does the Painter Buy the Paint?</label>
                             <div class="col-sm-12">
                                 <div class="form-check col-sm-6">
                                     <input {{old("stairs_stained", $painterjob->stairs_stained) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=1 id="flexRadioDefault1">
-    <label class="form-check-label" for="flexRadioDefault1">
-        Yes
-    </label>
+<label class="form-check-label" for="flexRadioDefault1">
+    Yes
+</label>
 </div>
 <div class="form-check col-sm-6">
     <input {{old("stairs_stained", $painterjob->stairs_stained) ==0? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=0 id="flexRadioDefault2">
@@ -915,6 +919,7 @@ require public_path() . '/admin/footer.blade.php';
     };
 
 
+
     function showCard(cardNumber) {
         var cards = document.querySelectorAll('#section1 .po-wrap');
         for (var i = 0; i < cards.length; i++) {
@@ -941,6 +946,25 @@ require public_path() . '/admin/footer.blade.php';
         document.querySelector('#' + section + ' .button-navigation button:nth-child(' + (cardNumber) + ')').classList
             .add('active');
     }
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var builderCompanySelect = document.getElementById('builder_company');
+
+        builderCompanySelect.addEventListener('change', function() {
+
+            var selectedCompanyId = this.value;
+            var assignCompanySelect = document.getElementById('assign_company_id');
+            for (var i = 0; i < assignCompanySelect.options.length; i++) {
+                if (assignCompanySelect.options[i].value === selectedCompanyId) {
+                    assignCompanySelect.selectedIndex = i;
+                    break;
+                }
+            }
+        });
+    });
 
 </script>
 
