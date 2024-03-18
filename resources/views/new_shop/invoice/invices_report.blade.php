@@ -315,7 +315,8 @@
 
                     <!-- per job Page -->
                     <div id="page-content" class="content">
-                        <div class="cart-btn d-flex align-items-center justify-content-between toggle-type" style="height: 60px">
+                        <div class="cart-btn d-flex align-items-center justify-content-between toggle-type mt-4" style="height: 60px">
+
                             <h6>Cost & Profit</h6>
                             <div id="price" class="active" onclick="toggleTab('price')">
                                 <h6>Price $</h6>

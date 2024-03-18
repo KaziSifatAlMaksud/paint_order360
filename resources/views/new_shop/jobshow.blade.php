@@ -413,8 +413,10 @@
                                 @endif
                             </p>
                             @else
-                            <img class="company-logo" src="{{ asset('uploads/' . $job->admin_builders->img_log) }}" style="height: 60px;" alt="Company Logo" />
 
+                            @if($job->admin_builders)
+                            <img class="company-logo" src="{{ asset('uploads/' . $job->admin_builders->img_log) }}" style="height: 60px;" alt="Company Logo" />
+                            @endif
 
 
                             <p> <b> Gate Code: </b> @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
