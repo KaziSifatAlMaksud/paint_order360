@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::table('invoices', function (Blueprint $table) {
             $table->string('send_to')->nullable();
+            $table->string('attachment1')->nullable(); // For image paths
+            $table->string('attachment2')->nullable(); // For PDF paths or other file types
         });
     }
 
@@ -27,6 +29,8 @@ return new class extends Migration
     {
         Schema::table('invoices', function (Blueprint $table) {
             $table->dropColumn('send_to');
+            $table->dropColumn('attachment1');
+            $table->dropColumn('attachment2');
         });
     }
 };

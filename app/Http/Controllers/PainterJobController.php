@@ -10,7 +10,8 @@ use App\Models\PjItem;
 use App\Models\Builder;
 use App\Models\PoItems;
 use App\Models\PoItem;
-
+use App\Models\Invoice;
+use Carbon\Carbon;
 use App\Models\PainterJob;
 use App\Models\Superviser;
 use App\Models\BuilderModel;
@@ -227,6 +228,118 @@ class PainterJobController extends Controller
                 $poItem->fill($povalue)->save();
             }
         }
+
+        if ($request->po_item) {
+            $user_id = $request->user_id;
+            $MainPainter = User::find($user_id);
+            $MainPainterEmail = $MainPainter->email;
+            $admin_company_id = $request->company_id;
+            $admin_company = BuilderModel::find($admin_company_id);
+            $admin_company_name = $admin_company->company_name;
+            $admin_company_email = $admin_company->builder_email;
+            $currentDate = Carbon::now()->format('Y-m-d');
+            $job_address = $request->address;
+
+            foreach ($request->po_item as $pokey => $povalue) {
+                $category = ($pokey >= 1 && $pokey <= 4) ? 'firstGroup' : (($pokey >= 5 && $pokey <= 8) ? 'secondGroup' : ' ');
+
+                $inv_numbers = Invoice::max('id') ?? 0;
+                $next_inv_number = $inv_numbers + 1;
+
+                $formatted_number = sprintf('INV:%05d', $next_inv_number);
+
+
+
+                switch ($category) {
+                    case 'firstGroup':
+                        $invoice = new Invoice();
+                        $invoice->user_id = $user_id;
+                        $invoice->customer_id = $admin_company_name;
+                        $invoice->send_email = $admin_company_email;
+                        $invoice->inv_number = $formatted_number;
+                        $invoice->date = $currentDate;
+                        $invoice->purchase_order = $povalue['ponumber'] ?? '';
+                        $invoice->job_id = $painterjob->id;
+                        $invoice->address = $job_address;
+                        $invoice->batch = $pokey;
+                        $invoice->description = $povalue['description'] ?? '';
+                        $invoice->job_details = $povalue['job_details'] ?? '';
+                        $invoice->amount = $povalue['price'] ?? 0;
+                        $invoice->gst = $invoice->amount * 0.30; // Assuming a 30% GST rate
+                        $invoice->total_due = $invoice->amount + $invoice->gst;
+
+                        // Handle file upload
+                        if ($request->hasFile("po_item.$pokey.file")) {
+                            $file = $request->file("po_item.$pokey.file");
+
+                            // Validate the file or add more specific error handling here
+                            if (!$file->isValid()) {
+                                return response()->json(['error' => 'File upload error.']); // Properly handle or log the error as needed
+                            }
+
+                            $filename = time() . '_' . $file->getClientOriginalName();
+                            try {
+                                $file->move(public_path('uploads'), $filename);
+                                $invoice->attachment = $filename;
+                            } catch (\Exception $e) {
+                                // Handle the error, maybe log it and return a user-friendly message
+                                return response()->json(['error' => 'File could not be saved.']); // Adjust the response as per your application's needs
+                            }
+                        }
+
+                        // Save the invoice
+                        $invoice->save();
+                        break;
+
+
+
+                    case 'secondGroup':
+                        $invoice = new Invoice();
+                        $user_id = $request->assign_company_id;
+
+                        $invoice->user_id = $request->assigned_painter_name;
+                        $invoice->customer_id = $admin_company_name;
+                        $invoice->send_email = $MainPainterEmail;
+                        $invoice->inv_number = $formatted_number;
+                        $invoice->date = $currentDate;
+                        $invoice->purchase_order = $povalue['ponumber'] ?? '';
+                        $invoice->job_id = $painterjob->id;
+                        $invoice->address = $job_address;
+                        $invoice->batch = $pokey;
+                        $invoice->description = $povalue['description'] ?? '';
+                        $invoice->job_details = $povalue['job_details'] ?? '';
+                        $invoice->amount = $povalue['price'] ?? 0;
+                        $invoice->gst = $invoice->amount * 0.30;
+                        $invoice->total_due = $invoice->amount + $invoice->gst;
+
+                        // Handle file upload
+                        if ($request->hasFile("po_item.$pokey.file")) {
+                            $file = $request->file("po_item.$pokey.file");
+
+                            // Validate the file or add more specific error handling here
+                            if (!$file->isValid()) {
+                                return response()->json(['error' => 'File upload error.']);
+                            }
+
+                            $filename = time() . '_' . $file->getClientOriginalName();
+                            try {
+                                $file->move(public_path('uploads'), $filename);
+                                $invoice->attachment = $filename;
+                            } catch (\Exception $e) {
+                                // Handle the error
+                                return response()->json(['error' => 'File could not be saved.']);
+                            }
+                        }
+
+                        $invoice->save();
+                        break;
+                }
+            }
+        }
+
+
+
+
         Session::flash('message', 'PainterJob Added successfully');
         Session::flash('alert-class', 'alert-success');
         return redirect()->route("admins.painterJob.index");

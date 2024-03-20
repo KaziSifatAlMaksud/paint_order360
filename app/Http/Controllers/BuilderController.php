@@ -135,15 +135,6 @@ class BuilderController extends Controller
         return view('admin.edit_builder', ['builders' => $builders, 'brands' => $brands]);
     }
 
-    // public function update(adminbulderRequest $request, $admin_builder)
-    // {
-
-    //     BuilderModel::findOrFail($admin_builder)->update($request->all());
-
-    //     return true;
-    // }
-
-
 
     public function update(Request $request, $id)
     {

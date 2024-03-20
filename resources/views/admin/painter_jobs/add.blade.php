@@ -451,7 +451,7 @@ require public_path() . '/admin/header.blade.php';
 
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Description{{ $i - 4 }}: </label>
+            <label class="col-sm-3 control-label">Description{{ $i + 4 }}: </label>
             <div class="col-sm-9">
                 <input name="po_item[{{ $i + 4 }}][description]" value="{{ old('po_item[' . ($i + 4) . '][description]', count($painterjob->poItems) > $i + 3 && isset($painterjob->poItems[$i + 3]) ? $painterjob->poItems->values()[$i + 3]->description : '') }}" type="text" class="form-control">
 
@@ -462,7 +462,7 @@ require public_path() . '/admin/header.blade.php';
 
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">L.description{{ $i - 4 }}:
+            <label class="col-sm-3 control-label">L.description{{ $i + 4 }}:
             </label>
             <div class="col-sm-9">
                 <input name="po_item[{{ $i + 4 }}][job_details]" value="{{ old('po_item[' . ($i + 4) . '][job_details]', count($painterjob->poItems) > $i + 3 && isset($painterjob->poItems[$i + 3]) ? $painterjob->poItems->values()[$i + 3]->job_details : '') }}" type="text" class="form-control">
@@ -470,7 +470,7 @@ require public_path() . '/admin/header.blade.php';
         </div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">P.O upload{{ $i - 4 }}:</label>
+            <label class="col-sm-3 control-label">P.O upload{{ $i + 4 }}:</label>
             <div class="col-sm-9">
                 <input name="po_item[{{ $i + 4 }}][file]" class="form-control form-control-lg" id="po" type="file">
                 @if (count($painterjob->poItems) > 0 &&
@@ -484,7 +484,7 @@ require public_path() . '/admin/header.blade.php';
         </div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Price {{ $i + 3 }}:</label>
+            <label class="col-sm-3 control-label">Price {{ $i + 4 }}:</label>
             <div class="col-sm-9">
                 <input name="po_item[{{ $i + 4 }}][price]" value="{{ old('po_item[' . $i . '][price]', count($painterjob->poItems) > $i + 3 && isset($painterjob->poItems[$i + 3]) ? $painterjob->poItems->values()[$i + 3]->price : '') }}" min="1" max="50000000000000" type="number" step="0.01" class="form-control form-control-lg" onblur="formatPrice()">
             </div>
