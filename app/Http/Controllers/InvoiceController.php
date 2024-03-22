@@ -200,7 +200,6 @@ class InvoiceController extends Controller
             ->whereNull('parent_id')
             ->first();
         if ($jobs->admin_builders !== null) {
-
             $admin_builders = BuilderModel::where('company_name', $jobs->admin_builders->name)->first();
             $poItem = $jobs->poitem()->where('id', $poItem_id)->first();
             $invoice = Invoice::where('id', $poItem->invoice_id)->first();
@@ -617,6 +616,10 @@ class InvoiceController extends Controller
             if ($poItem) {
                 $poItem->update([
                     "ponumber" => null,
+                    "job_id" => null,
+                    "file" => null,
+                    "ponumber" => null,
+                    "batch" => null,
                     "description" => null,
                     "job_details" => null,
                     "price" => null,
