@@ -27,6 +27,7 @@ use App\Models\Invoice;
 use App\Models\BuilderModel;
 use App\Models\GaragePaint;
 use App\Models\JobPp;
+use App\Models\PoItems;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Notifications\WelcomeEmailNotification;
@@ -192,7 +193,7 @@ class HomeController extends Controller
     }
     public function showinvoiceing($id, Request $request)
     {
-        $jobs = PainterJob::with('assignedJob', 'users')->findOrFail($id);
+        $jobs = PainterJob::with('assignedJob', 'users', 'admin_builders')->findOrFail($id);
         $status = Invoice::all();
         $invoices = Invoice::where('job_id', $id)->whereNull('batch')
             ->orderBy('updated_at', 'desc')

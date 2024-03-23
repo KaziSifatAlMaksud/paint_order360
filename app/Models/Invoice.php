@@ -19,6 +19,7 @@ class Invoice extends Model
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
+
     protected $appends = ['total_payments'];
     public function getTotalPaymentsAttribute()
     {

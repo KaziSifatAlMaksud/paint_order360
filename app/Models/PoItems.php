@@ -27,4 +27,9 @@ class PoItems extends Model
     {
         return $this->belongsTo(PainterJob::class, 'job_id');
     }
+
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class, 'invoice_id');
+    }
 }

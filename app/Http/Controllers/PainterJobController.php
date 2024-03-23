@@ -315,6 +315,7 @@ class PainterJobController extends Controller
         foreach ($items as  $item) {
             $data[$item->type][$item->key] = $item;
         }
+
         $assign_painter = AssignedPainterJob::where('job_id', $painterJob->id)->first();
         $painterJob->load('poItems');
         $buliders =  Builder::whereNotNull('name')->orderBy('name')->get();
@@ -381,17 +382,45 @@ class PainterJobController extends Controller
                 }
             }
             if ($request->po_item) {
-                foreach ($request->po_item as $pokey => $povalue) {
-                    $poItem = PoItems::where(['job_id' => $painterJob->id, 'batch' => $pokey])->first();
-                    if (!$poItem) {
-                        $poItem = new PoItems();
+                foreach ($request->po_item as $poKey => $poValue) {
+                    $poItem = PoItems::where(['job_id' => $painterJob->id, 'batch' => $poKey])->firstOrNew();
+
+                    if (!$poItem->exists || ($poItem->exists && !$poItem->invoice_id)) {
+                        // Assuming PoItems model has 'job_id', 'batch', 'job_details', 'description' fields
+                        $poItem->job_id = $painterJob->id;
+                        $poItem->batch = $poKey;
+                        $poItem->job_details = $poValue['job_details'];
+                        $poItem->description = $poValue['description'];
+                        $poItem->save();
                     }
-                    $povalue['job_id'] = $painterJob->id;
-                    $povalue['batch'] = $pokey;
-                    $this->manageFile($request, "po_item.$pokey.file", $povalue, $poItem, 'file');
-                    $poItem->fill($povalue)->save();
+
+                    if ($poItem->exists && $poItem->invoice_id) {
+                        $invoice = Invoice::findOrFail($poItem->invoice_id);
+                    } else {
+                        $invoice = new Invoice();
+                        $invoice->po_item_id = $poItem->id; // Assuming there's a relationship to link back to PoItems
+                    }
+
+                    $invoice->amount = $poValue['price'];
+                    $invoice->gst = $poValue['price'] * 0.10; // Calculate GST as 10% of the price.
+                    $invoice->total_due = $poValue['price'] * 1.10; // Total due includes the price plus GST.
+
+                    // Handling the file, assuming it's supposed to be associated directly with the invoice
+                    if ($request->hasFile("po_item.$poKey.file")) {
+                        $file = $request->file("po_item.$poKey.file");
+                        // Get the original file name without changing it
+                        $fileName = $file->getClientOriginalName();
+                        // Assuming manageFile() stores the file and just the file name is needed here
+                        $this->manageFile($request, "po_item.$poKey.file", $poValue, $poItem, 'file');
+                        $invoice->attachment = $fileName;
+                    }
+
+                    $invoice->job_details = $poValue['job_details'];
+                    $invoice->description = $poValue['description'];
+                    $invoice->save();
                 }
             }
+
 
             // Update or Create logic for AssignedPainterJob
             $assignedPainterJob = AssignedPainterJob::firstOrNew(['job_id' => $painterJob->id]); // Assuming 'job_id' is the correct identifier

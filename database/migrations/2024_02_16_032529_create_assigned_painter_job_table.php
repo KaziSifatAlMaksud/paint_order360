@@ -13,6 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('assigned_painter_job')) {
+            Schema::drop('assigned_painter_job');
+        }
         Schema::create('assigned_painter_job', function (Blueprint $table) {
             $table->id();
             // Removed the empty string column definition. Add or correct this line if that was a mistake.
@@ -32,9 +35,8 @@ return new class extends Migration
 
             // Now, define the foreign keys
             $table->foreign('assigned_painter_name')->references('id')->on('users');
-            $table->foreign('assign_company_id')->references('id')->on('admin_builders');
+
             $table->foreign('assigned_supervisor')->references('id')->on('supervisers');
-            $table->foreign('job_id')->references('id')->on('painter_jobs'); // Assuming you want to delete assigned jobs if the painter job is deleted
         });
     }
 
