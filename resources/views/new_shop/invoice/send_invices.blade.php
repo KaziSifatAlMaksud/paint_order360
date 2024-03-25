@@ -50,7 +50,9 @@
                     <div class="col-10">
                         {{-- {{$admin_builders}} --}}
                         {{-- <input name="customer_id" type="text" value="{{ isset($admin_builders->company_name) ? $admin_builders->company_name : $admin_builders->company_name }}" class="custom-input" readonly> --}}
-                        <input name="customer_id" type="text" value="{{ $jobs->admin_builders->company_name ?? '' }}" class="custom-input" readonly>
+                        <input name="customer_id" type="text" value="{{$jobs->admin_builders ? $jobs->admin_builders->company_name : '' }}" class="custom-input" readonly>
+
+
 
 
                     </div>

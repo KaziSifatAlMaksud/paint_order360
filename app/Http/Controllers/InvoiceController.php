@@ -194,12 +194,12 @@ class InvoiceController extends Controller
     public function invoice_send(Request $request, $jobs_id, $poItem_id)
     {
         $customers = Customer::all()->where('user_id', $request->user()->id);
-        $jobs = PainterJob::with('superviser', 'poitem')
+        $jobs = PainterJob::with('superviser', 'poitem', 'admin_builders')
             ->where('id', $jobs_id)
-            ->where('user_id', $request->user()->id)
+            // ->where('user_id', $request->user()->id)
             ->whereNull('parent_id')
             ->first();
-        if ($jobs->admin_builders !== null) {
+        if (isset($jobs->admin_builders)) {
             $admin_builders = BuilderModel::where('company_name', $jobs->admin_builders->name)->first();
             $poItem = $jobs->poitem()->where('id', $poItem_id)->first();
             $invoice = Invoice::where('id', $poItem->invoice_id)->first();
@@ -500,7 +500,7 @@ class InvoiceController extends Controller
                         "invoice_id" => $invoice->id,
                     ]);
                 }
-                Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath,  'company_name' => $company_name, 'username' => $user_name], function ($message) use ($data, $pdf, $attachmentPath) {
+                Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath,  'company_name' => $company_name, 'user_name' => $user_name], function ($message) use ($data, $pdf, $attachmentPath) {
                     $message->to($data["send_email"])
                         ->subject("Your Invoice - " . $data['address'])
                         ->attachData($pdf->output(), "invoice.pdf");

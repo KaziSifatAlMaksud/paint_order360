@@ -240,7 +240,9 @@ require public_path() . '/admin/header.blade.php';
             <label class="col-sm-3 control-label">PO Number {{ $i }}: </label>
 
             <div class="col-sm-9">
-                <input name="po_item[{{ $i }}][ponumber]" value="{{ old('po_item[$i][ponumber]', count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i - 1]->ponumber : '') }}" type="text" class="form-control">
+                {{-- <input name="po_item[$i][ponumber]" value="{{ count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i - 1]->ponumber : '' }}" type="text" class="form-control"> --}}
+                <input name="po_item[{{ $i }}][ponumber]" value="{{ count($painterjob->poItems) > 0 && isset($painterjob->poItems->values()[$i - 1]) ? $painterjob->poItems->values()[$i - 1]->ponumber : '' }}" type="text" class="form-control">
+
 
             </div>
 
@@ -607,16 +609,10 @@ require public_path() . '/admin/header.blade.php';
                     <tr>
                         <td data-title="Area" class="border1px">
                             <div class="input-field col s12">
-                                @if($value == '')
 
-
-
-                                <input id="area-{{ $key }}" type="text" value="{{ $value }}" name="outside[{{ $key }}][]" class="validate clickget os_{{ $key }}">
-
-                                @else
                                 {{ $value }}
                                 <input id="area-{{ $key }}" type="hidden" value="{{ $value }}" name="outside[{{ $key }}][area]" class="validate clickget os_{{ $key }}">
-                                @endif
+
                             </div>
 
                         </td>
