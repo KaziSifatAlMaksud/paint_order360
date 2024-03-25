@@ -660,8 +660,10 @@
             <a href="tel:{{ $job->painter->phone ? $job->painter->phone : '' }}" style="text-decoration: none;">
                 <div class="custom-card custom-border card  h-100 rounded-4">
                     <div class="card-body px-1 d-flex">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <img src="/image/icon1/190034-200 1.png" style="height: 40px" />
+                        <div class="d-flex justify-content-between align-items-center w-100 gap-2">
+
+                            <img src="/image/icon1/download 42.png" style="height: 40px" />
+
                             <div>
                                 <h6 class="mb-0">Call To Boss</h6>
                                 <p class="mb-0 pb-0"> {{ $job->painter->company_name ? $job->painter->company_name : '' }} - {{ $job->painter->first_name ? $job->painter->first_name : '' }}</p>
@@ -872,8 +874,14 @@
 
     <!-- view2 -->
     <section class="view2 mt-4" style="display: none;">
-        <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}" style="text-decoration: none;">
-            <div class="row service-box gap-2 mx-3">
+
+
+
+        <div class="row service-box gap-2 mx-3">
+            @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
+
+            <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}" style="text-decoration: none;">
+
                 <div class="service-col col-3 mb-3 px-0">
                     <div class="custom-card card custom-border rounded-4">
                         <div class="card-body py-2 px-1 justify-content-center">
@@ -885,8 +893,12 @@
                             </div>
                         </div>
                     </div>
-        </a>
+            </a>
+
+
         </div>
+        @endif
+
         <!-- 2 -->
         @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
         <div class="service-col col-3 mb-3 px-0">
@@ -908,7 +920,8 @@
                 <div class="custom-card card custom-border rounded-4">
                     <div class="card-body px-1 py-2 d-flex justify-content-center">
                         <div class="d-flex flex-column justify-content-center align-items-center gap-1">
-                            <img src="/image/icon1/190034-200 1.png" style="height: 40px" />
+                            <img src="/image/icon1/download 42.png" style="height: 40px" />
+
                             <div>
                                 <h6 class="mb-0">Boss</h6>
                             </div>
