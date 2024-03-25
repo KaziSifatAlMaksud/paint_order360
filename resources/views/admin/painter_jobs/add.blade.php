@@ -607,9 +607,18 @@ require public_path() . '/admin/header.blade.php';
                     <tr>
                         <td data-title="Area" class="border1px">
                             <div class="input-field col s12">
+                                @if($value == '')
+
+
+
+                                <input id="area-{{ $key }}" type="text" value="{{ $value }}" name="outside[{{ $key }}][]" class="validate clickget os_{{ $key }}">
+
+                                @else
                                 {{ $value }}
-                                <input id="area-{{ $key }}" type="hidden" value='<?php echo $value; ?>' name="outside[<?php echo $key; ?>][area]" class="validate clickget os_<?php echo $key; ?>">
+                                <input id="area-{{ $key }}" type="hidden" value="{{ $value }}" name="outside[{{ $key }}][area]" class="validate clickget os_{{ $key }}">
+                                @endif
                             </div>
+
                         </td>
                         <td data-title="Product" class="border1px">
                             <div class="input-field col s12">
@@ -1063,6 +1072,7 @@ require public_path() . '/admin/footer.blade.php';
     });
 
 </script>
+
 
 
 

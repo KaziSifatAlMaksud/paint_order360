@@ -7,6 +7,6 @@
     <p>Hello,</p>
     <p>You have just received the invoice from {{ $company_name }}.</p>
     <p>Regards,</p>
-    <p>{{ $username }}</p>
+    <p>{{ $user_name }}</p>
 </body>
 </html>

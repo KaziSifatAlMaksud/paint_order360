@@ -166,7 +166,7 @@ class HomeController extends Controller
 
     public function show($id)
     {
-        $job = PainterJob::with('GallaryPlan', 'admin_builders')->find($id);
+        $job = PainterJob::with('GallaryPlan', 'admin_builders', 'assignedJob')->find($id);
         $assign_job = AssignedPainterJob::where('job_id', $id)->with(['adminBuilder', 'painterJob', 'painter'])->first();
 
         if (!$job) {

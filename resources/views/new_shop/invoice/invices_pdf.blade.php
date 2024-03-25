@@ -12,7 +12,7 @@
             padding: 0;
             font-family: sans-serif;
             color: gray;
-           
+
         }
 
         h1,
@@ -100,45 +100,46 @@
         .float-right {
             float: right;
         }
+
     </style>
 </head>
 
 <body>
-   
+
     <div class="container">
-       
-<table style="margin-bottom: 20px!; border-collapse: collapse; border: none !important; width: 100%; margin-top: 40px;">
-    <tr>
-        <td>
-            <h1 style="color: #5086e6 !important; ">{{$company_name}}</h1>
-        </td>
-        <td style="text-align: end !important;">
-            <h3 style="margin: 0 !important; color: #000!important;">Tax Invoice</h3>
-        </td>
-    </tr>
-    <tr>
-        <td style="border: none !important; ">
-            <p style="margin: 0 !important;">{{$user_address}}</p>
-            <p style="margin: 0 !important;">ABN: {{$abn}}</p>
-            <p style="margin: 0 !important;">{{$user_name}}: {{$user_phone}}</p>
-        </td>
-        <td style="border: none !important; margin-top: 15px!important;">
-            <p style="margin: 0 !important;">
-                {{-- <b>INVOICE # </b>  --}}
-                <span style="color: #5086e6 !important;"> {{$inv_number}} </span> </p> <br>
-            <p style="margin: 0 !important;"><b>Type Of work done:</b> <span style="color: #5086e6 !important;"> {{$description}}</span></p>
-        </td>
-    </tr>
-</table>
-<br>
-<br>
-<br>
+
+        <table style="margin-bottom: 20px!; border-collapse: collapse; border: none !important; width: 100%; margin-top: 40px;">
+            <tr>
+                <td>
+                    <h1 style="color: #5086e6 !important; ">{{$company_name}}</h1>
+                </td>
+                <td style="text-align: end !important;">
+                    <h3 style="margin: 0 !important; color: #000!important;">Tax Invoice</h3>
+                </td>
+            </tr>
+            <tr>
+                <td style="border: none !important; ">
+                    <p style="margin: 0 !important;">{{$user_address}}</p>
+                    <p style="margin: 0 !important;">ABN: {{$abn}}</p>
+                    <p style="margin: 0 !important;">{{$user_name}}: {{$user_phone}}</p>
+                </td>
+                <td style="border: none !important; margin-top: 15px!important;">
+                    <p style="margin: 0 !important;">
+                        {{-- <b>INVOICE # </b>  --}}
+                        <span style="color: #5086e6 !important;"> {{$inv_number}} </span> </p> <br>
+                    <p style="margin: 0 !important;"><b>Type Of work done:</b> <span style="color: #5086e6 !important;"> {{$description}}</span></p>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <br>
+        <br>
 
         <div class="body-section">
             <div class="row">
                 <div class="col-8">
                     <p class="sub-heading"><b>Send Date:</b> <span style="color: #5086e6 !important;"> {{ date('d F, Y', strtotime($date)) }} </span> </p>
-                    <p class="sub-heading"><b> Bill To:</b> <span style="color: #5086e6 !important;"> {{$customer_id}} </span>  </p>
+                    <p class="sub-heading"><b> Bill To:</b> <span style="color: #5086e6 !important;"> {{$customer_id}} </span> </p>
                 </div>
                 <div class="col-4">
 
@@ -149,7 +150,7 @@
         <div class="body-section">
 
             <p> <b>Job Address: </b>
-            <span style="color: #5086e6 !important;"> {{$address}}. </span> 
+                <span style="color: #5086e6 !important;"> {{$address}}. </span>
             </p>
             <br>
             <table class="table-bordered">
@@ -166,10 +167,10 @@
                         <td></td>
                     </tr>
                     <tr>
-                        <td> <span style="color: #5086e6 !important;">{{$job_details}} </span>  </td>
+                        <td> <span style="color: #5086e6 !important;">{{$job_details}} </span> </td>
                         <td class="text-right">$
-                         
-                              {{ number_format($amount, 2) }}
+
+                            {{ number_format($amount, 2) }}
                         </td>
                     </tr>
                     <tr>
@@ -184,8 +185,8 @@
                     <tr>
                         <td class="text-right">Amount:</td>
                         <td class="text-right">$
-                      
-                              {{ number_format($amount, 2) }}
+
+                            {{ number_format($amount, 2) }}
                         </td>
                     </tr>
 
@@ -193,14 +194,14 @@
                         <td class="text-right">Gst:</td>
                         <td class="text-right">$
                             {{ number_format($gst, 2) }}
-                      
+
                         </td>
                     </tr>
                     <tr>
                         <td class="text-right"><b>Balance Due:</b></td>
                         <td class="text-right"><b> $
-                             
-                                  {{ number_format($total_due, 2) }}
+
+                                {{ number_format($total_due, 2) }}
                             </b></td>
                     </tr>
                 </tbody>

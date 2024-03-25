@@ -254,26 +254,30 @@
 
                     <div class="d-flex gap-2 justify-content-between">
                         <div class="d-flex flex-column gap-2">
-                            <div>
-                                <p>
-                                    <b>Job Details: </b> <br>
-                                    {{$job->builder_company_name ? $job->builder_company_name : ''}}
 
-                                </p>
-                                <p>
-                                    <b>Extra Message: </b> <br>
-                                    <span id="extrasMessages"></span>
+                            <p>
+                                <b>Job Details: </b> <br>
+                                {{$job ? $job : ''}}
 
-                                </p>
-                            </div>
+                            </p>
+                            <p>
+                                <b>Extra Message: </b> <br>
+                                <span id="extrasMessages"> {{$job->assignedJob ?  $job->assignedJob->assign_job_description : ''}}</span>
+
+
+
+                            </p>
+
                         </div>
 
-                    </div>
-                    <div>
-                        <p>
-                        </p>
+
+
                     </div>
                 </div>
+                <div class="text-center w-100 mb-2">
+                    <p> Do you want to accept this job? </p>
+                </div>
+
                 <div class="row justify-content-center">
                     <div class="col-6 text-center">
                         <form id="AcceptJobForm" action="{{ route('Accept.Job', $assign_job->id) }}" method="POST" style="width: 100%;">
@@ -439,15 +443,67 @@
 
                         </div>
                     </div>
-                    <div>
-                        <p>
-                            @if (!$job->builder_company_name)
-                            'There Is no Discription...'
-                            @else
-                            {{ $job->builder_company_name }}
-                            @endif
-                        </p>
+                    <div class="row">
+                        <div class="col-8">
+                            <p>
+                                @if (!$job->builder_company_name)
+                                'There Is no Description...'
+                                @else
+                                {{ $job->builder_company_name }}
+                                @endif
+                            </p>
+                        </div>
+
+
+                        @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
+
+                        <div class="col-4 d-flex justify-content-end">
+                            <!-- Image that triggers the modal -->
+                            <img src="/image/icon1/assign_painter.png" alt="" width="35px" height="35px" data-bs-toggle="modal" data-bs-target="#uniqueModalID" style="cursor: pointer;">
+                        </div>
+
+                        <!-- Modal Structure -->
+                        <div class="modal fade" id="uniqueModalID" tabindex="-1" aria-labelledby="modalLabelUnique" aria-hidden="true">
+                            <div class="modal-dialog" style="margin-top: 91px;">
+
+
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalLabelUnique">Unique Modal Title</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="mb-1">Extra Message for Assign Painter & Start Date:</p>
+                                        <form method="POST" action="{{ route('save.message', ['assign_painter' => $assign_job->id]) }}">
+                                            @csrf
+                                            <input id="messageInput" name="message" type="text" class="custom-input mb-3" style="background-color: #ffff" placeholder="Type your message for Assign Painter">
+                                            <input id="dateInput" name="startdate" type="date" value="{{ $job ? $job->start_date : '' }}" class="custom-input" style="background-color: #ffff;" placeholder="Date">
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button id="sendMessageBtn" type="submit" style="background-color: #f97316;" class="btn btn-block">Send</button>
+
+
+                                            </div>
+                                        </form>
+
+                                        @if(session('success'))
+                                        <div id="successAlert" class="alert alert-success">
+                                            {{ session('success') }}
+                                        </div>
+                                        @endif
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
+
+
+
                     </div>
+
+
                 </div>
 
 
@@ -489,62 +545,63 @@
                     <div class="pt-2">
                         <p class="mb-0">
                             {{$assign_job? $assign_job->assign_job_description : ''}}</p>
-                        {{-- <p>
-                Painter needs to order the paint for this job using this app
-                (paint order comes to you )
-              </p> --}}
+                    </div>
+                    {{-- <div>
 
                         <p class="mb-1">Extra Message:</p>
                         <form method="POST" action="{{ route('save.message', ['assign_painter' => $assign_job->id]) }}">
-                            @csrf
+                    @csrf
 
-                            <div class="row">
-                                <div class="col-10">
-                                    <input id="messageInput" name="message" type="text" class="custom-input" style="background-color: #ffff" placeholder="Type your message">
-                                </div>
-                                <div class="col-2">
-                                    <button id="sendMessageBtn" type="submit" class="btn btn-primary btn-block">Send</button>
-                                </div>
-                            </div>
-                        </form>
-
-                        @if(session('success'))
-                        <div id="successAlert" class="alert alert-success">
-                            {{ session('success') }}
+                    <div class="row">
+                        <div class="col-10">
+                            <input id="messageInput" name="message" type="text" class="custom-input" style="background-color: #ffff" placeholder="Type your message">
                         </div>
-                        @endif
+                        <div class="col-2">
+                            <button id="sendMessageBtn" type="submit" class="btn btn-primary btn-block">Send</button>
+                        </div>
                     </div>
-                </div>
+                    </form>
+
+                    @if(session('success'))
+                    <div id="successAlert" class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+
+                </div> --}}
+
+            </div>
+        </div>
 
 
-                <!-- Profit Page -->
-                <div id="page-content" class="content">
-                    <div class="d-flex justify-content-between py-2 mb-4">
-                        <h3>Cost & profit on this job</h3>
-                        {{-- <img
+        <!-- Profit Page -->
+        <div id="page-content" class="content">
+            <div class="d-flex justify-content-between py-2 mb-4">
+                <h3>Cost & profit on this job</h3>
+                {{-- <img
               class="company-logo"
                 src="/image/icon1/GJ-Gardner-Homes-e1595894281740 5.png"
                 style="height: 30px"
               /> --}}
-                    </div>
-                    <div class="fw-medium">
-                        <p>
-                            <strong> Original Price: </strong>
-
-                            $ {{$job ? number_format($job->price, 2 ) : ''}}
-                        </p>
-                        <p> <strong>Painter Price : </strong> $ {{$job ? number_format($assign_job->assign_price_job, 2 ) : ''}}</p>
-                        <p> <strong> Paint Cost : </strong>
-                            $ {{$assign_job ? number_format($assign_job->assign_price_job * 0.30, 2 ) : ''}}
-
-                        </p>
-                        <p>
-                            <strong> Total Profit: </strong> $ {{ $assign_job ? number_format(($job->price - (($assign_job->assign_price_job ? $assign_job->assign_price_job : 0) + ($assign_job->assign_price_job ? $assign_job->assign_price_job * 0.30 : 0))), 2) : 0 }}
-                        </p>
-                    </div>
-                </div>
-                @endif
             </div>
+            <div class="fw-medium">
+                <p>
+                    <strong> Original Price: </strong>
+
+                    $ {{$job ? number_format($job->price, 2 ) : ''}}
+                </p>
+                <p> <strong>Painter Price : </strong> $ {{$job ? number_format($assign_job->assign_price_job, 2 ) : ''}}</p>
+                <p> <strong> Paint Cost : </strong>
+                    $ {{$assign_job ? number_format($assign_job->assign_price_job * 0.30, 2 ) : ''}}
+
+                </p>
+                <p>
+                    <strong> Total Profit: </strong> $ {{ $assign_job ? number_format(($job->price - (($assign_job->assign_price_job ? $assign_job->assign_price_job : 0) + ($assign_job->assign_price_job ? $assign_job->assign_price_job * 0.30 : 0))), 2) : 0 }}
+                </p>
+            </div>
+        </div>
+        @endif
+        </div>
         </div>
     </section>
     <!-- ====== job view1 ====== -->
@@ -1049,7 +1106,12 @@
                 <p class="mb-0">Delete this entire job file</p>
             </button>
         </form>
+
+
         @endif
+
+
+
         <button type="button" class="btn btn-sm btn-light shadow-sm w-50 fw-medium" onclick="toggleView()">
             Change Button View
         </button>
@@ -1057,12 +1119,25 @@
 
     <div style="margin: 20px 0px 300px 0px;"></div>
     </div>
+
+
 </body>
 
 
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var myModal = new bootstrap.Modal(document.getElementById('uniqueModalID'), {
+            backdrop: false // This disables the backdrop
+        });
+
+        // Find your image by the src or any other method
+        document.querySelector('img[data-bs-target="#uniqueModalID"]').addEventListener('click', function() {
+            myModal.show();
+        });
+    });
+
     function closebtn() {
         var modal = document.getElementById("amountNotesModal");
         var btn = document.getElementById("addInvoicePaidLessButton");
