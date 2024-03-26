@@ -119,11 +119,20 @@ class InvoiceController extends Controller
                 return response()->json(['error' => $e->getMessage()], 500);
             }
         }
-
         if ($request->input('action') == 'save') {
             if ($request->hasFile('attachment')) {
                 $fileName = time() . '_' . $request->file('attachment')->getClientOriginalName();
                 $validatedData['attachment'] = $request->file('attachment')->storeAs('', $fileName, 'public');
+            }
+            if ($request->hasFile('attachment1')) {
+                $fileName = time() . '_' . $request->file('attachment1')->getClientOriginalName();
+                $validatedData['attachment1'] = $request->file('attachment1')->storeAs('', $fileName, 'public');
+            }
+
+            // Check and store the third attachment
+            if ($request->hasFile('attachment2')) {
+                $fileName = time() . '_' . $request->file('attachment2')->getClientOriginalName();
+                $validatedData['attachment2'] = $request->file('attachment2')->storeAs('', $fileName, 'public');
             }
             $invoice = Invoice::create($validatedData);
             return redirect()->back()->with('go_back', true)->with('success', 'Invoice created successfully.');
@@ -648,11 +657,6 @@ class InvoiceController extends Controller
         $invoice = Invoice::where('id', $id)->first();
         $invoicePaymentHistorys = InvoicePayment::where('invoice_id', $id)->orderBy('id', 'asc')->get();
         $totalAmountMain = InvoicePayment::where('invoice_id', $id)->sum('amount_main');
-
-
-
-
-
         return view('new_shop.invoice.send_manual_invoices', compact('customers', 'admin_builders', 'invoice', 'invoicePaymentHistorys', 'totalAmountMain'));
     }
 

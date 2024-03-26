@@ -387,7 +387,21 @@
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 <img src="/image/icon1/4793321 1.png" style="height: 25px" />
-                                <p class="mb-0">{{date('j M, Y', strtotime( $job->start_date))}} (in 2 weeks)</p>
+                                <p class="mb-0">
+                                    {{ date('j M, Y', strtotime($job->start_date)) }}
+                                    @php
+                                    $currentDate = new DateTime(); // Today's date
+                                    $startDate = new DateTime($job->start_date);
+                                    $interval = $currentDate->diff($startDate);
+                                    $days = $interval->format('%r%a'); // %r provides the sign "-" if difference is negative, %a gives the total number of days
+                                    $dayText = $days == 1 ? 'day' : 'days'; // Singular or plural day(s)
+                                    @endphp
+
+                                    @if ($days > 0)
+                                    (in {{ $days }} {{ $dayText }})
+                                    @elseif ($days < 0) ({{ abs($days) }} {{ $dayText }} ago) @else (today) @endif </p>
+
+
                             </div>
                             <div class="d-flex align-items-center gap-2">
                                 <img src="/image/icon1/meter.png" style="height: 25px" />
@@ -469,15 +483,22 @@
 
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="modalLabelUnique">Unique Modal Title</h5>
+                                        <h5 class="modal-title" id="modalLabelUnique">Extra Message & Start Date for Painter :</h5>
+
+
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p class="mb-1">Extra Message for Assign Painter & Start Date:</p>
-                                        <form method="POST" action="{{ route('save.message', ['assign_painter' => $assign_job->id]) }}">
+                                        <p class="mb-0"></p>
+                                        <form method="POST" action="{{ route('save.message', ['assign_painter' => $assign_job->id, 'jobId' => $job->id]) }}">
+
+
+
                                             @csrf
                                             <input id="messageInput" name="message" type="text" class="custom-input mb-3" style="background-color: #ffff" placeholder="Type your message for Assign Painter">
-                                            <input id="dateInput" name="startdate" type="date" value="{{ $job ? $job->start_date : '' }}" class="custom-input" style="background-color: #ffff;" placeholder="Date">
+                                            <input id="start_date" name="start_date" type="date" value="{{ $job ? $job->start_date : '' }}" class="custom-input" style="background-color: #ffff;" placeholder="Date">
+
+
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                 <button id="sendMessageBtn" type="submit" style="background-color: #f97316;" class="btn btn-block">Send</button>

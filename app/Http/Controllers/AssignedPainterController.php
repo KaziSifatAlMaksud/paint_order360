@@ -88,7 +88,7 @@ class AssignedPainterController extends Controller
             return response()->json(['error' => 'Assigned painter name is required'], 400); // 400 Bad Request
         }
     }
-    public function saveMessage(Request $request, $assign_painter)
+    public function saveMessage(Request $request, $assign_painter, $jobId)
     {
         // Validate the request if necessary
         $request->validate([
@@ -97,14 +97,16 @@ class AssignedPainterController extends Controller
 
         // Find the existing row in assigned_painter_job table
         $assignedPainterJob = AssignedPainterJob::where('id', $assign_painter)->first();
-
+        $job = PainterJob::findOrFail($jobId);
         // Update the assign_job_description column content
         if ($assignedPainterJob) {
             $existingDescription = $assignedPainterJob->assign_job_description;
             $updatedDescription = $existingDescription .  "\n\n"  . $request->message;
             // Append the new message
+            $job->update(['start_date' => $request->start_date]);
             $assignedPainterJob->update(['assign_job_description' => $updatedDescription]);
         } else {
+            $job->update(['start_date' => $request->start_date]);
             // If no existing row found, create a new one
             AssignedPainterJob::create([
                 'assign_painter_id' => $assign_painter,

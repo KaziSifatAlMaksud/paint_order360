@@ -76,7 +76,9 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 
 	Route::post('jobs/{id}/assign_painter/assign', 'AssignedPainterController@UserAssign')->name('assignJob.Store');
 	// In your routes file (e.g., web.php)
-	Route::post('save-message/{assign_painter}', 'AssignedPainterController@saveMessage')->name('save.message');
+	Route::post('save-message/{assign_painter}/{jobId}', 'App\Http\Controllers\AssignedPainterController@saveMessage')->name('save.message');
+
+	// Route::post('save-message/{assign_painter}/{jobId}', 'AssignedPainterController@saveMessage')->name('save.message');
 
 
 	Route::post('/invoiceing/{jobs_id}/{poItem_id}/{batch}/store', [InvoiceController::class, 'invoice_savesend'])->name('invoice_savesend');

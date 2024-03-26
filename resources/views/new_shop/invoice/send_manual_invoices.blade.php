@@ -220,25 +220,47 @@
 
 
                 <div class="row">
-                    <div class="col-md-4 mb-1">
-                        <input type="file" class="form-control" id="attachmentInput1" name="attachment">
-                        @error('attachment.0')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
+                    <div class="col-4 mb-1">
+                        @if (!empty($invoice->attachment))
+                        <div style="text-align: center;">
+                            <a href="{{ asset('uploads/' . $invoice->attachment) }}" download>
+                                <img src="{{ asset('uploads/' . $invoice->attachment) }}" style="max-width: 80%; height: auto;">
+                            </a>
+                        </div>
+                        @endif
+                        {{-- <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')"> --}}
+
                     </div>
-                    <div class="col-md-4 mb-1">
-                        <input type="file" class="form-control" id="attachmentInput2" name="attachment1">
-                        @error('attachment.1')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
+                    <div class="col-4 mb-1">
+
+
+                        @if (!empty($invoice->attachment1))
+                        <div style="text-align: center;">
+                            <a href="{{ asset('uploads/' . $invoice->attachment1) }}" download>
+                                <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style="max-width: 80%; height: auto;">
+                            </a>
+                        </div>
+                        @endif
+                        {{-- <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')"> --}}
+
+
                     </div>
-                    <div class="col-md-4 mb-1">
-                        <input type="file" class="form-control" id="attachmentInput3" name="attachment2">
-                        @error('attachment.2')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
+                    <div class="col-4 mb-1">
+
+                        @if (!empty($invoice->attachment2))
+                        <div style="text-align: center;">
+                            <a href="{{ asset('uploads/' . $invoice->attachment2) }}" download>
+                                <img src="{{ asset('uploads/' . $invoice->attachment2) }}" style="max-width: 80%; height: auto;">
+                            </a>
+                        </div>
+                        @endif
+                        {{-- <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')"> --}}
+
+
                     </div>
                 </div>
+
+
 
                 <!-- Attachment Field -->
                 {{-- <div class="row mb-3">

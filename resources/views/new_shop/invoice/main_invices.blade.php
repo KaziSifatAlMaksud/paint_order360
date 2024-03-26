@@ -234,9 +234,9 @@
 
 
                         <div>
-                            <p class="text3"> <b> ${{ number_format($invoice->total_due, 2) }}inc gst </b></p>
+                            <p class="text2"> ${{ number_format($invoice->total_due, 2) }}inc gst </p>
 
-                            <p class="text3 bilderName"> <b> {{ $invoice->customer_id }} </b> </p>
+                            <p class="text2 bilderName"> {{ $invoice->customer_id }} </p>
 
 
 

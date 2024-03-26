@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class Invoice extends Model
 {
 
-    protected $fillable = ['user_id', 'customer_id', 'send_email', 'inv_number', 'date', 'purchase_order', 'job_id', 'address', 'description', 'attachment', 'job_details', 'amount', 'gst', 'total_due', 'status', 'batch', 'send_to'];
+    protected $fillable = ['user_id', 'customer_id', 'send_email', 'inv_number', 'date', 'purchase_order', 'job_id', 'address', 'description', 'attachment', 'attachment1', 'attachment2', 'job_details', 'amount', 'gst', 'total_due', 'status', 'batch', 'send_to'];
 
 
     public function customer()
