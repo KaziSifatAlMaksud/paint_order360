@@ -30,6 +30,13 @@
             --bg-green: #b8ffc3;
         }
 
+        p {
+            margin-top: 0 !important;
+
+            margin-bottom: 0 !important;
+
+        }
+
         header {
             /* position: relative; */
             position: fixed;
@@ -382,9 +389,9 @@
                         <div class="d-flex justify-content-between py-2 mb-4">
                             <h3>Cost & Profit on This Job</h3>
                             <!-- Button trigger modal -->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                 ADD Painter
-                            </button>
+                            </button> --}}
 
 
                             <div class="modal " style="z-index: 999999;" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -535,7 +542,7 @@
                             <div class="d-flex align-items-center gap-2">
                                 <img src="/image/icon1/126169 1.png" style="height: 25px" />
 
-                                <p class="mb-0">Profit: $ <span id="profit_amount"> </span></p>
+                                <p class="mb-0">Profit: <span id="profit_amount"> </span></p>
 
                             </div>
                             <div class="d-flex align-items-center gap-2">

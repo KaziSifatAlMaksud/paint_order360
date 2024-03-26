@@ -241,7 +241,7 @@
                         <div class="invoice-cart" style="padding-left: 10px; line-height: 1;">
                             <h5 class="address_text showinline">{{$job->address}}</h5>
                             <div style="display: flex; justify-content: space-between;">
-                                <div style="text-align: left; width: 50%; overflow:hidden;">
+                                <div style="text-align: left; width: 75%; overflow:hidden;">
                                     <p class="text2 showinline ">
                                         @if (!$job->builder_company_name)
                                         Click The Card For Learn More
