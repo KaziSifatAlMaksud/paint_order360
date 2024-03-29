@@ -43,7 +43,7 @@
             <h4><b>{{ $jobs->address }}</b></h4>
             <p class="text-start reduced-line-height">Here are all the in voices for this address,
                 open the ones you want to send</p>
-            <p class="text-left reduced-line-height showinline"><b>Job ID:</b> {{$jobs->id}}</p>
+            {{-- <p class="text-left reduced-line-height showinline"><b>Job ID:</b> {{$jobs->id}}</p> --}}
             <p class="text-left reduced-line-height showinline">
                 <b>Company Name: </b>
                 @if(isset($jobs->admin_builders) && $jobs->users->id === auth()->user()->id && $jobs->admin_builders->company_name)
@@ -101,7 +101,7 @@
                             @endphp
 
                             <div class="invoice-cart-border"></div>
-                            <p class="text3">{{ $poItem->description }} </p>
+                            <p class="text3 mb-1">{{ $poItem->description }} </p>
 
                             <p class="docs_right jobs_right position-absolute end-0 customerInv " style="margin: -10px 10px 0px 0px;">{{ $poItem->invoice ?  $poItem->invoice->inv_number : '' }}</p>
 
@@ -109,7 +109,7 @@
 
 
                             <div>
-                                <p class="text3">${{ number_format($priceIncludingGST, 2) }}inc gst</p>
+                                <p class="text3 mb-1">${{ number_format($priceIncludingGST, 2) }}inc gst</p>
 
                                 <p class="text3 bilderName"> {{ $jobs->admin_builders ? $jobs->admin_builders->company_name : '' }} </p>
 
@@ -159,7 +159,7 @@
                             @endphp
 
                             <div class="invoice-cart-border"></div>
-                            <p class="text3">{{ $poItem->description }} </p>
+                            <p class="text3 mb-1">{{ $poItem->description }} </p>
 
                             <p class="docs_right jobs_right position-absolute end-0 customerInv " style="margin: -10px 10px 0px 0px;">{{ $poItem->invoice ?  $poItem->invoice->inv_number : '' }}</p>
 
@@ -217,9 +217,9 @@
                         <h5 class="addressText mt-2 showinline address_text">{{ $invoice->address }}</h5>
                         <div class="invoice-cart-border"></div>
                         <p class="text3">{{ $invoice->description }} </p>
-                        <p class="docs_right jobs_right position-absolute end-0 customerInv " style="margin: -10px 10px 0px 0px;">{{ $invoice->inv_number }}</p>
+                        <p class="docs_right jobs_right position-absolute end-0 customerInv" style="margin: -18px 10px 0px 0px;">{{ $invoice->inv_number }}</p>
                         <div>
-                            <p class="text3"> ${{ number_format($invoice->total_due, 2) }}inc gst</p>
+                            <p class="text3 mt-1 mb-1"> ${{ number_format($invoice->total_due, 2) }}inc gst</p>
                             <p class="text3 bilderName"> {{ $invoice->customer_id }} </p>
                         </div>
                     </div>

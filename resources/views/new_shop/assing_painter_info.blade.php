@@ -421,36 +421,51 @@
                         <div class="fw-medium">
 
                             @csrf {{-- Include CSRF token for security --}}
-                            <div class="mb-3">
+                            {{-- <div class="mb-3">
                                 <label for="assigned_painter_name" class="form-label">Select Painter:<span style="color: red;">*</span></label>
                                 <select name="assigned_painter_name" id="assigned_painter_name" class="custom-input" required>
                                     <option value="" selected>Select an option</option>
                                     @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->first_name }} - {{ $user->company_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="newPrice" class="form-label">New Price inc GST: <span style="color: red;">*</span> </label>
-                                <input type="number" id="newPrice" name="assign_price_job" class="custom-input" placeholder="Enter new price" value="{{ old('assign_price_job') }}">
-                            </div>
-                            <div class="mb-3" hidden>
-                                <label for="paintCost" class="form-label">Paint Cost</label>
-                                <input type="number" id="paintCost" name="paint_cost" placeholder="Paint Cost" class="custom-input" value="{{ old('paint_cost') }}" readonly>
-                            </div>
-                            <div class="mb-3">
-                                <label for="extrasMessage" class="form-label">Extras Message to Painter (optional)</label>
-                                <input type="text" id="extrasMessage" name="assign_job_description" class="custom-input" placeholder="Enter message" value="{{ old('assign_job_description') }}">
-                            </div>
-                            <div class="text-center"> {{-- Center button with Bootstrap class --}}
-                                <p class="btn btn-primary" {{-- type="submit"  --}} id="nextbtnsubmit" onclick="showCostSection()">Next</p>
-                            </div>
+                            @endforeach
+                            </select>
+                        </div> --}}
+                        <div class="mb-3">
+                            <label for="assigned_painter_name" class="form-label">Select Painter:<span style="color: red;">*</span></label>
+                            <select name="assigned_painter_name" id="assigned_painter_name" class="custom-input" required>
+                                <option value="" selected>Select an option</option>
+                                @foreach ($users as $user)
+                                @if ($user->id != auth()->user()->id)
+                                <option value="{{ $user->id }}">{{ $user->first_name }} - {{ $user->company_name }}</option>
+                                @endif
+                                @endforeach
+                            </select>
+                        </div>
 
+
+                        <div class="mb-3">
+                            <label for="newPrice" class="form-label">New Price inc GST: <span style="color: red;">*</span> </label>
+                            <input type="number" id="newPrice" name="assign_price_job" class="custom-input" placeholder="Enter new price" required onblur="validatePrice()">
 
 
                         </div>
+                        <div class="mb-3" hidden>
+                            <label for="paintCost" class="form-label">Paint Cost</label>
+                            <input type="number" id="paintCost" name="paint_cost" placeholder="Paint Cost" class="custom-input" value="{{ old('paint_cost') }}" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="extrasMessage" class="form-label">Extras Message to Painter (optional)</label>
+                            <input type="text" id="extrasMessage" name="assign_job_description" class="custom-input" placeholder="Enter message" value="{{ old('assign_job_description') }}">
+                        </div>
+                        <div class="text-center"> {{-- Center button with Bootstrap class --}}
+                            <p class="btn btn-primary" {{-- type="submit"  --}} id="nextbtnsubmit" onclick="showCostSection()">Next</p>
+                        </div>
+
+
+
                     </div>
                 </div>
+            </div>
             </div>
         </section>
 
@@ -609,6 +624,14 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+        function validatePrice() {
+            var price = document.getElementById("newPrice").value;
+
+            if (price === null || price === "" || parseFloat(price) === 0.00) {
+                alert("Please enter a valid price. It should not be 0.00 or empty.");
+            }
+        }
+
         // Function to show the second question
         function showSecondQues() {
             var quesTwo = document.getElementById("quesTwo");

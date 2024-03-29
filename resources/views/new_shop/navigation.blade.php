@@ -313,36 +313,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     {{-- push Notification start  --}}
 
-    <script>
-        // Corrected navigator object spelling
-        navigator.serviceWorker.register("/sw.js").then(registration => {
-            console.log('Service Worker registered successfully:', registration);
-        }).catch(error => {
-            console.error('Service Worker registration failed:', error);
-        });
 
-        function requestPermission() {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
 
-                    sw.pushManager.subscribe({
-                        userVisibleOnly: true
-                        , applicationServerKey: ""
-                    })
-                    new Notification('Permission Granted', {
-                        body: 'You can now receive notifications.'
-                    });
-                } else {
-                    // Permission denied or dismissed
-                    console.warn('Notification permission not granted.');
-                }
-            });
-        }
 
-    </script>
+
+
+
+
+    <script src="{{ asset('js/pushnotification.js') }}"></script>
+
 
     {{-- push Notification End  --}}
     <script src="{{ asset('js/script.js') }}"></script>
-    <script src="./profile.js"></script>
+
+    <script src="{{ asset('js/profile.js') }}"></script>
+
+
+    {{-- <script src="./profile.js"></script> --}}
 </body>
 </html>

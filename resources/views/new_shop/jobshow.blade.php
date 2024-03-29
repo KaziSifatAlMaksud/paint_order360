@@ -257,7 +257,7 @@
 
                             <p>
                                 <b>Job Details: </b> <br>
-                                {{$job ? $job : ''}}
+                                {{-- {{$job ? $job : ''}} --}}
 
                             </p>
                             <p>
@@ -597,7 +597,8 @@
 
         <!-- Profit Page -->
         <div id="page-content" class="content">
-            <div class="d-flex justify-content-between py-2 mb-4">
+            <div class="d-flex justify-content-between px-3 py-2 mb-2">
+
                 <h3>Cost & profit on this job</h3>
                 {{-- <img
               class="company-logo"
@@ -605,7 +606,7 @@
                 style="height: 30px"
               /> --}}
             </div>
-            <div class="fw-medium">
+            <div class="fw-medium px-3">
                 <p>
                     <strong> Original Price: </strong>
 
@@ -628,7 +629,7 @@
     <!-- ====== job view1 ====== -->
     <section class="view1 mt-4" style="display:block;">
         <div class="row service-box justify-content-between mx-3">
-            @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
+            @if($job ? $job->user_id == auth()->id() : '')
             <!-- 1 -->
             <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}" style="text-decoration: none;">
                 <div class="service-box-single col-6 mb-3 px-0">
@@ -653,8 +654,10 @@
                     </div>
             </a>
         </div>
+        @endif
         <!-- 2 -->
         {{-- //this is for Assign  Painter Call  --}}
+        @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
 
         <div class="service-box-single col-6 mb-3 px-0">
             <a href="tel:{{ $assign_job->painter ? $assign_job->painter->phone : '' }}" style="text-decoration: none;">
@@ -899,7 +902,8 @@
 
 
         <div class="row service-box gap-2 mx-3">
-            @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
+            @if($job ? $job->user_id == auth()->id() : '')
+
 
             <a href="tel:{{ $job->superviser ? $job->superviser->phone : '' }}" style="text-decoration: none;">
 

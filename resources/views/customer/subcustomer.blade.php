@@ -10,90 +10,111 @@
     <link rel="stylesheet" href="{{ asset('css/style8.css') }}">
 </head>
 <body>
-    
- 
-<header>
-			<div class="header-row">
-				<div class="header-item">
-				 <a href="{{ url()->previous() }}"> <i class="fa-solid fa-arrow-left"></i> </a>	
-					<span>  <h3>{{ isset($subcustomer) ? 'Edit' : 'Create' }} Subcontractors</h3>  </span>
-					<a href="<?php echo '/main' ?>">   <img src="/image/logo-phone.png" alt="Logo"> </a>   
-				</div>
-			</div>
-		</header>	
-  
 
-    <div class="container " >
-      @if(session('success'))
-      <div class="alert mt-2 alert-success">
-          {{ session('success') }}
-      </div>
-      @endif
-      <form action="{{ route('subcustomers.store') }}" method="POST">
 
-        @csrf
-    
-        <fieldset class="m-3">
-            <h4>Subcontractors Information</h4>
-            @if(isset($subcustomer))
-            <input type="hidden" name="id" value="{{ $subcustomer->id }}">
-            @endif
-            <div class="mb-1 mt-5 pt-5">
-                <label for="companyName" class="form-label">Subcontractor Company Name:</label>
-                <input type="text" class="custom-input" id="companyName"   value=" {{ isset($subcustomer) ? $subcustomer->companyName : '' }}"  name="companyName">
+    <header>
+        <div class="header-row">
+            <div class="header-item">
+                <a href="{{ url()->previous() }}"> <i class="fa-solid fa-arrow-left"></i> </a>
+                <span>
+                    <h3>{{ isset($subcustomer) ? 'Edit' : 'Create' }} Subcontractors</h3>
+                </span>
+                <a href="<?php echo '/main' ?>"> <img src="/image/logo-phone.png" alt="Logo"> </a>
             </div>
-    
-            <div class="mb-1">
-                <label for="name" class="form-label">Subcustomer Name:</label>
-                <input type="text" class="custom-input" id="name"  value="{{ isset($subcustomer) ? $subcustomer ->name : '' }} "  name="name">
-            </div>
-    
-            <div class="mb-1">
-                <label for="email" class="form-label">Subcontractor Email Address:</label>
-                <input type="email" class="custom-input" id="email"  name="email"  value=" {{ isset($subcustomer) ? $subcustomer -> email : '' }} "  required>
-            </div>
-    
-            <div class="mb-1 mt-3">
-                <label for="mobile" class="form-label">Mobile Number:</label>
-                <input type="text" class="custom-input" id="mobile" value=" {{ isset($subcustomer) ? $subcustomer -> mobile : '' }} " name="mobile">
-            </div>
-    
-    
-            <div class="mb-1 mt-3">
-                <label for="abn" class="form-label">ABN:</label>
-                <input type="text" class="custom-input" id="abn"  value=" {{ isset($subcustomer) ? $subcustomer -> abn : '' }} "  name="abn">
-            </div>
-    
-            <div class="mb-1 mt-3">
-                <label for="billingAddress" class="form-label">Address:</label>
-                <input type="text" class="custom-input" id="billingAddress"  value=" {{ isset($subcustomer) ? $subcustomer -> billingAddress : '' }} "   name="billingAddress">
-            </div>
+        </div>
+    </header>
 
-            @if(isset($subcustomer))
-                <div class="d-flex mt-5 justify-content-center">
-                <button type="submit" class="btn btn-success w-50" name="action" value="update"> Update</button>
+
+    <div class="container ">
+        @if(session('success'))
+        <div class="alert mt-2 alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+        <form action="{{ route('subcustomers.store') }}" method="POST">
+
+            @csrf
+
+            <fieldset class="m-3">
+                <h4>Subcontractors Information</h4>
+                @if(isset($subcustomer))
+                <input type="hidden" name="id" value="{{ $subcustomer->id }}">
+                @endif
+                <div class="mb-1 mt-5 pt-5">
+                    <label for="companyName" class="form-label">Subcontractor Company Name:</label>
+                    <input type="text" class="custom-input" id="companyName" value=" {{ isset($subcustomer) ? $subcustomer->companyName : '' }}" name="companyName">
                 </div>
-            @else
-             <div class="d-flex mt-5 justify-content-center">
-                <button type="submit" class="btn btn-primary w-50" name="action" value="save"> Submit</button>
-            </div>
-            @endif
-    
-          
-        </fieldset>
-    </form>
-    
+
+                <div class="mb-1">
+                    <label for="name" class="form-label">Subcustomer Name:</label>
+                    <input type="text" class="custom-input" id="name" value="{{ isset($subcustomer) ? $subcustomer ->name : '' }} " name="name">
+                </div>
+
+                <div class="mb-1">
+                    <label for="email" class="form-label">Subcontractor Email Address:</label>
+                    <input type="email" class="custom-input" id="email" name="email" value=" {{ isset($subcustomer) ? $subcustomer -> email : '' }} " required>
+                </div>
+
+                <div class="mb-1 mt-3">
+                    <label for="mobile" class="form-label">Mobile Number:</label>
+                    <input type="text" class="custom-input" id="mobile" value=" {{ isset($subcustomer) ? $subcustomer -> mobile : '' }} " name="mobile">
+                </div>
+
+
+                {{-- <div class="mb-1 mt-3">
+                <label for="abn" class="form-label">ABN:</label>
+                <input type="text" class="custom-input" id="abn"  value=" {{ isset($subcustomer) ? $subcustomer -> abn : '' }} " name="abn">
+    </div> --}}
+
+    <div class="mb-1 mt-3" style="display: flex; align-items: center;">
+        <label for="abn" class="form-label" style="margin-right: 8px;">ABN:</label>
+        <div style="flex-grow: 1; display: flex; align-items: center;">
+            <input type="text" class="custom-input" id="abn" value="{{ isset($subcustomer) ? $subcustomer->abn : '' }}" name="abn" style="flex-grow: 1;">
+            <button type="button" onclick="copyABN()" style="margin-left: 8px;">Copy & Go</button>
+        </div>
     </div>
 
-  
-    
-   
-     
-       
-    
+
+    <div class="mb-1 mt-3">
+        <label for="billingAddress" class="form-label">Address:</label>
+        <input type="text" class="custom-input" id="billingAddress" value=" {{ isset($subcustomer) ? $subcustomer -> billingAddress : '' }} " name="billingAddress">
+    </div>
+
+    @if(isset($subcustomer))
+    <div class="d-flex mt-5 justify-content-center">
+        <button type="submit" class="btn btn-success w-50" name="action" value="update"> Update</button>
+    </div>
+    @else
+    <div class="d-flex mt-5 justify-content-center">
+        <button type="submit" class="btn btn-primary w-50" name="action" value="save"> Submit</button>
+    </div>
+    @endif
+
+
+    </fieldset>
+    </form>
+
+    </div>
+
+
+
+
+
+
+
 </body>
 
-    
+<script>
+    function copyABN() {
+        var abnInput = document.getElementById('abn');
+        abnInput.select();
+        document.execCommand('copy');
+
+        window.open('https://abr.business.gov.au/', '_blank');
+    }
+
+</script>
+
 
 <script src="scrpit.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
