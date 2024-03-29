@@ -185,8 +185,8 @@
         <!-- card -->
         <section>
             <div class="card mx-1 shadow rounded-4" style="margin-top: 90px;">
-                <div class="card-body">
-                    <div class="cart-btn d-flex align-items-center justify-content-between toggle-card" style="height: 60px">
+                <div class="card-body px-1">
+                    <div class="cart-btn d-flex align-items-center justify-content-between toggle-card px-2" style="height: 60px">
                         <div class="d-flex flex-column align-items-center active" id="job">
 
                             <img src="/image/icon1/calendar.png" alt="calendar.png" />
@@ -315,7 +315,7 @@
 
                     <!-- per job Page -->
                     <div id="page-content" class="content">
-                        <div class="cart-btn d-flex align-items-center justify-content-between toggle-type mt-4" style="height: 60px">
+                        <div class="cart-btn d-flex align-items-center justify-content-between toggle-type mt-4 px-2" style="height: 60px">
 
                             <h6>Cost & Profit</h6>
                             <div id="price" class="active" onclick="toggleTab('price')">

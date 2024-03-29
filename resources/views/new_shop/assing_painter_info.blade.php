@@ -228,20 +228,12 @@
 </head>
 <body>
 
-
     <header>
         <div class="header-row">
             <div class="header-item">
-                <a href="#"> </a>
-                <span> @if (!empty($company_name))
-                    {{ $company_name }}
-
-                    @else
-                    Company Name
-                    @endif
-                </span>
-
-                <a href="<?php echo '/main' ?>"> <img src="/image/logo-phone.png" alt="Logo"> </a>
+                <a href="{{ url()->previous() }}"> <i class="fa-solid fa-arrow-left text-black"></i> </a>
+                <span> Assign Painter </span>
+                <a href="<?php echo '/main'; ?>"> <img src="/image/logo-phone.png" alt="Logo"> </a>
             </div>
         </div>
     </header>

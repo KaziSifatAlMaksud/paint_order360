@@ -563,35 +563,77 @@
 
                         </div>
                     </div>
-                    <div class="pt-2">
+                    {{-- <div class="pt-2">
                         <p class="mb-0">
                             {{$assign_job? $assign_job->assign_job_description : ''}}</p>
-                    </div>
-                    {{-- <div>
+                </div> --}}
+                {{-- <div class="pt-2">
+                    @if($assign_job)
+
+                    @php
+                    $descriptionParts = explode("\n\n",C);
+
+                    @endphp
+
+                    @foreach($descriptionParts as $index => $part)
+                    <div>
+                        <p class="mb-0">{{ $index + 1 }}. {{ $part }}</p>
+            </div>
+            @endforeach
+            @else
+            <p>No job description available.</p>
+            @endif
+        </div> --}}
+        <div class="pt-2">
+            @if(!empty($assign_job) && !empty($assign_job->assign_job_description))
+            @php
+            $descriptionParts = explode("\n\n", $assign_job->assign_job_description);
+            @endphp
+
+            @if(!empty($descriptionParts))
+            <ul class="text-left mx-0">
+                @foreach($descriptionParts as $part)
+                @if(!empty($part))
+                <li>{{ $part }}</li>
+                @endif
+                @endforeach
+            </ul>
+
+
+            @endif
+            @endif
+        </div>
+
+
+
+
+
+
+        {{-- <div>
 
                         <p class="mb-1">Extra Message:</p>
                         <form method="POST" action="{{ route('save.message', ['assign_painter' => $assign_job->id]) }}">
-                    @csrf
+        @csrf
 
-                    <div class="row">
-                        <div class="col-10">
-                            <input id="messageInput" name="message" type="text" class="custom-input" style="background-color: #ffff" placeholder="Type your message">
-                        </div>
-                        <div class="col-2">
-                            <button id="sendMessageBtn" type="submit" class="btn btn-primary btn-block">Send</button>
-                        </div>
-                    </div>
-                    </form>
-
-                    @if(session('success'))
-                    <div id="successAlert" class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                    @endif
-
-                </div> --}}
-
+        <div class="row">
+            <div class="col-10">
+                <input id="messageInput" name="message" type="text" class="custom-input" style="background-color: #ffff" placeholder="Type your message">
             </div>
+            <div class="col-2">
+                <button id="sendMessageBtn" type="submit" class="btn btn-primary btn-block">Send</button>
+            </div>
+        </div>
+        </form>
+
+        @if(session('success'))
+        <div id="successAlert" class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
+
+        </div> --}}
+
+        </div>
         </div>
 
 

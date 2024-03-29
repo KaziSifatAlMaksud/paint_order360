@@ -167,7 +167,7 @@
 
 
                             <div>
-                                <p class="text3">${{ number_format($priceIncludingGST, 2) }}inc gst</p>
+                                <p class="text3">${{ number_format($priceIncludingGST, 2) }} inc gst</p>
                                 {{-- @if(isset($jobs->users) && isset($jobs->assignedJob) && $jobs->assignedJob->assigned_painter_name == auth()->user()->id && $jobs->users->company_name)
                                 {{ $jobs->users->company_name }}
                                 @endif --}}
@@ -219,7 +219,7 @@
                         <p class="text3">{{ $invoice->description }} </p>
                         <p class="docs_right jobs_right position-absolute end-0 customerInv" style="margin: -18px 10px 0px 0px;">{{ $invoice->inv_number }}</p>
                         <div>
-                            <p class="text3 mt-1 mb-1"> ${{ number_format($invoice->total_due, 2) }}inc gst</p>
+                            <p class="text3 mt-1 mb-1"> ${{ number_format($invoice->total_due, 2) }} inc gst</p>
                             <p class="text3 bilderName"> {{ $invoice->customer_id }} </p>
                         </div>
                     </div>
