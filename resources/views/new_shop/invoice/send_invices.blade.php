@@ -47,15 +47,18 @@
                     <div class="col-2 d-flex align-items-center justify-content-center">
                         <label class="form-label"> To : </label>
                     </div>
+                    @if($jobs && $jobs->assignedJob && $jobs->assignedJob->assigned_painter_name == auth()->user()->id)
+                    <div class="col-10">
+                        <input name="customer_id" type="text" value="{{ $jobs->painter ? $jobs->painter->company_name : '' }}" class="custom-input" readonly>
+                    </div>
+                    @else
                     <div class="col-10">
                         {{-- {{$admin_builders}} --}}
                         {{-- <input name="customer_id" type="text" value="{{ isset($admin_builders->company_name) ? $admin_builders->company_name : $admin_builders->company_name }}" class="custom-input" readonly> --}}
                         <input name="customer_id" type="text" value="{{$jobs->admin_builders ? $jobs->admin_builders->company_name : '' }}" class="custom-input" readonly>
-
-
-
-
                     </div>
+                    @endif
+
                 </div>
                 <div class="row mb-3 mt-2">
                     <div class="col-2 d-flex align-items-center justify-content-center">

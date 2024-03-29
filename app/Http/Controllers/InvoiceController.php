@@ -203,7 +203,7 @@ class InvoiceController extends Controller
     public function invoice_send(Request $request, $jobs_id, $poItem_id)
     {
         $customers = Customer::all()->where('user_id', $request->user()->id);
-        $jobs = PainterJob::with('superviser', 'poitem', 'admin_builders')
+        $jobs = PainterJob::with('superviser', 'poitem', 'painter', 'admin_builders', 'assignedJob')
             ->where('id', $jobs_id)
             // ->where('user_id', $request->user()->id)
             ->whereNull('parent_id')

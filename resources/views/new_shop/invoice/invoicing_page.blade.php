@@ -161,7 +161,7 @@
                             <div class="invoice-cart-border"></div>
                             <p class="text3 mb-1">{{ $poItem->description }} </p>
 
-                            <p class="docs_right jobs_right position-absolute end-0 customerInv " style="margin: -10px 10px 0px 0px;">{{ $poItem->invoice ?  $poItem->invoice->inv_number : '' }}</p>
+                            <p class="docs_right jobs_right position-absolute end-0 customerInv " style="margin: -18px 10px 0px 0px;">{{ $poItem->invoice ?  $poItem->invoice->inv_number : '' }}</p>
 
 
 
@@ -217,9 +217,16 @@
                         <h5 class="addressText mt-2 showinline address_text">{{ $invoice->address }}</h5>
                         <div class="invoice-cart-border"></div>
                         <p class="text3">{{ $invoice->description }} </p>
-                        <p class="docs_right jobs_right position-absolute end-0 customerInv" style="margin: -18px 10px 0px 0px;">{{ $invoice->inv_number }}</p>
+                        <p class="docs_right jobs_right position-absolute end-0 customerInv" style="margin: 0px 10px 0px 0px;">{{ $invoice->inv_number }}</p>
                         <div>
-                            <p class="text3 mt-1 mb-1"> ${{ number_format($invoice->total_due, 2) }} inc gst</p>
+                            <p class="text3"> {{$jobs->assignedJob ? $jobs->assignedJob->assign_job_description : ''  }} </p>
+
+
+
+
+
+
+                            <p class=" text3 mt-1 mb-1 "> ${{ number_format($invoice->total_due, 2) }} inc gst</p>
                             <p class="text3 bilderName"> {{ $invoice->customer_id }} </p>
                         </div>
                     </div>
