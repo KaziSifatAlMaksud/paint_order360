@@ -220,13 +220,14 @@
                         <h5 class="address_text mt-2 showinline" id="expandable-title">{{ $invoice->address }}</h5>
 
                         <div class="invoice-cart-border"></div>
-                        <p class="text2">{{ $invoice->description }} </p>
+                        <p class="text3">{{ $invoice->description }} </p>
+
                         <p class="docs_right jobs_right position-absolute end-0 customerInv" style="margin: -10px 10px 0px 0px;">{{ $invoice->inv_number }}</p>
 
                         <div>
-                            <p class="text3"> <b> ${{ number_format($invoice->total_due, 2) }}inc gst </b> </p>
+                            <p class="text3 mt-1"> ${{ number_format($invoice->total_due, 2) }} inc gst </p>
 
-                            <p class="text3 bilderName"> <b> {{ $invoice->customer_id }} </b> </p>
+                            <p class="text3 bilderName mt-1">{{ $invoice->customer_id }} </p>
 
                         </div>
                     </div>

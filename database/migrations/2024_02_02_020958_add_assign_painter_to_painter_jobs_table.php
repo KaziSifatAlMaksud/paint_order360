@@ -14,8 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::table('painter_jobs', function (Blueprint $table) {
-            $table->json('assign_painter')->nullable()->after('company_id');
-            $table->json('assign_companyName')->nullable()->after('assign_painter');
+            if (!Schema::hasColumn('painter_jobs', 'assign_painter')) {
+                $table->json('assign_painter')->nullable()->after('company_id');
+            }
+            if (!Schema::hasColumn('painter_jobs', 'assign_companyName')) {
+                $table->json('assign_companyName')->nullable()->after('assign_painter');
+            }
+            if (!Schema::hasColumn('painter_jobs', 'job_description')) {
+                $table->json('job_description')->nullable()->after('assign_companyName');
+            }
         });
     }
 
@@ -27,8 +34,15 @@ return new class extends Migration
     public function down()
     {
         Schema::table('painter_jobs', function (Blueprint $table) {
-            $table->dropColumn('assign_painter');
-            $table->dropColumn('assign_companyName');
+            if (Schema::hasColumn('painter_jobs', 'assign_painter')) {
+                $table->dropColumn('assign_painter');
+            }
+            if (Schema::hasColumn('painter_jobs', 'assign_companyName')) {
+                $table->dropColumn('assign_companyName');
+            }
+            if (Schema::hasColumn('painter_jobs', 'job_description')) {
+                $table->dropColumn('job_description');
+            }
         });
     }
 };

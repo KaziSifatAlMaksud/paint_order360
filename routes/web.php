@@ -131,6 +131,8 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 	Route::get('jobs/{id}/map_view', [HomeController::class, 'showJobonMap'])->name('show_on_map');
 	Route::get('/invoices/late',	[InvoiceController::class, 'late'])->name('invoices.late');
 	Route::get('/invoices/report',	[InvoiceController::class, 'report'])->name('invoices.report');
+	Route::get('/invoices/report/filter_inv', [InvoiceController::class, 'filterInvoices'])->name('invoices.filter');
+
 
 
 

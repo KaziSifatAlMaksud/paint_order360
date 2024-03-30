@@ -22,6 +22,7 @@ class PainterJob extends Model
         'cladding',
         'render',
         'status',
+        'job_description',
         'latitude',
         'longitude',
         'user_id',
