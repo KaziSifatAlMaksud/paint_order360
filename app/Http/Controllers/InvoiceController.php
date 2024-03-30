@@ -1115,9 +1115,8 @@ class InvoiceController extends Controller
     public function filterInvoices(Request $request)
     {
         $user_id = $request->user()->id;
-
-        $dateRange = $request->dateRange;
-        $year = $request->year;
+        $dateRange = $request->query('dateRange');
+        $year = $request->query('year');
         $quarters = [
             'Q1' => ['01', '03'],
             'Q2' => ['04', '06'],
@@ -1129,7 +1128,7 @@ class InvoiceController extends Controller
             $startDate = "{$year}-{$quarters[$dateRange][0]}-01";
             $endDate = "{$year}-{$quarters[$dateRange][1]}-" . cal_days_in_month(CAL_GREGORIAN, (int)$quarters[$dateRange][1], (int)$year);
 
-            $invoiceSums = DB::table('invoices')
+            $invoiceSumas = DB::table('invoices')
                 ->select('customer_id', DB::raw('SUM(total_due) as total_price'))
                 ->where('status', '=', 3)
                 ->where('user_id', '=', $user_id)
@@ -1138,20 +1137,17 @@ class InvoiceController extends Controller
                 ->groupBy('customer_id')
                 ->get();
         } else {
-            // If the dateRange is not set or invalid, get all or handle as needed
-            // $invoiceSums = DB::table('invoices')
-            //     ->select('customer_id', DB::raw('SUM(total_due) as total_price'))
-            //     ->where('status', '=', 3)
-            //     ->where('user_id', '=', $user_id)
-            //     ->whereNotNull('customer_id')
-            //     ->groupBy('customer_id')
-            //     ->get();
+            $invoiceSumas = DB::table('invoices')
+                ->select('customer_id', DB::raw('SUM(total_due) as total_price'))
+                ->where('status', '=', 3)
+                ->where('user_id', '=', $user_id)
+                ->whereNotNull('customer_id')
+                ->groupBy('customer_id')
+                ->get();
         }
 
-        // Generate the view and return the HTML content
-        $viewContent = view('new_shop.invoice.main_invices', compact('invoiceSums'))->render();
-
-        return response()->json(['html' => $viewContent]);
+        // Return the data as JSON
+        return response()->json(['invoiceSumas' => $invoiceSumas]);
     }
 
 

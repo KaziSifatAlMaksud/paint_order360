@@ -135,7 +135,6 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 
 
 
-
 	// AssingPainter Rountings 
 	Route::match(['get', 'post'], 'jobs/{id}/assign_painter', [HomeController::class, 'assign_painter'])->name('assign_painter_info');
 });

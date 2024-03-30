@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+</html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -163,6 +164,8 @@
     </style>
 
 
+
+
 </head>
 
 <body>
@@ -228,8 +231,8 @@
                                 @if(!empty($invoiceSums))
                                 @foreach($invoiceSums as $customer)
                                 <tr data-customer-id="{{ $customer->customer_id }}">
-                                    <td class="fs-6" style="text-align: left;">{{ $customer->customer_id ?? 'N/A' }}</td>
-                                    <td class="fs-6" style="text-align: right;">$ {{ number_format($customer->total_price, 2) }}</td>
+                                    <td class="fs-5" style="text-align: left;">{{ $customer->customer_id ?? 'N/A' }}</td>
+                                    <td class="fs-5" style="text-align: right;">$ {{ number_format($customer->total_price, 2) }}</td>
                                 </tr>
                                 @endforeach
 
@@ -254,37 +257,10 @@
 
 
                         </table>
-
-
-                        {{-- <div class="px-3 shadow my-4">
-                            <hr />
-                        </div> --}}
-
-                        {{-- <div class="total-expense">
-                            <p class="px-4 mb-1 fw-bold">Total expense and profit</p>
-                            <div class="px-4 mb-4">
-                                <div class="d-flex w-100">
-                                    <p class="cost">Total Income</p>
-                                    <p class="t-income">$<span>107.00</span></p>
-                                </div>
-                                <div class="d-flex w-100">
-                                    <p class="cost">Paint Cost</p>
-                                    <p class="">$<span>540.00</span></p>
-                                </div>
-                                <div class="d-flex w-100">
-                                    <p class="cost">Labour Costs</p>
-                                    <p class="">$<span>780.00</span></p>
-                                </div>
-                                <div class="d-flex w-100">
-                                    <p class="cost">Total Costs</p>
-                                    <p class="">$<span>170.00</span></p>
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
 
                     <!-- ------ Quarterly ----- -->
-                    <div id="paint-content" class="content Quarterly">
+                    <div id="paint-content" class="content">
                         <p class="mb-2 mt-3 fw-bold text-center">Income by customer</p>
                         <div class="row">
                             <div class="col-6">
@@ -295,49 +271,43 @@
                                     <option value="Q3">Jul - Sep</option>
                                     <option value="Q4">Oct - Dec</option>
                                 </select>
-
-
                             </div>
                             <div class="col-6">
                                 <select id="yearFilter" class="form-select mb-2" aria-label="Select Year" style="border-color: orange;">
                                     <option value="">Select Year</option>
-                                    <!-- Dynamically generate year options or hardcode them -->
-                                    <option value="2023">2024</option>
-
+                                    <option value="2024">2024</option>
                                     <option value="2023">2023</option>
                                     <option value="2022">2022</option>
                                     <option value="2021">2021</option>
                                     <!-- Add more years as needed -->
                                 </select>
-
                             </div>
+
+
 
 
                         </div>
 
-
-
-
-                        <table class="table responsive-table" style="width: 100%; border-collapse: collapse; overflow: hidden;">
+                        <table class="table responsive-table" id="filter_table" style="width: 100%; border-collapse: collapse; overflow: hidden;">
                             <thead>
                                 <tr>
                                     <th class="fs-6">Builder Name</th>
                                     <th class="fs-6" style="text-align: right;">Sub-Total</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <!-- This will be filled by the AJAX response -->
-                                @foreach($invoiceSums as $customer)
+                            <tbody id="filter_table_tbody">
+
+                                @isset($invoiceSumas)
+
+                                @foreach($invoiceSumas as $customer)
+                                {{$customer}}
+
                                 <tr data-customer-id="{{ $customer->customer_id }}">
                                     <td class="fs-6" style="text-align: left;">{{ $customer->customer_id ?? 'N/A' }}</td>
                                     <td class="fs-6" style="text-align: right;">$ {{ number_format($customer->total_price, 2) }}</td>
                                 </tr>
                                 @endforeach
-
-                                <tr>
-                                    <td class="fs-6" style="text-align: left;"><b>Total Income:</b></td>
-                                    <td class="fs-6" style="text-align: right;"><b>$ {{ number_format($totalSum ?? 0, 2) }}</b></td>
-                                </tr>
+                                @endisset
                             </tbody>
                         </table>
 
@@ -524,56 +494,74 @@
     </main>
     <div style="margin: 20px 0px 300px 0px;"></div>
     <script src="{{ asset('js/profile.js') }}"></script>
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            function sendFilterRequest() {
-                var selectedQuarter = $('#dateRangeFilter').val();
-                var selectedYear = $('#yearFilter').val();
+    <script defer>
+        function sendFilterRequest() {
+            console.log("hello sifat");
+            var selectedQuarter = $('#dateRangeFilter').val();
+            var selectedYear = $('#yearFilter').val();
 
-                // Only send AJAX request if both quarter and year are selected
-                if (selectedQuarter && selectedYear) {
-                    $.ajax({
-                        url: '/invoices/report/filter_inv', // Updated URL to match the route
-                        type: 'GET', // Using GET as we are only retrieving data
-                        data: {
-                            'dateRange': selectedQuarter
-                            , 'year': selectedYear
-                        }
-                        , success: function(response) {
-                            $('tbody').html(response.html); // Expecting an object with an 'html' key
-                        }
-                        , error: function(xhr, status, error) {
-                            console.error(error);
-                        }
-                    });
-                }
+            if (selectedQuarter && selectedYear) {
+                $.ajax({
+                    url: '/invoices/report/filter_inv'
+                    , type: 'GET'
+                    , data: {
+                        'dateRange': selectedQuarter
+                        , 'year': selectedYear
+                    }
+                    , success: function(response) {
+                        var rows = '';
+
+                        response.invoiceSumas.forEach(function(data1) {
+                            rows += '<tr data-customer-id="' + data1.customer_id + '">' +
+                                '<td class="fs-6" style="text-align: left;">' + (data1.customer_id ? data1.customer_id : 'N/A') + '</td>' +
+                                '<td class="fs-6" style="text-align: right;">$ ' + Number(data1.total_price).toFixed(2) + '</td>' +
+                                '</tr>';
+                        });
+
+
+
+                        $('#filter_table_tbody').html(rows);
+
+                    }
+                    , error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
             }
+        }
 
+        // Attach the event listener for dropdown changes directly
+        $(document).ready(function() {
             $('#dateRangeFilter, #yearFilter').on('change', sendFilterRequest);
         });
 
 
+        // Function to fetch random data
         function randomData() {
             $.ajax({
                 url: '/invoices/report/price_data'
                 , type: 'GET'
                 , success: function(response) {
-                    // Assuming 'response' contains an 'html' key with the table rows as its value
-                    $('#dataBody').html(response.html); // Set the table body's HTML to the received HTML
+                    $('#dataBody').html(response.html);
                 }
                 , error: function(xhr, status, error) {
-                    console.error("Error fetching data: ", xhr, status, error);
+                    console.error("Error fetching data: ", error);
                 }
             });
         }
 
-        $(document).ready(function() {
-            randomData(); // Load data when the document is ready
-        });
+        // Call randomData to load data initially
+        randomData();
 
     </script>
+
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 </body>
