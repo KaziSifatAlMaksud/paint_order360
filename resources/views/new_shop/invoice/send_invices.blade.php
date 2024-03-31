@@ -65,7 +65,14 @@
                         <label class="form-label"> Email : </label>
                     </div>
                     <div class="col-10">
-                        <input name="send_email" type="text" value="{{$jobs->admin_builders->builder_email ?? ''}}" class="custom-input">
+                        @if($jobs && $jobs->assignedJob && $jobs->assignedJob->assigned_painter_name == auth()->user()->id)
+                        <input name="send_email" type="email" value="{{ $jobs->painter ? $jobs->painter->email : '' }}" class="custom-input">
+                        @else
+                        <input name="send_email" type="email" value="{{$jobs->admin_builders->builder_email ?? ''}}" class="custom-input">
+
+                        @endif
+
+
                     </div>
                 </div>
                 <!-- Invoice Number -->
@@ -224,7 +231,7 @@
                 <input type="text" name="status" value="1" class="form-control @error('status') is-invalid @enderror" hidden>
                 @endif
 
-                <div class="col-12">
+                <div class="col-12 p-0">
                     @if($invoice && $invoice->status == 2)
                     <div class="alert alert-warning">
                         <p> Click Here If You Were Paid Less then This total. </p>

@@ -591,19 +591,17 @@
             @endphp
 
             @if(!empty($descriptionParts))
-            <ul class="text-left mx-0">
+            <ul class="text-left mx-0" style="padding-left: 20px;">
+
                 @foreach($descriptionParts as $part)
                 @if(!empty($part))
                 <li>{{ $part }}</li>
                 @endif
                 @endforeach
             </ul>
-
-
             @endif
             @endif
         </div>
-
         </div>
         </div>
 

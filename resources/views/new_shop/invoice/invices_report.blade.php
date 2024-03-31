@@ -231,8 +231,8 @@
                                 @if(!empty($invoiceSums))
                                 @foreach($invoiceSums as $customer)
                                 <tr data-customer-id="{{ $customer->customer_id }}">
-                                    <td class="fs-5" style="text-align: left;">{{ $customer->customer_id ?? 'N/A' }}</td>
-                                    <td class="fs-5" style="text-align: right;">$ {{ number_format($customer->total_price, 2) }}</td>
+                                    <td class="fs-6" style="text-align: left;">{{ $customer->customer_id ?? 'N/A' }}</td>
+                                    <td class="fs-6" style="text-align: right;">$ {{ number_format($customer->total_price, 2) }}</td>
                                 </tr>
                                 @endforeach
 
@@ -297,7 +297,7 @@
                             </thead>
                             <tbody id="filter_table_tbody">
 
-                                @isset($invoiceSumas)
+                                {{-- @isset($invoiceSumas)
 
                                 @foreach($invoiceSumas as $customer)
                                 {{$customer}}
@@ -307,7 +307,7 @@
                                     <td class="fs-6" style="text-align: right;">$ {{ number_format($customer->total_price, 2) }}</td>
                                 </tr>
                                 @endforeach
-                                @endisset
+                                @endisset --}}
                             </tbody>
                         </table>
 
@@ -435,22 +435,15 @@
                                         <td style="text-align: right;">{{ $job ? 30 : '' }}%</td>
                                         <td style="text-align: right;">{{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job / $job->price * 100  , 2) : 0.00 }}%</td>
                                         @php
-                                        $profit_percentage = 0;
-
-                                        $discountedPrice = $job->price * 0.3;
-                                        $assignPrice = $job->assignedJob->assign_price_job ?? 0.00;
-                                        $finalPrice = $discountedPrice - $assignPrice;
+                                        $mainPrice = $job->price;
+                                        $paintCost = $job->price * 0.3;
+                                        $assignPainterPrice = $job->assignedJob->assign_price_job ?? 0.00;
+                                        $profit = $mainPrice - ($paintCost + $assignPainterPrice);
+                                        $profitPercentage = ($mainPrice > 0) ? ($profit / $mainPrice) * 100 : 0;
                                         @endphp
-                                        <td style="text-align: right;">{{ number_format($profit_percentage, 2) }}% </td>
 
-
-
-
-
-
+                                        <td style="text-align: right;">{{ number_format($profitPercentage, 2) }} %</td>
                                     </tr>
-
-
                                     @endforeach
                                     <tr>
                                         <td>
@@ -515,12 +508,37 @@
                     , success: function(response) {
                         var rows = '';
 
+                        let totalPriceSum = 0;
+
                         response.invoiceSumas.forEach(function(data1) {
+                            totalPriceSum += Number(data1.total_price); // Increment the total sum
+
+                            // Existing code to add rows to the table
                             rows += '<tr data-customer-id="' + data1.customer_id + '">' +
                                 '<td class="fs-6" style="text-align: left;">' + (data1.customer_id ? data1.customer_id : 'N/A') + '</td>' +
-                                '<td class="fs-6" style="text-align: right;">$ ' + Number(data1.total_price).toFixed(2) + '</td>' +
+                                '<td class="fs-6" style="text-align: right;">$ ' + Number(data1.total_price).toLocaleString(undefined, {
+                                    minimumFractionDigits: 2
+                                    , maximumFractionDigits: 2
+                                }) + '</td>' +
+
+
                                 '</tr>';
                         });
+
+                        // Adding a final row to display the total sum
+                        rows += '<tr>' +
+                            '<td class="fs-6" style="text-align: left;"><strong>Total</strong></td>' +
+                            '<td class="fs-6" style="text-align: right;"><strong>$ ' + Number(totalPriceSum).toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                                , maximumFractionDigits: 2
+                            }) + '</strong></td>' +
+
+
+                            '</tr>';
+
+                        // Now you can insert 'rows' into your HTML table where needed.
+
+
 
 
 

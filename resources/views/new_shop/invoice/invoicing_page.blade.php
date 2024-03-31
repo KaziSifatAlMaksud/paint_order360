@@ -59,9 +59,33 @@
                 {{ $jobs->builder_company_name }}
                 @endif
                 @if(isset($jobs->assignedJob) && $jobs->assignedJob->assigned_painter_name == auth()->user()->id)
-                {{ $jobs->assignedJob->assign_job_description }}
+                {{ $jobs->builder_company_name }}
+
+            </p>
+
+
+            <p class="reduced-line-height showinline"><b>Extra Message:</b>
+
+
+                @if(!empty($jobs->assignedJob) && !empty($jobs->assignedJob->assign_job_description))
+                @php
+                $descriptionParts = explode("\n\n", $jobs->assignedJob->assign_job_description);
+                @endphp
+                @if(!empty($descriptionParts))
+                <ol class="text-left mx-0" style="padding-left: 15px;">
+                    @foreach($descriptionParts as $part)
+                    @if(!empty($part))
+                    <li style="line-height: 1.2; /* Adjust this value for line spacing */">{{ $part }}</li>
+                    @endif
+                    @endforeach
+                </ol>
+                @endif
                 @endif
             </p>
+
+
+            @endif
+
         </div>
 
 
@@ -79,10 +103,6 @@
             No Invoice is Available
         </div>
         @endif
-        {{-- {{$jobs}} --}}
-
-
-
 
 
 
@@ -111,7 +131,18 @@
                             <div>
                                 <p class="text3 mb-1">${{ number_format($priceIncludingGST, 2) }}inc gst</p>
 
+                                @if($jobs && $jobs->assign_painter == auth()->id())
+
+
+                                <p class="text3 bilderName"> {{ $jobs->painter ? $jobs->painter->company_name : '' }} </p>
+                                @else
+
                                 <p class="text3 bilderName"> {{ $jobs->admin_builders ? $jobs->admin_builders->company_name : '' }} </p>
+
+                                @endif
+
+
+
 
 
 
@@ -171,7 +202,17 @@
                                 {{-- @if(isset($jobs->users) && isset($jobs->assignedJob) && $jobs->assignedJob->assigned_painter_name == auth()->user()->id && $jobs->users->company_name)
                                 {{ $jobs->users->company_name }}
                                 @endif --}}
-                                <p class="text3 bilderName"> {{ $jobs ? $jobs->admin_builders->company_name : '' }} </p>
+
+                                @if($jobs && $jobs->assign_painter == auth()->id())
+
+
+                                <p class="text3 bilderName"> {{ $jobs->painter ? $jobs->painter->company_name : '' }} </p>
+                                @else
+
+                                <p class="text3 bilderName"> {{ $jobs->admin_builders ? $jobs->admin_builders->company_name : '' }} </p>
+
+                                @endif
+
 
 
 

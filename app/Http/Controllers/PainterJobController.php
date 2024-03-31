@@ -16,6 +16,7 @@ use App\Models\PainterJob;
 use App\Models\Superviser;
 use App\Models\BuilderModel;
 use App\Models\AssignedPainterJob;
+use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -130,7 +131,7 @@ class PainterJobController extends Controller
         $Assjob = AssignedPainterJob::find($id);
         $Assjob->status = 2;
         $Assjob->save();
-        return redirect()->route('main')->with('success', 'Job is Accepted Successfully.');
+        return redirect()->back()->with('success', 'Job is Accepted Successfully.');
     }
 
     public function unassign($id)
@@ -142,6 +143,11 @@ class PainterJobController extends Controller
             $job->save();
         }
         $assign_job = AssignedPainterJob::where('job_id', $id)->first();
+
+        $invoice = Invoice::where('job_id', $id)->whereNull('batch')->first();
+        if ($invoice) {
+            $invoice->delete();
+        }
 
 
         if ($assign_job) {
