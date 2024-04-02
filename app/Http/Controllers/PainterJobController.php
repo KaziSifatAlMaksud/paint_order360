@@ -197,7 +197,7 @@ class PainterJobController extends Controller
 
 
         $painterjob->fill($data)->save();
-        if (!empty($request->assigned_painter_name) && !empty($request->assign_company_id)) {
+        if (!empty($request->assigned_painter_name) && !empty($request->assign_company_id) && !empty($request->assign_price_job)) {
             // if ($request->has('assigned_painter_name') && $request->has('assign_company_id')) {
             AssignedPainterJob::create([
                 'assigned_painter_name' => $request->assigned_painter_name,
@@ -255,10 +255,11 @@ class PainterJobController extends Controller
 
                         break;
                     case 'secondGroup':
-                        $user_id = $request->assign_company_id; // This seems incorrect as user_id was already set. Assuming it's intentional.
-                        $invoice->user_id = $request->assigned_painter_name; // This also seems potentially incorrect as it assigns a name to a user_id field.
-                        $invoice->send_email = $MainPainterEmail;
-
+                        if (!is_null($request->assign_company_id)) {
+                            $user_id = $request->assign_company_id; // This seems incorrect as user_id was already set. Assuming it's intentional.
+                            $invoice->user_id = $request->assigned_painter_name; // This also seems potentially incorrect as it assigns a name to a user_id field.
+                            $invoice->send_email = $MainPainterEmail;
+                        }
                         break;
                 }
 
@@ -280,6 +281,7 @@ class PainterJobController extends Controller
                 // Handle file upload, assuming this logic is correct and the same for both groups
                 // Save the invoice
                 $invoice->save();
+
 
                 // Now create or update the PoItem with the invoice ID
                 $poItem = new PoItems();

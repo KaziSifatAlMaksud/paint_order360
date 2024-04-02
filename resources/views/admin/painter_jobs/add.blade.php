@@ -1074,7 +1074,7 @@ require public_path() . '/admin/footer.blade.php';
 
 
 
-{{-- <script>
+<script>
     $(document).ready(function() {
         $('.brand').on('change', function(e) {
             var val = $(this).val();
@@ -1144,4 +1144,4 @@ require public_path() . '/admin/footer.blade.php';
         });
     });
 
-</script> --}}
+</script>

@@ -672,7 +672,8 @@
         @if($assign_job && $assign_job->painterJob && $assign_job->painterJob->user_id == auth()->id())
 
         <div class="service-box-single col-6 mb-3 px-0">
-            <a href="tel:{{ $assign_job ? $assign_job->painter->phone : '' }}" style="text-decoration: none;">
+            <a href="tel:{{ $assign_job->painter ? $assign_job->painter->phone : '' }}" style="text-decoration: none;">
+
 
                 {{-- <a href="tel:{{ $assign_job->painter->phone ? $assign_job->painter->phone : '' }}" style="text-decoration: none;"> --}}
                 <div class="custom-card custom-border card h-100 rounded-4">
@@ -681,7 +682,9 @@
                             <img src="/image/icon1/190034-200 1.png" style="height: 40px" />
                             <div>
                                 <h6 class="mb-0">Call Painter</h6>
-                                <p class="mb-0 pb-0">{{ $assign_job ? $assign_job->painter->company_name : '' }} - {{ $assign_job ? $assign_job->painter->first_name : '' }}</p>
+                                <p class="mb-0 pb-0">{{ $assign_job->painter ? $assign_job->painter->company_name : '' }} - {{ $assign_job->painter ? $assign_job->painter->first_name : '' }}</p>
+
+
                             </div>
                         </div>
                     </div>
