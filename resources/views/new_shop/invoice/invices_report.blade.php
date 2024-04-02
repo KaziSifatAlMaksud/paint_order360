@@ -265,7 +265,7 @@
                         <div class="row">
                             <div class="col-6">
                                 <select id="dateRangeFilter" class="form-select mb-2" aria-label="Default select example" style="border-color: orange;">
-                                    <option value="">Select Date Range</option>
+                                    <option value="">Select Range</option>
                                     <option value="Q1">Jan - Mar</option>
                                     <option value="Q2">Apr - Jun</option>
                                     <option value="Q3">Jul - Sep</option>
@@ -332,16 +332,17 @@
                         </div>
 
                         <div id="price-content" class="content-type active">
-                            <table class="price-content-table" style="width:100%">
+                            <table class="price-content-table" style="width:100%; margin-bottom: 500px;">
+
                                 <tr>
                                     <th style="width:50%">Job</th>
                                     <th style="text-align: right;">Job Price</th>
 
-                                    <th style="text-align: right;">Paint</th>
+                                    <th style="text-align: right;">$Paint</th>
 
-                                    <th style="text-align: right;">Labour</th>
+                                    <th style="text-align: right;">$Labour</th>
 
-                                    <th style="text-align: right;">Profit</th>
+                                    <th style="text-align: right;">$Profit</th>
 
                                 </tr>
                                 <tbody id="">
@@ -354,10 +355,10 @@
                                     @foreach($jobs as $job )
                                     <tr>
                                         <td>{{ $job ? $job->address : '' }}</td>
-                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price, 2) : '' }}</td>
-                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price * 0.3 , 2) : '' }}</td>
+                                        <td style="text-align: right;"> {{ $job ? number_format($job->price, 2) : '' }}</td>
+                                        <td style="text-align: right;">{{ $job ? number_format($job->price * 0.3 , 2) : '' }}</td>
 
-                                        <td style="text-align: right;">$ {{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job, 2) : 0.00 }}</td>
+                                        <td style="text-align: right;">{{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job, 2) : 0.00 }}</td>
 
                                         @php
                                         $discountedPrice = $job->price * 0.7;
@@ -372,7 +373,7 @@
 
 
                                         @endphp
-                                        <td style="text-align: right;">$ {{ number_format($finalPrice, 2) }}</td>
+                                        <td style="text-align: right;">{{ number_format($finalPrice, 2) }}</td>
 
 
 
@@ -411,7 +412,7 @@
                             </table>
                         </div>
                         <div id="percentage-content" class="content-type">
-                            <table class="price-content-table" style="width:100%">
+                            <table class="price-content-table" style="width:100%;margin-bottom: 200px;">
                                 <tr>
                                     <th style="width:50%">Job</th>
                                     <th style="text-align: right;">Job Price</th>
@@ -477,15 +478,18 @@
 
 
                         </div>
+
+
+
                     </div>
                 </div>
             </div>
         </section>
-        <div style="margin: 20px 0px 300px 0px;"></div>
+        {{-- <div style="margin: 20px 0px 300px 0px;"></div> --}}
 
         <!-- footer nav -->
     </main>
-    <div style="margin: 20px 0px 300px 0px;"></div>
+    {{-- <div style="margin: 20px 0px 300px 0px;"></div> --}}
     <script src="{{ asset('js/profile.js') }}"></script>
 
 

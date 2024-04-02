@@ -137,33 +137,87 @@
                 </div>
 
                 <!-- Attachment Field -->
-                <div class="row mb-3">
-                    <div class="col-2 d-flex align-items-center justify-content-center">
-                        <label class="form-label text-center">
-                            <i class="fas fa-paperclip"></i>
-                        </label>
-                    </div>
-                    <div class="col-10">
-                        {{-- @if($poItem->file)
-                                     <p> Have File Attribute {{$poItem->file}} </p>
-                        <input type="file" class="form-control" id="attachmentInput" value="{{$poItem->file}}---" name="attachment">
-                        @else
-                        <input type="file" class="form-control" id="attachmentInput" name="attachment">
-                        @endif --}}
-                        {{-- @if($poItem && $poItem->file)
-                                        <p> Have File Attribute(s): </p>
-                                        <ul>
-                                            @foreach((array)$poItem->file as $file)
-                                                <li>{{ $file }}</li>
-                        @endforeach
-                        </ul>
-                        @endif --}}
-                        <!-- Allow multiple file uploads -->
-                        <input type="file" class="form-control" id="attachmentInput" name="attachment">
 
-                        @error('attachment')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
+                <div class="row">
+                    <div class="col-4 mb-1">
+                        @if (!empty($invoice->attachment))
+                        <div style="text-align: center;">
+                            <a href="{{ asset('uploads/' . $invoice->attachment) }}" download>
+                                <img src="{{ asset('uploads/' . $invoice->attachment) }}" style="max-width: 80%; height: auto;">
+                            </a>
+                        </div>
+                        @endif
+                        {{-- <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')"> --}}
+
+                    </div>
+                    <div class="col-4 mb-1">
+
+
+                        @if (!empty($invoice->attachment1))
+                        <div style="text-align: center;">
+                            <a href="{{ asset('uploads/' . $invoice->attachment1) }}" download>
+                                <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style="max-width: 80%; height: auto;">
+                            </a>
+                        </div>
+                        @endif
+                        {{-- <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')"> --}}
+
+
+                    </div>
+                    <div class="col-4 mb-1">
+
+                        @if (!empty($invoice->attachment2))
+                        <div style="text-align: center;">
+                            <a href="{{ asset('uploads/' . $invoice->attachment2) }}" download>
+                                <img src="{{ asset('uploads/' . $invoice->attachment2) }}" style="max-width: 80%; height: auto;">
+                            </a>
+                        </div>
+                        @endif
+                        {{-- <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')"> --}}
+
+
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-4 mb-1">
+                        @if (!empty($invoice->attachment))
+                        <div style="text-align: center;">
+                            <a href="{{ asset('uploads/' . $invoice->attachment) }}" download>
+                                <img src="{{ asset('uploads/' . $invoice->attachment) }}" style="max-width: 80%; height: auto;">
+                            </a>
+                        </div>
+                        @endif
+                        <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')">
+
+                    </div>
+                    <div class="col-4 mb-1">
+
+
+                        @if (!empty($invoice->attachment1))
+                        <div style="text-align: center;">
+                            <a href="{{ asset('uploads/' . $invoice->attachment1) }}" download>
+                                <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style="max-width: 80%; height: auto;">
+                            </a>
+                        </div>
+                        @endif
+                        <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')">
+
+
+                    </div>
+                    <div class="col-4 mb-1">
+
+                        @if (!empty($invoice->attachment2))
+                        <div style="text-align: center;">
+                            <a href="{{ asset('uploads/' . $invoice->attachment2) }}" download>
+                                <img src="{{ asset('uploads/' . $invoice->attachment2) }}" style="max-width: 80%; height: auto;">
+                            </a>
+                        </div>
+                        @endif
+                        <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')">
+
+
                     </div>
                 </div>
 
