@@ -5,10 +5,7 @@
 <title>Company Name</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-<link rel="stylesheet" href="{{ asset('css/style77.css') }}">
-<link rel="stylesheet" href="{{ asset('css/style8.css') }}">
-<link rel="stylesheet" href="{{ asset('css/style77.css') }}">
-<link rel="stylesheet" href="{{ asset('css/style8.css') }}">
+
 
 <style>
     .container {
@@ -99,7 +96,7 @@
 </style>
 
 
-<header style="margin-top: -20px;">
+<header style="margin-top: -90px;">
     <div class="header-row">
         <div class="header-item">
             <a href="{{ url()->previous() }}"> <i class="fa-solid fa-arrow-left"></i> </a>
@@ -109,50 +106,14 @@
     </div>
 </header>
 
-<div class="navigation">
-    <ul>
-        <li class="list active">
-            <a href="<?php echo '/main' ?>">
-                <span class="icon">
-                    <ion-icon name="home-outline"></ion-icon>
-                </span>
-                <span class="text">Jobs</span>
-            </a>
-        </li>
-        <li class="list">
-            <a href="#">
-                <span class="icon">
-                    <ion-icon name="briefcase-outline"></ion-icon>
-                </span>
-                <span class="text">Docs</span>
-            </a>
-        </li>
-        <li class="list">
-            <a>
-                <span class="icon">
-                    <ion-icon name="newspaper-outline"></ion-icon>
-                </span>
-                <span class="text">Invoice</span>
-            </a>
-        </li>
-        <li class="list ">
-            <a href="<?php echo '/profile' ?>">
-                <span class="icon">
-                    <ion-icon name="person-outline"></ion-icon>
-                </span>
-                <span class="text">Profile</span>
-            </a>
-
-        </li>
 
 
-    </ul>
-</div>
+@include('layouts.partials.footer')
 
 
 
+<div id="googleMap" class="show_location" style="margin-top: 90px;"></div>
 
-<div id="googleMap" class="show_location"></div>
 <center class="show_distance">
     <p>Distance is <?php echo $distance ?> From Your Home</p>
 </center>
