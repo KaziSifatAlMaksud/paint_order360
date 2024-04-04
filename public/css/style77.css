@@ -4,6 +4,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
     font-family: 'Quicksand', sans-serif;
     /* font-family: 'Visby Round CF Medium', sans-serif; */
 }
@@ -40,7 +41,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     width: 100%;
-
+    background-color: #fff !important;
     overflow-x: hidden;
     background-color: var(--body-bg);
 }
@@ -97,7 +98,7 @@ header {
     margin: 0 auto;
     padding: 85px 5px 5px 5px !important;
     align-items: center;
-    background: var(--body-bg);
+
 
 }
 
