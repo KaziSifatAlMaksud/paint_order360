@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Shop;
+use Illuminate\Support\Facades\URL;
 
 use App\Models\User;
 use App\Models\Admin;
@@ -11,7 +12,6 @@ use App\Models\Order;
 use App\Models\PainterBoss;
 use App\Models\PainterJob;
 use App\Models\UserShop;
-use App\Models\userShops;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -137,7 +137,8 @@ class AdminController extends BaseController
         } else {
             $modal = $modal;
         }
-        return Redirect::route('admins.' . $modal);
+        // return Redirect::route('admins.' . $modal);
+        return Redirect::route('admins.shops1');
     }
 
     public function orders(Request $request)
@@ -308,27 +309,27 @@ class AdminController extends BaseController
                     $pass = $this->generateRandomString();;
                     $input['password'] = sha1($pass);
                 }
-                // $mail = [];
-                // $mail['to']     = $input['email'];
-                // $mail['from']     = "EastoodPaintShop";
-                // $mail['subject'] = "Shop Registration";
-                // $msg = "Hello " . $input['name'] . "!<br>";
-                // $msg = "Thanks for registration in Eastood Paint Shop.<br><br>";
-                // $msg = "Following are login details.<br><br>";
-                // $msg = "Email : " . $input['email'] . "<br><br>";
-                // $msg = "Password : " . $pass . "<br><br>";
-                // $msg = "Url : " . URL::to('/') . "/shop/login<br><br>";
-                // $mail['body'] = $msg;
-                // $this->_send_mail($mail);
+                $mail = [];
+                $mail['to']     = $input['email'];
+                $mail['from']     = "EastoodPaintShop";
+                $mail['subject'] = "Shop Registration";
+                $msg = "Hello " . $input['name'] . "!<br>";
+                $msg = "Thanks for registration in Eastood Paint Shop.<br><br>";
+                $msg = "Following are login details.<br><br>";
+                $msg = "Email : " . $input['email'] . "<br><br>";
+                $msg = "Password : " . $pass . "<br><br>";
+                $msg = "Url : " . URL::to('/') . "/shop/login<br><br>";
+                $mail['body'] = $msg;
+                $this->_send_mail($mail);
                 unset($input['_token']);
                 DB::table('shop')->insert($input);
                 Session::flash('message', 'New Shop Added Successfully.');
                 Session::flash('alert-class', 'alert-success');
-                return Redirect::route('admins.shops');
+                return Redirect::route('admins.shops1');
             } else {
                 Session::flash('message', 'This Email Is Already Exist');
                 Session::flash('alert-class', 'alert-danger');
-                return redirect()->back();
+                return Redirect::route('admins.shops1');
             }
         }
         return View::make('admin/add_shop');
@@ -351,7 +352,8 @@ class AdminController extends BaseController
                 DB::table('shop')->where('id', $id)->update($input);
                 Session::flash('message', 'Shop Updated Successfully.');
                 Session::flash('alert-class', 'alert-success');
-                return Redirect::route('admins.shops');
+                // return Redirect::route('admins.shops');
+                return Redirect::route('admins.shops1');
             } else {
                 Session::flash('alert-class', 'alert-danger');
                 Session::flash('message', 'This email is already exist!.');

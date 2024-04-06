@@ -217,7 +217,7 @@ Route::group(['middleware' => ['auth:admin'], 'as' => 'admins.', 'prefix' => 'ad
 	Route::get('logout', array('uses' => 'AdminController@logout'))->name('logout');
 	Route::get('painters', array('uses' => 'AdminController@painters'))->name('painters');
 	Route::get('delete_order/{id}', array('uses' => 'AdminController@delete_order'));
-	Route::get('shops', array('uses' => 'AdminController@shops'))->name('shops');
+	Route::get('shops', array('uses' => 'AdminController@shops'))->name('shops1');
 	Route::get('orders', array('uses' => 'AdminController@orders'))->name('orders');
 	Route::get('brands', array('uses' => 'AdminController@brands'))->name('brands');
 	Route::match(array('GET', 'POST'), 'edit_brand/{id}', array('uses' => 'AdminController@edit_brand'));

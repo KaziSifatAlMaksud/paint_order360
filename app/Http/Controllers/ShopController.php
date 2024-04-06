@@ -97,33 +97,34 @@ class ShopController extends BaseController
 		return Redirect::action('ShopController@login');
 	}
 
+
 	public function login(Request $request)
 	{
 		if ($request->isMethod('post')) {
-			$input = $request->all();
-			$password = sha1($input['password']);
-			$shop = DB::table('shop')->where('email', $input['email'])->first();
+			$email = $request->input('email');
+			$password = $request->input('password');
+
+			$shop = DB::table('shop')->where('email', $email)->first();
+
 			if ($shop) {
-				$data = array(
-					'email' => $request->email,
-					'password' => $request->password
-				);
-				if (Auth::guard('shop')->attempt($data)) {
-					Session::flash('message', 'You are now logged in.');
-					Session::flash('alert-class', 'alert-success');
-					return Redirect::route('shop.profile');
+				// Check if the SHA-1 hash of the input password matches the stored hash
+				if ($shop->password === sha1($password)) {
+					Auth::guard('shop')->loginUsingId($shop->id); // Manually log in the user
+					session()->flash('message', 'You are now logged in.');
+					session()->flash('alert-class', 'alert-success');
+					return redirect()->route('shop.profile');
 				} else {
-					Session::flash('message', 'Please check your password!');
-					Session::flash('alert-class', 'alert-danger');
-					return Redirect::route('shop.login');
+					session()->flash('message', 'Please check your password!');
+					session()->flash('alert-class', 'alert-danger');
+					return redirect()->route('shop.login');
 				}
 			} else {
-				Session::flash('message', 'Please check your email!');
-				Session::flash('alert-class', 'alert-danger');
-				return Redirect::route('shop.login');
+				session()->flash('message', 'Please check your email!');
+				session()->flash('alert-class', 'alert-danger');
+				return redirect()->route('shop.login');
 			}
 		}
-		return View::make('shop/login', array());
+		return view('shop.login');
 	}
 
 
@@ -481,7 +482,7 @@ class ShopController extends BaseController
 	public function contact_us()
 	{
 		$_paint_shop = Session::get('paint_shop');
-		$data  = DB::table('admins')->select('admins.address','admins.email','admins.phone')->first();
+		$data  = DB::table('admins')->select('admins.address', 'admins.email', 'admins.phone')->first();
 		//$this->prx($_paint_shop);
 		if (Request::isMethod('post')) {
 			$input = Input::all();
