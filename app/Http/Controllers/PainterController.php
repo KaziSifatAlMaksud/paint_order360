@@ -609,9 +609,10 @@ class PainterController extends BaseController
                 'p_job_items.*',
                 'brands.name as b_name',
                 'painter_jobs.id as o_id'
-            )->where('p_job_items.size', '!=', 101)->where('p_job_items.qty', '!=', 0)->get();
+            )->where('p_job_items.size', '!=', 101)->where('p_job_items.qty', '!=', 0)->where('painter_jobs.parent_id', $jobid)->get();
         $brands = DB::table('brands')->get();
 
+        $groupedOrders = $ordersdetails->groupBy('key');
         $expjobs = PainterJob::where('parent_id', $jobid)
             ->whereNotNull('parent_id')
             // ->whereDate('start_date', '<', Carbon::now())
@@ -619,7 +620,7 @@ class PainterController extends BaseController
             ->orderBy('created_at', 'DESC')
             ->get();
 
-        return view('painter.previouse', ['expjobs' => $expjobs, 'id' => $jobid, 'ordersdetails' => $ordersdetails, 'brands' => $brands]);
+        return view('painter.previouse', ['expjobs' => $expjobs, 'id' => $jobid, 'ordersdetails' => $ordersdetails, 'groupedOrders' => $groupedOrders, 'brands' => $brands]);
     }
 
     public function  choseShope(Request $request, PainterJob $painterjob)

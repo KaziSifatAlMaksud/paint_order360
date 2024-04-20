@@ -118,6 +118,26 @@ class PainterJobController extends Controller
         ]);
     }
 
+    public function order_details()
+    {
+        $assign_painter = null;
+        $painterJob = new PainterJob();
+        // $buliders =  Builder::whereNotNull('name')->orderBy('name')->get();
+        $data['inside'] = [];
+        $data['outside'] = [];
+        $brands = Brand::all();
+        $order = Order::all();
+        $admin_buliders = BuilderModel::all();
+        $supervisors = Superviser::all();
+        $users = User::whereNotNull('first_name')->orderBy('first_name')->get();
+        return view('shop.order_details', [
+            'data' => $data, 'users' => $users, 'supervisors' => $supervisors, 'order' => $order, 'brands' => $brands, 'admin_buliders' => $admin_buliders, 'painterjob' => $painterJob,
+            // 'buliders' => $buliders, 
+            'assign_painter' => $assign_painter,
+            'outside' => $this->outside, 'inside' => $this->inside
+        ]);
+    }
+
 
     public function delete($id)
     {

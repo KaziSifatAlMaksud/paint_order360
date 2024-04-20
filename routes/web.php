@@ -16,6 +16,9 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\AssignedPainterController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\GaragePaintController;
+use App\Http\Controllers\ShopController;
+use App\Http\Controllers\PrintOrderController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -250,12 +253,7 @@ Route::group(['middleware' => ['auth:admin'], 'as' => 'admins.', 'prefix' => 'ad
 	Route::match(['get', 'post', 'delete'], 'assign_builder', [BuilderController::class, 'handleRequest'])->name('assign_builder');
 
 	Route::delete('admin/assign_builder/{id}', [BuilderController::class, 'deleteCustomer'])->name('delete_customer');
-
-
-
 	Route::resource('admin_builder', 'App\Http\Controllers\BuilderController');
-
-
 	Route::get('', array('uses' => 'AdminController@shops'))->name('shops');
 });
 Route::resource('admin_builder', 'App\Http\Controllers\BuilderController');
@@ -286,5 +284,13 @@ Route::group(['middleware' => ['auth:shop'], 'as' => 'shop.'], function () {
 	Route::match(array('GET', 'POST'), '/shop/delete_emp/{id}', array('uses' => 'ShopController@delete_emp'));
 	Route::get('/shop/customers', array('uses' => 'ShopController@customers'));
 	Route::match(array('GET', 'POST'), '/shop/ajaxUpdateStatus', array('uses' => 'ShopController@ajaxUpdateStatus'));
+
+	Route::post('/shop/print_order/store', [PrintOrderController::class, 'store'])->name('shop.storePaintOrder');
+
+	Route::get('/shop/order/order_details', [ShopController::class, 'order_details'])->name('order_details');
 });
+
+// Route::group(['middleware' => ['auth:shop'], 'prefix' => 'shop', 'as' => 'shop.'], function () {
+
+// });
 Route::get('select_language', ['as' => 'select_language', 'uses' => 'App\Http\Controllers\multiLanguageController@change']);

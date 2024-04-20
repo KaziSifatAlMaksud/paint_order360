@@ -4,7 +4,11 @@ require  public_path() . '/custom_settings.php';
 
 
 //echo '<pre>';
-$nameArray = explode(" ", $_paint_shop->name);
+    if (isset($_paint_shop['name'])) {
+    $nameArray = explode(" ", $_paint_shop['name']);
+    }
+
+// $nameArray = explode(" ", $_paint_shop->name);
 
 $shopName = '';
 
@@ -130,20 +134,24 @@ foreach ($nameArray as $key => $value) {
             width: 50%;
             padding: 41px 38px;
         }
+
         a.ph.shop-logo {
             width: 65px;
             display: block;
             height: 65px;
         }
+
         a.ph.shop-logo img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             object-position: center;
         }
+
         .navbar-brand.navbar-brand-center {
             padding: 0px 15px;
         }
+
     </style>
     <!--
         <script src="<?php echo PUBLIC_PATH . '/assets' ?>/vendor/blueimp-file-upload/jquery.fileupload-ui.js"></script>
@@ -165,6 +173,7 @@ foreach ($nameArray as $key => $value) {
     <script src="<?php echo PUBLIC_PATH . '/assets' ?>/vendor/breakpoints/breakpoints.js"></script>
     <script>
         Breakpoints();
+
     </script>
 </head>
 
@@ -186,10 +195,10 @@ foreach ($nameArray as $key => $value) {
                 <i class="icon wb-more-horizontal" aria-hidden="true"></i>
             </button>
             <div class="navbar-brand navbar-brand-center" data-toggle="gridmenu">
-                <a class="ph shop-logo" href="<?php echo PUBLIC_PATH; ?>/shop/dashboard" >
+                <a class="ph shop-logo" href="<?php echo PUBLIC_PATH; ?>/shop/dashboard">
                     <!-- <strong><?php //echo $shopName;
                                     ?></strong> -->
-                    
+
                     <img src="<?php echo PUBLIC_PATH; ?>/image/logo-phone.png">
                 </a>
                 <br>
@@ -248,6 +257,18 @@ foreach ($nameArray as $key => $value) {
                             <span class="site-menu-title">Employees</span>
                         </a>
                     </li>
+                    <li class="site-menu-item">
+                        <a class="animsition-link" href="<?php echo PUBLIC_PATH . '/shop/order/order_details' ?>" data-slug="articles-listing">
+
+
+                            <i class=" site-menu-icon fa fa-print" aria-hidden="true"></i>
+
+
+
+                            <span class="site-menu-title">Print Order</span>
+                        </a>
+                    </li>
+
                     <!-- <li class="site-menu-item">
                                 <a class="animsition-link" href="<?php echo PUBLIC_PATH . '/shop/contact_us' ?>" data-slug="articles-listing">
                                     <i class="site-menu-icon wb-users" aria-hidden="true"></i>
@@ -278,14 +299,14 @@ foreach ($nameArray as $key => $value) {
     <?php
     if (Session::has('message')) {
     ?>
-        <div class="row visible-ie8 alert_msg">
-            <div class="">
-                <div class="alert <?php echo Session::get('alert-class', 'alert-info') ?> alert-dismissable">
-                    <button class="close" aria-hidden="true" data-dismiss="alert" type="button" style="color:black">×</button>
-                    <?php echo Session::get('message'); ?>
-                </div>
+    <div class="row visible-ie8 alert_msg">
+        <div class="">
+            <div class="alert <?php echo Session::get('alert-class', 'alert-info') ?> alert-dismissable">
+                <button class="close" aria-hidden="true" data-dismiss="alert" type="button" style="color:black">×</button>
+                <?php echo Session::get('message'); ?>
             </div>
         </div>
+    </div>
     <?php
     }
     require  public_path() . '/s_shop/sidebar.blade.php';

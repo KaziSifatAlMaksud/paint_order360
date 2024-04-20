@@ -11,11 +11,83 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\Console\Input\Input;
-
+use App\Models\{Brand, Order, BuilderModel, Superviser, User, PainterJob};
 
 class ShopController extends BaseController
 {
 
+	private $outside = [
+		'eaves' => 'Eaves',
+		'downpipes' => 'Downpipes',
+		'meter_box' => 'Meter box',
+		'front_door' => 'Front door',
+		'laundry_door' => 'Laundry door',
+		'balcony_door' => 'Balcony door',
+		'garage_door' => 'Garage door',
+		'main_render' => 'Balcony door',
+		'main_render' => 'Main Render',
+		'render_2' => 'Render 2',
+		'render_3' => 'Render 3',
+		'Main_cladding' => 'Main Cladding',
+		'cladding_2' => 'Cladding 2',
+		'cladding_3' => 'Cladding 3',
+		'moroka_finish' => 'Moroka finish',
+		'moroka_undercoat' => 'Moroka undercoat',
+		'columns' => 'Columns',
+		'timber_posts' => 'Timber Posts',
+		'timber_beam' => 'Timber Beam',
+		'timber_window' => 'Timber Window',
+		'fascia' => 'Fascia',
+		'leter_box' => 'Leter box',
+		'flashing' => 'Fashing',
+		'z_flashing' => 'Z Flashing',
+		'Extra_1' => 'Extra_1',
+		'Extra_2' => 'Extra_2',
+		'Extra_3' => 'Extra_3',
+		'Extra_4' => 'Extra_4',
+		'Extra_5' => 'Extra_5',
+	];
+
+	private $inside = [
+		'ceilings' => 'Ceilings',
+		'walls' => 'Walls',
+		'wall_undercoat' => 'Wall undar coat',
+		'woodwork_colour' => 'Woodwork colour',
+		'woodwork_undercoat' => 'Woodwork undercoat',
+		'feature_room1' => 'Feature room 1',
+		'feature_room2' => 'Feature room 2',
+		'1st_feature_wall' => '1st Feature wall',
+		'2st_feature_wall' => '2st Feature wall',
+		'3st_feature_wall' => '3st Feature wall',
+		'stringer' => 'Stringer',
+		'handrail' => 'Handrail',
+		'post' => 'Post',
+		'tread' => 'Tread',
+		'riser' => 'Riser',
+		'other' => 'Other',
+	];
+
+	public function order_details()
+	{
+		$_paint_shop = ['name' => 'John', 'email' => 'john@example.com'];
+
+		$assign_painter = null;
+		$painterJob = new PainterJob();
+		// $buliders =  Builder::whereNotNull('name')->orderBy('name')->get();
+		$data['inside'] = [];
+		$data['outside'] = [];
+		$brands = Brand::all();
+		$order = Order::all();
+		$admin_buliders = BuilderModel::all();
+		$supervisors = Superviser::all();
+		$users = User::whereNotNull('first_name')->orderBy('first_name')->get();
+		return view('shop.order_details', [
+			'data' => $data, 'users' => $users, 'supervisors' => $supervisors, 'order' => $order, '_paint_shop' => $_paint_shop, 'brands' => $brands, 'admin_buliders' => $admin_buliders, 'painterjob' => $painterJob,
+			// 'buliders' => $buliders, 
+			'assign_painter' => $assign_painter,
+			'outside' => $this->outside, 'inside' => $this->inside
+		]);
+	}
 
 	/*
 	|--------------------------------------------------------------------------
