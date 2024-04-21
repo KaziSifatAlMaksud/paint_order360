@@ -222,9 +222,11 @@
                 <div class="row">
                     <div class="col-4 mb-1">
                         @if (!empty($invoice->attachment))
-                        <div style="text-align: center;">
+                        <div style="text-align: center; ">
+
                             <a href="{{ asset('uploads/' . $invoice->attachment) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment) }}" style="max-width: 80%; height: auto;">
+                                <img src="{{ asset('uploads/' . $invoice->attachment) }}" style="  max-width: 50px; height: auto;">
+
                             </a>
                         </div>
                         @endif
@@ -237,7 +239,8 @@
                         @if (!empty($invoice->attachment1))
                         <div style="text-align: center;">
                             <a href="{{ asset('uploads/' . $invoice->attachment1) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style="max-width: 80%; height: auto;">
+                                <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style="max-width: 50px; height: auto;">
+
                             </a>
                         </div>
                         @endif
@@ -250,7 +253,8 @@
                         @if (!empty($invoice->attachment2))
                         <div style="text-align: center;">
                             <a href="{{ asset('uploads/' . $invoice->attachment2) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment2) }}" style="max-width: 80%; height: auto;">
+                                <img src="{{ asset('uploads/' . $invoice->attachment2) }}" style="max-width: 50px; height: auto;">
+
                             </a>
                         </div>
                         @endif
