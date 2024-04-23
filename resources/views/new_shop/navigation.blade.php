@@ -27,6 +27,13 @@
             --bg-green: #b8ffc3;
         }
 
+        .invoice-doc .docs_part1 {
+
+            padding: 0px 0px !important;
+
+        }
+
+
         header {
             /* position: relative; */
             position: fixed;
@@ -227,51 +234,60 @@
         <section class="invoice-doc px-2 jobs_area" style="line-height:1;">
             @foreach($jobs->sortByDesc('created_at') as $job)
             <a href="{{ route('jobs.show', ['id' => $job->id]) }}" style="text-decoration: none; color: black;" class="portfolio-item {{ $job->status == 1 ? 'filter-new' : ($job->status == 3 ? 'filter-finished' : 'filter-started') }}">
-                <div class="docs_part1 docs_prt1 d-flex">
-                    <div style="width: 100px; height: 110px; margin: -10px 0px -10px -10px;">
-                        <div style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%; border-top-left-radius: 10px; border-bottom-left-radius: 10px; overflow: hidden;">
-                            @forelse($pps->where('job_id', $job->id) as $pp)
-                            <img src="{{ asset('/gallery_images/'.$pp->image) }}" alt="Card image cap" style="width: 100%; height: 100%; object-fit: fill; object-position: center center;">
-                            @empty
-                            <img src="{{ asset('/image/Home.png') }}" alt="Card image cap" style="width: 100px; height: 100px; object-fit: cover; object-position: center center;">
-                            @endforelse
-                        </div>
+                <div class="docs_part1  d-flex">
+
+                    <div style="
+                        background-image: url('{{ asset('/image/Home.png') }}');
+                        width: 100px; 
+                        height: 110px; 
+                        border-radius: 13px 0px 0px 13px;
+                        background-size: cover; 
+                        background-position: center center; 
+                        background-repeat: no-repeat;
+                        overflow: hidden;">
+                        @forelse($pps->where('job_id', $job->id) as $pp)
+                        <img src="{{ asset('/gallery_images/'.$pp->image) }}" alt="Card image cap" style="width: 100%; height: 100%; object-fit: fill; object-position: center center;">
+                        @empty
+                        <img src="{{ asset('/image/Home.png') }}" alt="Card image cap" style="width: 100px; height: 100px; object-fit: cover; object-position: center center;">
+                        @endforelse
+
                     </div>
-                    <div class="position-relative" style="flex: 1; overflow:hidden;">
+                    <div class="position-relative" style="flex: 1; overflow:hidden;" style="margin-bottom: 10px;">
                         <div class="invoice-cart" style="padding-left: 10px; line-height: 1;">
                             <h5 class="address_text showinline">{{$job->address}}</h5>
                             <div style="display: flex; justify-content: space-between;">
                                 <div style="text-align: left; width: 75%; overflow:hidden;">
-                                    <p class="text2 showinline ">
+                                    <p class="text2 showinline " style="padding-bottom: 10px;">
+
                                         @if (!$job->builder_company_name)
                                         Click The Card For Learn More
                                         @else
                                         <span> {{ $job->builder_company_name }} </span>
                                         @endif
                                     </p>
-                                    <p class="text2 showinline">
+                                    <p class="text2 showinline" style="padding-bottom: 10px;">
+
                                         {{ $job ? \Carbon\Carbon::parse($job->start_date)->format('d/m/Y') : '' }}
                                     </p>
 
                                     <p class="text2 bilderName showinline" style="display: flex; align-items: center; white-space: nowrap;">
                                         @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
                                         Gate Code: {{ $job->admin_builders->gate }}
-
                                         @endif
                                     </p>
                                 </div>
                                 {{-- @if($job->builder_id && $job->admin_builders && !is_bool($job->admin_builders))
-                                {{ $job->admin_builders }}
+                                        {{ $job->admin_builders }}
                                 @endif --}}
 
 
-                                <div style="display: flex;  align-items: flex-end; margin-bottom: 5px">
-                                    @if($job->assign_painter && $job->assignedJob && $job->assignedJob->assigned_painter_name == auth()->id())
+                                <div style="display: flex;  align-items: flex-end; margin: 0px 0px 6px 0px;">
 
+
+                                    @if($job->assign_painter && $job->assignedJob && $job->assignedJob->assigned_painter_name == auth()->id())
                                     {{-- @if( $job->assign_painter && $job->assignedJob->assigned_painter_name == auth()->id()) --}}
                                     <div> I </div>
                                     @endif
-
                                     @if($job->assign_painter && $job->user_id === auth()->id())
                                     <div class="red-dot"></div>
                                     @endif
@@ -279,10 +295,10 @@
 
 
 
-                                <div style="align-self: flex-end; margin-bottom:-6px;">
+                                <div style="align-self: flex-end; margin-bottom:-10px;">
 
                                     @if ($job->status == 1)
-                                    <p class="map_btn status status-new ml-5 text-light">New</p>
+                                    <p class="map_btn status status-new ml-5 ml-5 text-light" style="margin: 10px;">New</p>
                                     @elseif($job->status == 2)
                                     <p class="map_btn status status-started ml-5 text-light">Started</p>
                                     @elseif($job->status == 3)

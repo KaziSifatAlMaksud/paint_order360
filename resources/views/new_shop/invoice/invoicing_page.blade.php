@@ -53,17 +53,17 @@
                 {{ $jobs->users->company_name }}
                 @endif
             </p>
-            <p class="text-left reduced-line-height showinline">
+            {{-- <p class="text-left reduced-line-height showinline">
                 <b>Job Description: </b>
                 @if(isset($jobs->builder_company_name) && $jobs->users->id === auth()->user()->id )
                 {{ $jobs->builder_company_name }}
-                @endif
-                @if(isset($jobs->assignedJob) && $jobs->assignedJob->assigned_painter_name == auth()->user()->id)
-                {{ $jobs->builder_company_name }}
+            @endif
+            @if(isset($jobs->assignedJob) && $jobs->assignedJob->assigned_painter_name == auth()->user()->id)
+            {{ $jobs->builder_company_name }}
 
-            </p>
+            </p> --}}
 
-
+            {{--
             <p class="reduced-line-height showinline"><b>Extra Message:</b>
 
 
@@ -76,15 +76,15 @@
                     @foreach($descriptionParts as $part)
                     @if(!empty($part))
                     <li style="line-height: 1.2; /* Adjust this value for line spacing */">{{ $part }}</li>
-                    @endif
-                    @endforeach
-                </ol>
-                @endif
-                @endif
+            @endif
+            @endforeach
+            </ol>
+            @endif
+            @endif
             </p>
 
 
-            @endif
+            @endif --}}
 
         </div>
 
@@ -123,11 +123,8 @@
                             <div class="invoice-cart-border"></div>
                             <p class="text3 mb-1">{{ $poItem->description }} </p>
 
+
                             <p class="docs_right jobs_right position-absolute end-0 customerInv " style="margin: -10px 10px 0px 0px;">{{ $poItem->invoice ?  $poItem->invoice->inv_number : '' }}</p>
-
-
-
-
                             <div>
                                 <p class="text3 mb-1">${{ number_format($priceIncludingGST, 2) }}inc gst</p>
 

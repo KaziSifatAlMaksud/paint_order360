@@ -249,7 +249,7 @@
                         <p><b>From: </b> {{$job->painter->first_name ? $job->painter->first_name . " " . $job->painter->last_name : ''}} <br>
 
                             <b>Company: </b> {{$job->painter->company_name ? $job->painter->company_name : '' }} <br>
-                            <b>Supervisor: </b>{{$job->superviser ? $job->superviser->name : '' }} </p>
+                            {{-- <b>Supervisor: </b>{{$job->superviser ? $job->superviser->name : '' }} </p> --}}
                     </div>
 
                     <div class="d-flex gap-2 justify-content-between">
@@ -379,9 +379,9 @@
                             <div class="d-flex align-items-center gap-2">
                                 <img src="/image/icon1/126169 1.png" style="height: 25px" />
                                 @if($assign_job && $assign_job->assigned_painter_name && $assign_job->assigned_painter_name == auth()->id())
-                                <p class="mb-0">$ {{ number_format($assign_job->assign_price_job ?? 0, 2) }} inc gst</p>
+                                <p class="mb-0">$ {{ number_format($assign_job->assign_price_job ?? 0) }} inc gst</p>
                                 @else
-                                <p class="mb-0">$ {{ number_format( $job->price , 2)  }} inc gst</p>
+                                <p class="mb-0">$ {{ number_format( $job->price)  }} inc gst</p>
                                 @endif
 
                             </div>
@@ -389,6 +389,11 @@
                                 <img src="/image/icon1/4793321 1.png" style="height: 25px" />
                                 <p class="mb-0">
                                     {{ date('j M, Y', strtotime($job->start_date)) }}
+                            </div>
+
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="/image/icon1/4793321 1.png" style="height: 25px" />
+                                <p class="mb-0">
                                     @php
                                     $currentDate = new DateTime(); // Today's date
                                     $startDate = new DateTime($job->start_date);
@@ -398,11 +403,12 @@
                                     @endphp
 
                                     @if ($days > 0)
-                                    (in {{ $days }} {{ $dayText }})
-                                    @elseif ($days < 0) ({{ abs($days) }} {{ $dayText }} ago) @else (today) @endif </p>
+                                    in {{ $days }} {{ $dayText }}
+                                    @elseif ($days < 0) {{ abs($days) }} {{ $dayText }} ago @else (today) @endif </p>
 
 
                             </div>
+
                             <div class="d-flex align-items-center gap-2">
                                 <img src="/image/icon1/meter.png" style="height: 25px" />
                                 <p class="mb-0"> {{$job->house_size}}</p>

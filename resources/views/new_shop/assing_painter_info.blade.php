@@ -496,7 +496,7 @@
                 <h3 class="pt-4 px-2 text-center">Select who pays for and orders the paint</h3>
                 <div id="page-content" class="content active">
                     <div class="d-flex flex-column align-items-stretch px-2">
-                        <p class="mb-3 text-center fs-6 pt-3 text-decoration-underline">Does the Painter Buy the Paint?</p>
+                        <p class="mb-3 text-center fs-5 pt-3 text-decoration-underline">Does the Painter Buy the Paint?</p>
                         <div class="mt-auto d-flex justify-content-between">
                             <p class="w-25 btn btn-warning" onclick=" showstartbtn(); setAnswer(1, 1);">Yes</p>
                             <p onclick="showSecondQues(); setAnswer(1, 0);" class="w-25 btn btn-danger">No</p>
@@ -504,7 +504,7 @@
                     </div>
 
                     <div id="quesTwo" class="d-none flex-column align-items-stretch px-2">
-                        <p class="mb-3 text-center fs-6 pt-5 text-decoration-underline">Does the Painter orders the paint or me ?</p>
+                        <p class="mb-3 text-center fs-5 pt-5 text-decoration-underline">Does the Painter orders the paint or me ?</p>
                         <div class="mt-auto d-flex justify-content-between">
                             <p class="w-25 btn btn-warning" onclick=" showstartbtn(); setAnswer(2, 1);">Me</p>
                             <p class="w-25 btn btn-danger" onclick="showThirdQues();setAnswer(2, 0);">Painter</p>
@@ -512,7 +512,8 @@
                     </div>
 
                     <div id="quesThird" class="d-none flex-column align-items-stretch px-2">
-                        <p class="mb-3 text-center fs-6 pt-5 text-decoration-underline">Is Paint order is sent to me or paint shop ?</p>
+                        <p class="mb-3 text-center fs-5 pt-5 text-decoration-underline">Is Paint order is sent to me or paint shop ?</p>
+
                         <div class="mt-auto d-flex justify-content-between">
                             <p class="w-25 btn btn-warning" onclick=" showstartbtn(); setAnswer(3, 1)">Me</p>
                             <p class="w-25 btn btn-danger" onclick="showstartbtn();setAnswer(3, 0);">Shop</p>
@@ -555,20 +556,11 @@
                             <div class="d-flex align-items-center gap-2">
                                 <img src="/image/icon1/1painter.png" style="height: 25px" />
                                 <p class="mb-0"> Painter: <span id="painterName"></span> </p>
+
                             </div>
 
 
-                            <div class=" d-flex flex-column align-items-left">
-                                <div class="d-flex pb-0 mb-0">
-                                    <p id="displayQ1"></p>
-                                </div>
-                                <div class="d-flex py-0 my-0">
-                                    <p id="displayQ2"></p>
-                                </div>
-                                <div class="d-flex py-0 my-0">
-                                    <p id="displayQ3"></p>
-                                </div>
-                            </div>
+
 
 
                             <div class="d-flex align-items-center gap-2">
@@ -583,6 +575,18 @@
                                     {{$job->builder_company_name ? $job->builder_company_name : ''}}
 
                                 </p>
+                                <div class=" d-flex flex-column align-items-left">
+                                    <div class="d-flex pb-0 mb-0">
+                                        <p id="displayQ1"></p>
+                                    </div>
+                                    <div class="d-flex py-0 my-0">
+                                        <p id="displayQ2"></p>
+                                    </div>
+                                    <div class="d-flex py-0 my-0">
+                                        <p id="displayQ3"></p>
+                                    </div>
+                                </div>
+
                                 <p>
                                     <b>Extra Message: </b> <br>
                                     <span id="extrasMessages"></span>
@@ -593,7 +597,7 @@
 
                     </div>
                     <div>
-                        <p>
+                        <p class="mt-2">
                             <center> <b> Send to Painter ? </b></center>
                         </p>
                     </div>

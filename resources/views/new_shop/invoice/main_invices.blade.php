@@ -178,13 +178,15 @@
 
 
         <!-- card -->
-        <section style="padding-top: 90px;">
-            <div class="search-bar mt-2">
+        <section style="padding-top: 80px;">
+
+            <div class="search-bar" style=" z-index:99999; position:fixed;">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" id="search-input" placeholder=" Search Address or Customer" oninput="filterCards()">
+                <input type="text" class="search-input" id="search-input" placeholder="Address or Customer" oninput="filterCards()">
             </div>
 
-            <div class="filter custom-border rounded-4">
+            <div class="filter custom-border rounded-4" style="margin-top: 70px;">
+
                 <table class="align-middle">
                     <tbody>
                         <tr>
@@ -228,13 +230,15 @@
 
 
                         <div class="invoice-cart-border"></div>
-                        <p class="text2">{{ $invoice->description }} </p>
+                        <p class="text2 " style="padding-bottom: 5px!important;">{{ $invoice->description }} </p>
+
                         <p class="docs_right jobs_right position-absolute end-0 customerInv " style="margin: -18px 10px 0px 0px;">{{ $invoice->inv_number }}</p>
 
 
 
                         <div>
-                            <p class="text2 my-1"> ${{ number_format($invoice->total_due, 2) }} inc gst </p>
+                            <p class="text2 my-1" style="padding-bottom: 5px!important;"> ${{ number_format($invoice->total_due, 2) }} inc gst </p>
+
 
                             <p class="text2 bilderName"> {{ $invoice->customer_id }} </p>
 
