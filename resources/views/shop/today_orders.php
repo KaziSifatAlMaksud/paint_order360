@@ -21,6 +21,7 @@ require  public_path().'/s_shop/header.blade.php';
                         <table class="table table-bordered table-striped tbale-responsive" id="painter_table">
                             <thead>
                                 <tr>
+                                    imaput
                                      <th>#Order Number</th> 
                                     <!-- <th>Shop Name</th> -->
                                     <th>Painter Name</th>

@@ -355,10 +355,10 @@
                                     @foreach($jobs as $job )
                                     <tr>
                                         <td>{{ $job ? $job->address : '' }}</td>
-                                        <td style="text-align: right;"> {{ $job ? number_format($job->price, 2) : '' }}</td>
-                                        <td style="text-align: right;">{{ $job ? number_format($job->price * 0.3 , 2) : '' }}</td>
+                                        <td style="text-align: right;"> {{ $job ? number_format($job->price) : '' }}</td>
+                                        <td style="text-align: right;">{{ $job ? number_format($job->price * 0.3 ) : '' }}</td>
 
-                                        <td style="text-align: right;">{{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job, 2) : 0.00 }}</td>
+                                        <td style="text-align: right;">{{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job) : 0 }}</td>
 
                                         @php
                                         $discountedPrice = $job->price * 0.7;
@@ -373,7 +373,7 @@
 
 
                                         @endphp
-                                        <td style="text-align: right;">{{ number_format($finalPrice, 2) }}</td>
+                                        <td style="text-align: right;">{{ number_format($finalPrice) }}</td>
 
 
 
@@ -389,21 +389,21 @@
                                         </td>
                                         <td style="text-align: right;">
 
-                                            <b style="font-size: 15px; text-align: right;">${{ number_format($totalPrice, 2) ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalPrice) ?? '' }}</b>
 
                                         </td>
                                         <td style="text-align: right;">
-                                            <b style="font-size: 15px; text-align: right;">${{ number_format($totalPrice * 0.30, 2) ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalPrice * 0.30) ?? '' }}</b>
                                         </td>
 
                                         <td style="text-align: right;">
-                                            <b style="font-size: 15px; text-align: right;">$ {{ number_format($totallabarSum, 2)  ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">$ {{ number_format($totallabarSum)  ?? '' }}</b>
 
                                         </td>
 
 
                                         <td style="text-align: right;">
-                                            <b style="font-size: 15px; text-align: right;">${{ number_format($totalfinalSum, 2)  ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalfinalSum)  ?? '' }}</b>
                                         </td>
 
 
@@ -431,7 +431,7 @@
 
                                     <tr>
                                         <td>{{ $job ? $job->address : '' }}</td>
-                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price, 2) : '' }}</td>
+                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price) : '' }}</td>
                                         {{-- <td style="text-align: right;">{{ $job ? number_format($job->price * 0.3, 2) : '' }}%</td> --}}
                                         <td style="text-align: right;">{{ $job ? 30 : '' }}%</td>
                                         <td style="text-align: right;">{{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job / $job->price * 100  , 2) : 0.00 }}%</td>
@@ -443,30 +443,30 @@
                                         $profitPercentage = ($mainPrice > 0) ? ($profit / $mainPrice) * 100 : 0;
                                         @endphp
 
-                                        <td style="text-align: right;">{{ number_format($profitPercentage, 2) }} %</td>
+                                        <td style="text-align: right;">{{ number_format($profitPercentage) }} %</td>
                                     </tr>
                                     @endforeach
                                     <tr>
                                         <td>
-                                            <b style="font-size: 15px;">Sub Total: ( {{ $jobsCount ?? '' }} Houses )</b>
+                                            <b style="font-size: 12px;">Sub Total: ( {{ $jobsCount ?? '' }} Houses )</b>
                                         </td>
                                         <td style="text-align: right;">
 
-                                            <b style="font-size: 15px; text-align: right;">${{ number_format($totalPrice, 2) ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalPrice) ?? '' }}</b>
 
                                         </td>
                                         <td style="text-align: right;">
-                                            <b style="font-size: 15px; text-align: right;">${{ number_format($totalPrice * 0.30, 2) ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalPrice * 0.30) ?? '' }}</b>
                                         </td>
 
                                         <td style="text-align: right;">
-                                            <b style="font-size: 15px; text-align: right;">$ {{ number_format($totallabarSum, 2)  ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">$ {{ number_format($totallabarSum)  ?? '' }}</b>
 
                                         </td>
 
 
                                         <td style="text-align: right;">
-                                            <b style="font-size: 15px; text-align: right;">${{ number_format($totalfinalSum, 2)  ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalfinalSum, 2)  ?? '' }}</b>
                                         </td>
 
 
