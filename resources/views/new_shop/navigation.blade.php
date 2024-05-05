@@ -7,6 +7,8 @@
 
     <!-- Fav Icon -->
     <link rel="icon" href="images/favicon.ico" />
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 
     <link rel="stylesheet" href="{{ asset('css/style10.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -320,29 +322,100 @@
         </div>
 
         @endif
+
+      <form action="{{ route('send.notification') }}" method="POST">
+          @csrf
+          <div class="form-group">
+              <label for="title">Title</label>
+              <input type="text" class="form-control" name="title" id="title">
+          </div>
+          <div class="form-group">
+              <label for="body">Body</label>
+              <textarea class="form-control" name="body" id="body"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Send Notification</button>
+      </form>
+
+
+
     </main>
 
 
-    <button onclick="requestPermission()">Enable Notification</button>
+  <center>
+      <button id="btn-nft-enable" onclick="initFirebaseMessagingRegistration()" class="btn btn-danger btn-xs btn-flat">Allow for Notification</button>
+  </center>
+  
+    <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyAMap8UpkxjRjI6WCAapEgrqhvhz4Eec6A"
+            , authDomain: "push10-6b10e.firebaseapp.com"
+            , projectId: "push10-6b10e"
+            , storageBucket: "push10-6b10e.appspot.com"
+            , messagingSenderId: "1082252237318"
+            , appId: "1:1082252237318:web:2e27c021d056949f4b8187"
+            , measurementId: "G-S0SZSYLGKT"
 
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+
+        function initFirebaseMessagingRegistration() {
+            messaging
+                .requestPermission()
+                .then(function() {
+                    return messaging.getToken()
+                })
+                .then(function(token) {
+                    console.log(token);
+
+                
+
+               $.ajax({
+               url: '/save-token',
+               type: 'post',
+               data: {
+               token: token,
+               '_token': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
+               },
+               dataType: 'JSON',
+               success: function(response) {
+               alert('Token saved successfully.');
+               },
+               error: function(err) {
+               console.log('User Chat Token Error: ' + err);
+               },
+               });
+
+
+
+
+
+                }).catch(function(err) {
+                    console.log('User Chat Token Error' + err);
+                });
+        }
+
+        messaging.onMessage(function(payload) {
+            const noteTitle = payload.notification.title;
+            const noteOptions = {
+                body: payload.notification.body
+                , icon: payload.notification.icon
+            , };
+            new Notification(noteTitle, noteOptions);
+        });
+
+    </script>
+
+
+    <script src="{{ asset('js/script.js') }}"></script>
     <div style="margin: 20px 0px 300px 0px;"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     {{-- push Notification start  --}}
 
-
-
-
-
-
-
-
-    <script src="{{ asset('js/pushnotification.js') }}"></script>
-
-
-    {{-- push Notification End  --}}
-    <script src="{{ asset('js/script.js') }}"></script>
-
-    <script src="{{ asset('js/profile.js') }}"></script>
+    {{-- <script src="{{ asset('js/profile.js') }}"></script> --}}
 
 
     {{-- <script src="./profile.js"></script> --}}

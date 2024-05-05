@@ -518,6 +518,93 @@ class HomeController extends Controller
         }
         return $job;
     }
+
+
+   
+public function saveToken(Request $request)
+{
+// First, validate the incoming request to ensure a token is provided
+$request->validate([
+'token' => 'required|string',
+]);
+
+// Retrieve the authenticated user
+$user = auth()->user();
+
+if ($user) {
+// Update the user's device token
+$user->device_token = $request->token;
+$user->save();
+
+// Return a JSON response indicating success
+return response()->json(['message' => 'Token saved successfully.']);
+}
+
+// Return an error response if the user is not authenticated
+return response()->json(['error' => 'User is not authenticated.'], 401);
+}
+
+
+
+        /**
+        * Write code on Method
+        *
+        * @return response()
+        */
+        public function sendNotification(Request $request)
+        {
+
+    //    $firebaseToken = User:: whereNotNull('device_token')->pluck('device_token')->all();
+$user = User::find(38);
+if ($user) {
+$firebaseToken = $user->device_token; // Accessing the device token of the user with ID 38
+
+} else {
+$firebaseToken = null; // User not found, handle accordingly
+
+}
+
+
+
+
+    // whereNotNull('device_token')->pluck('device_token')->all();
+
+
+        $SERVER_API_KEY = 'AAAA-_tCmgY:APA91bGCOWTO-2jSJ_PHwatoh_ihC0sB_LBWMlRphSwgP7HCRz4vqVBuPWAIiECM9fCAQfZcnH3_Qoi3SrLghvW1V0J4qbjTgTWAKHwEhJbfTjYMXZLgXcladYR7PbxYGIKBYUODZUcn';
+
+        $data = [
+        // "registration_ids" => [$firebaseToken], if there is single valuo.. 
+   "registration_ids" => [$firebaseToken],
+
+        "notification" => [
+        "title" => $request->title,
+        "body" => $request->body,
+        "content_available" => true,
+        "priority" => "high",
+        ]
+        ];
+        $dataString = json_encode($data);
+
+        $headers = [
+        'Authorization: key=' . $SERVER_API_KEY,
+        'Content-Type: application/json',
+        ];
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+
+        $response = curl_exec($ch);
+
+        dd($response);
+        }
+
+
     public function assign_painter(Request $request, $id)
     {
         if ($request->isMethod('post')) {

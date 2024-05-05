@@ -15,6 +15,10 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->string('abn')->nullable();
+                 $table->text('device_token')->nullable();
+
+
+
         });
     }
 
@@ -27,6 +31,9 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('abn');
+            $table->dropColumn('device_token');
+
+
         });
     }
 };

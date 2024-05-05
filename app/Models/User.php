@@ -28,6 +28,9 @@ class User extends Authenticatable
         'email',
         'password',
         'abn',
+        'device_token'
+
+
     ];
 
     /**

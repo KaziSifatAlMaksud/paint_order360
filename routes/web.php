@@ -39,6 +39,10 @@ Route::get('/shop', function () {
 	Painter Routes
 */
 
+Route::post('/save-token', [HomeController::class, 'saveToken'])->name('save-token');
+
+
+
 Route::GET('/login', array('uses' => 'HomeController@login'))->middleware('guest')->name('login');
 Route::post('login_post', array('uses' => 'HomeController@loginPost'))->name('shop.loginPost');
 Route::match(array('GET', 'POST'), '/signup', array('uses' => 'PainterController@signup'))->middleware('guest');;
@@ -59,6 +63,10 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 
 	// Define a custom route for checking if an image exists for a job_id
 	Route::get('/check-image-exists/{job_id}', 'PainterJobPlanController@checkImageExists')->name('check.image.exists');
+
+	Route::post('/send-notification', [HomeController::class, 'sendNotification'])->name('send.notification');
+
+
 
 
 	Route::get('/invoice', 'HomeController@main_invoices')->name('invoice');
