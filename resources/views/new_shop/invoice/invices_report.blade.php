@@ -211,6 +211,22 @@
 
 
                         </h6>
+                        <div class="row">
+                           
+                            <div class="col-12">
+                                <select id="yearFilterforCustomer" class="form-select mb-2" aria-label="Select Year" style="border-color: orange;">
+                                    <option value="">Select Year</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2021">2021</option>
+                                    <!-- Add more years as needed -->
+                                </select>
+                            </div>
+                        </div>
+
+
+
                         <p class="mb-2 fw-bold">Income by customer</p>
 
                         <table class="table responsive-table" style="width: 100%; border-collapse: collapse; overflow: hidden;">
@@ -223,34 +239,9 @@
                             </thead>
 
 
-                            <tbody>
-                                @php
-                                $totalSum = $invoiceSums->sum('total_price');
-                                @endphp
+                            <tbody id="filter_table_tbody1">
 
-                                @if(!empty($invoiceSums))
-                                @foreach($invoiceSums as $customer)
-                                <tr data-customer-id="{{ $customer->customer_id }}">
-                                    <td class="fs-6" style="text-align: left;">{{ $customer->customer_id ?? 'N/A' }}</td>
-                                    <td class="fs-6" style="text-align: right;">$ {{ number_format($customer->total_price, 2) }}</td>
-                                </tr>
-                                @endforeach
-
-                                {{-- Ensure $totalIncome is treated as a number even when null --}}
-                                <tr>
-                                    <td class="fs-6" style="text-align: left;"> <b> Total Income: </b> <br>
-                                        {{-- <p class="date mb-4">1st Jan to today yearly</p> --}}
-                                    </td>
-                                    <td class="fs-6" style="text-align: right;">
-                                        <b> $ {{ number_format($totalSum ?? 0, 2) }} </b> {{-- Use 0 as a default --}}
-                                    </td>
-                                </tr>
-                                @else
-                                {{-- Display something if $invoiceSums is empty --}}
-                                <tr>
-                                    <td colspan="2" class="fs-6" style="text-align: center;">No data available</td>
-                                </tr>
-                                @endif
+                               
                             </tbody>
 
 
@@ -495,7 +486,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <script defer>
+    <script>
         function sendFilterRequest() {
             console.log("hello sifat");
             var selectedQuarter = $('#dateRangeFilter').val();
@@ -580,6 +571,63 @@
         randomData();
 
     </script>
+
+
+
+
+<script>
+    function sendCustomerFilterRequest() {
+        var selectedYear = $('#yearFilterforCustomer').val();
+        if (selectedYear) {
+            $.ajax({
+                url: '/invoices/report/filter_customer', // Make sure this matches your actual route
+                type: 'GET'
+                , data: {
+                    'year': selectedYear
+                }
+                , success: function(response) {
+                    var rows = '';
+                    let totalPriceSum = 0;
+
+                    // Update the variable names in the response handling code to match the JSON key
+                    response.invoiceCustomerSumas.forEach(function(data1) {
+
+
+                        totalPriceSum += Number(data1.total_price);
+                        rows += '<tr data-customer-id="' + (data1.customer_id || 'N/A') + '">' +
+                            '<td class="fs-6" style="text-align: left;">' + (data1.customer_id || 'N/A') + '</td>' +
+                            '<td class="fs-6" style="text-align: right;">$ ' + Number(data1.total_price).toLocaleString(undefined, {
+                                minimumFractionDigits: 2
+                                , maximumFractionDigits: 2
+                            }) + '</td>' +
+                            '</tr>';
+                    });
+                    rows += '<tr>' +
+                        '<td class="fs-6" style="text-align: left;"><strong>Total</strong></td>' +
+                        '<td class="fs-6" style="text-align: right;"><strong>$ ' + Number(totalPriceSum).toLocaleString(undefined, {
+                            minimumFractionDigits: 2
+                            , maximumFractionDigits: 2
+                        }) + '</strong></td>' +
+                        '</tr>';
+                    $('#filter_table_tbody1').html(rows);
+                }
+                , error: function(xhr, status, error) {
+                    console.error(`Error fetching data: ${error}`);
+                }
+            });
+        } else {
+            console.error('No year selected for filtering');
+        }
+    }
+
+    // Attach the event listener to the year filter element
+    $(document).ready(function() {
+        $('#yearFilterforCustomer').on('change', sendCustomerFilterRequest);
+    });
+
+</script>
+
+
 
 
 

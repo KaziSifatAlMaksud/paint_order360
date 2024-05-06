@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/style8.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style77.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+
 </head>
 <body>
 
@@ -138,88 +141,82 @@
 
                 <!-- Attachment Field -->
 
-                <div class="row">
-                    <div class="col-4 mb-1">
-                        @if (!empty($invoice->attachment))
-                        <div style="text-align: center;">
-                            <a href="{{ asset('uploads/' . $invoice->attachment) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment) }}" style="max-width: 80%; height: auto;">
-                            </a>
-                        </div>
-                        @endif
-                        {{-- <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')"> --}}
-
-                    </div>
-                    <div class="col-4 mb-1">
-
-
-                        @if (!empty($invoice->attachment1))
-                        <div style="text-align: center;">
-                            <a href="{{ asset('uploads/' . $invoice->attachment1) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style="max-width: 80%; height: auto;">
-                            </a>
-                        </div>
-                        @endif
-                        {{-- <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')"> --}}
-
-
-                    </div>
-                    <div class="col-4 mb-1">
-
-                        @if (!empty($invoice->attachment2))
-                        <div style="text-align: center;">
-                            <a href="{{ asset('uploads/' . $invoice->attachment2) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment2) }}" style="max-width: 80%; height: auto;">
-                            </a>
-                        </div>
-                        @endif
-                        {{-- <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')"> --}}
-
-
-                    </div>
-                </div>
-
+              
 
                 <div class="row">
                     <div class="col-4 mb-1">
                         @if (!empty($invoice->attachment))
-                        <div style="text-align: center;">
+                        <div class="position-relative" style="text-align: center;">
+
                             <a href="{{ asset('uploads/' . $invoice->attachment) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment) }}" style="max-width: 80%; height: auto;">
+                                <img class="responsive-image" src="{{ asset('uploads/' . $invoice->attachment) }}" style="max-width: 80%; max-height: 400px;">
+
                             </a>
+
+                            <p onclick="deleteAttachment('{{ $invoice->id }}', 'attachment')" style="position: absolute; right: -15px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
+
+                                <i class="fas fa-times-circle fa-1x"></i>
+                            </p>
                         </div>
                         @endif
-                        <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')">
-
                     </div>
                     <div class="col-4 mb-1">
-
-
                         @if (!empty($invoice->attachment1))
-                        <div style="text-align: center;">
+                        <div class="position-relative" style="text-align: center;">
+
                             <a href="{{ asset('uploads/' . $invoice->attachment1) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style="max-width: 80%; height: auto;">
+                                <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style="max-width: 80%; max-height: 400px;">
+
+
                             </a>
+                             <p  onclick="deleteAttachment('{{ $invoice->id }}', 'attachment1')" style="position: absolute; right: -25px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
+                                 <i class="fas fa-times-circle fa-1x"></i>
+                             </p>
+
                         </div>
                         @endif
-                        <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')">
-
-
                     </div>
                     <div class="col-4 mb-1">
 
                         @if (!empty($invoice->attachment2))
-                        <div style="text-align: center;">
+                        <div class="position-relative" style="text-align: center;">
+
                             <a href="{{ asset('uploads/' . $invoice->attachment2) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment2) }}" style="max-width: 80%; height: auto;">
+                                <img class="responsive-image" src="{{ asset('uploads/' . $invoice->attachment2) }}" style="max-width: 80%; max-height: 400px;">
+
+
                             </a>
+
+                             <p onclick="deleteAttachment('{{ $invoice->id }}', 'attachment2')" style="position: absolute; right: -25px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
+                                 <i class="fas fa-times-circle fa-1x"></i>
+                             </p>
+
                         </div>
                         @endif
-                        <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')">
-
-
                     </div>
                 </div>
+
+@if($invoice && $invoice->status && $invoice->status == '1')
+
+
+                 <div class="row">
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')">
+                         <img id="previewImg1" class="img-fluid" style="display: none;"> <!-- Removed inline styles for max-width and height for cleaner CSS management -->
+                     </div>
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')">
+                         <img id="previewImg2" class="img-fluid" style="display: none;">
+                     </div>
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')">
+                         <img id="previewImg3" class="img-fluid" style="display: none;">
+                     </div>
+                 </div>
+            
+@endif
+
+
 
 
 
@@ -341,6 +338,37 @@
 
 </body>
 
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<script>
+    function previewFile(input, previewId) {
+        var file = input.files[0];
+        var preview = document.getElementById(previewId);
+
+        if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block'; // Display the image element
+                 preview.style.maxHeight = '50px';
+                 preview.style.width = 'auto';
+            };
+
+            reader.readAsDataURL(file); // Convert image to base64 string
+        } else {
+            preview.style.display = 'none'; // Hide the image element if no file is selected
+        }
+    }
+
+</script>
+
+
+
+
+
+
 <script>
     document.getElementById('deleteButton').addEventListener('click', function(event) {
         // Show a confirmation dialog
@@ -375,12 +403,51 @@
 
 </script>
 
+<script>
+    // Ensure that the document is ready before attaching event handlers
+    jQuery(document).ready(function() {
+        // Function can be defined here if it's only used after the document is ready
+    });
+
+    function deleteAttachment(invoiceId, attachmentField) {
+        // Confirmation dialog to ensure the user wants to proceed
+        if (!confirm('Are you sure you want to delete this attachment?')) return;
+
+        // Proceed with AJAX call
+        jQuery.ajax({
+            url: '/attachment/delete-attachment', // Make sure the URL is correct and accessible
+            type: 'POST',
+                data: {
+                invoice_id: invoiceId,
+                attachment_field: attachmentField,
+                _token: jQuery('meta[name="csrf-token"]').attr('content')
+                }
+
+
+            , success: function(response) {
+                if (response.success) {
+                    alert('Attachment deleted successfully.');
+                } else {
+                    alert('Failed to delete attachment: ' + response.message);
+                }
+            }
+            , error: function(xhr) {
+                alert('Error: ' + xhr.responseText); // Consider more detailed error handling
+            }
+        });
+    }
+
+</script>
+
 
 <script src="{{ asset('js/script.js') }}"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+{{-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+
+
 
 </html>

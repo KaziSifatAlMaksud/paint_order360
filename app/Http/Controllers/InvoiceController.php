@@ -312,118 +312,6 @@ class InvoiceController extends Controller
             'batch' => 'nullable|numeric',
             'send_to' => 'nullable|string',
         ]);
-
-        // if ($request->input('action') == 'send&save') {
-
-        //     // Prepare data for the PDF
-
-
-        //     $painterUser = $request->user()->id;
-        //     $user = User::find($painterUser);
-        //     $company_name = $user->company_name;
-        //     $user_address = $user->address;
-        //     $user_name = $user->first_name;
-        //     $user_phone = $user->phone;
-        //     $user_abn = $user->abn;
-
-        //     $data = [
-        //         'user_id' => $painterUser,
-        //         'company_name' =>  $company_name,
-        //         'user_address' =>  $user_address,
-        //         'user_name' =>  $user_name,
-        //         'user_phone' =>  $user_phone,
-        //         'abn' => $user_abn,
-        //         'customer_id' => $request->customer_id,
-        //         'send_email' => $request->send_email,
-        //         'inv_number' =>  $request->inv_number,
-        //         'date' =>  $request->date,
-        //         'purchase_order' =>  $request->purchase_order,
-        //         'job_id' =>  $request->job_id,
-        //         'description' =>   $request->description,
-        //         'address' =>  $request->address,
-        //         'job_details' =>  $request->job_details,
-        //         'amount' =>  $request->amount,
-        //         'gst' =>  $request->gst,
-        //         'total_due' =>  $request->total_due,
-        //         'status' =>  $request->status,
-        //         'batch' => $request->batch,
-        //     ];
-
-        //     try {
-        //         // Initialize PDF
-        //         $pdf = PDF::loadView('new_shop.invoice.invices_pdf', $data);
-
-        //         // Initialize attachment path
-        //         $attachmentPath = null;
-
-        //         // Check if the status is not 2
-        //         if ($request->status !== 2) {
-        //             // Validate and set the status to 2
-        //             $validatedData = $request->validate([
-        //                 'user_id' => 'nullable|string',
-        //                 'customer_id' => 'nullable|string',
-        //                 'send_email' => 'required|email',
-        //                 'inv_number' => 'required|string',
-        //                 'date' => 'required|date',
-        //                 'purchase_order' => 'nullable|string',
-        //                 'job_id' => 'nullable|string',
-        //                 'address' => 'required|string',
-        //                 'description' => 'nullable|string',
-        //                 'job_details' => 'nullable|string',
-        //                 'amount' => 'required|numeric',
-        //                 'gst' => 'required|numeric',
-        //                 'total_due' => 'required|numeric',
-        //                 'status' => 'required|numeric',
-        //                 'batch' => 'nullable|numeric',
-        //                 'send_to' => 'nullable|string',
-        //             ]);
-        //             $validatedData['user_id'] = $request->user()->id;
-        //             $validatedData['status'] = 2;
-        //             $validatedData['send_to'] = Carbon::now()->format('d-m-Y H:i:s');
-
-
-        //             // Check if there's an attachment file
-        //             if ($request->hasFile('attachment')) {
-        //                 $file = $request->file('attachment');
-        //                 $fileName = time() . '_' . $file->getClientOriginalName();
-        //                 $attachmentPath = $file->storeAs('', $fileName, 'public');
-        //                 $validatedData['attachment'] = $attachmentPath;
-        //             }
-
-        //             // Create a new invoice
-        //             $invoice = Invoice::create($validatedData);
-
-        //             // Update the related PoItems
-        //             $poitem = PoItems::find($poItem_id);
-        //             $poitem->update([
-        //                 "job_id" => $jobs_id,
-        //                 "ponumber" => $request->purchase_order,
-        //                 "description" => $request->description,
-        //                 "job_details" => $request->job_details,
-        //                 "price" => $request->amount,
-        //                 "invoice_id" => $invoice->id,
-        //             ]);
-        //         }
-
-        //         // Send the email with the PDF and attachment (if available)
-        //         Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath,  'company_name' => $company_name, 'username' => $user_name], function ($message) use ($data, $pdf, $attachmentPath) {
-        //             $message->to($data["send_email"])
-        //                 ->subject("Your Invoice - " . $data['address'])
-        //                 ->attachData($pdf->output(), "invoice.pdf");
-        //             if ($attachmentPath) {
-        //                 $fullPath = public_path('uploads/' . $attachmentPath);
-        //                 $message->attach($fullPath);
-        //             }
-        //         });
-
-        //         // Redirect with success message
-        //         // return redirect()->back()->with('success', 'Invoice saved and email sent successfully.');
-        //         return redirect()->back()->with('go_back', true)->with('success', 'Invoice saved and email sent successfully.');
-        //     } catch (\Exception $e) {
-        //         return response()->json(['error' => $e->getMessage()], 500);
-        //     }
-        // }
-
         if ($request->input('action') == 'send') {
 
             $painterUser = $request->user();
@@ -433,6 +321,12 @@ class InvoiceController extends Controller
             $user_name = $user->first_name;
             $user_phone = $user->phone;
             $user_abn = $user->abn;
+
+            $attachmentPaths = [];
+
+             // Initialize attachment paths
+             $attachmentPath = $attachmentPath1 = $attachmentPath2 = null;
+
             // Prepare data for the PDF
             $data = [
                 'user_id' => $painterUser->id,
@@ -461,7 +355,8 @@ class InvoiceController extends Controller
             try {
 
                 $pdf = PDF::loadView('new_shop.invoice.invices_pdf', $data);
-                $attachmentPath = null;
+           
+
 
                 if ($request->status !== 2) {
                     $validatedData = $request->validate([
@@ -492,12 +387,19 @@ class InvoiceController extends Controller
                     if ($invoice) {
                         $invoice->update($validatedData);
                     }
-                    if ($request->hasFile('attachment')) {
-                        $file = $request->file('attachment');
-                        $fileName = time() . '_' . $file->getClientOriginalName();
-                        $attachmentPath = $file->storeAs('', $fileName, 'public');
-                        $validatedData['attachment'] = $attachmentPath;
-                    }
+
+                    
+          foreach (['attachment', 'attachment1', 'attachment2'] as $key => $fileKey) {
+                if ($request->hasFile($fileKey)) {
+                    $file = $request->file($fileKey);
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $attachmentPath[$key] = $file->storeAs('', $fileName, 'public');
+                    $validatedData[$fileKey] = $attachmentPats[$key];
+                } else {
+                    $attachmentPath[$key] = null; // Ensure every index is initialized
+                }
+          }
+
 
                     $poitem = PoItems::find($poItem_id);
                     $poitem->update([
@@ -509,14 +411,31 @@ class InvoiceController extends Controller
                         "invoice_id" => $invoice->id,
                     ]);
                 }
-                Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath,  'company_name' => $company_name, 'user_name' => $user_name], function ($message) use ($data, $pdf, $attachmentPath) {
+                Mail::send('new_shop.invoice.invoice_mess', [
+                'data' => $data,
+                'attachmentPath' => $attachmentPath,
+                'attachmentPath1' => $attachmentPath1,
+                'attachmentPath2' => $attachmentPath2,
+                'company_name' => $company_name,
+                'user_name' => $user_name
+                ], function ($message) use ($data, $pdf, $attachmentPath, $attachmentPath1, $attachmentPath2) {
+
+
+
                     $message->to($data["send_email"])
                         ->subject("Your Invoice - " . $data['address'])
                         ->attachData($pdf->output(), "invoice.pdf");
-                    if ($attachmentPath) {
-                        $fullPath = public_path('uploads/' . $attachmentPath);
-                        $message->attach($fullPath);
+                        
+                    
+                    foreach ($attachmentPaths as $index => $path) {
+                    if ($path) {
+                    $fullPath = public_path('uploads/' . $path);
+                    $message->attach($fullPath);
                     }
+                    }
+
+
+
                 });
 
                 // Redirect with success message
@@ -584,9 +503,24 @@ class InvoiceController extends Controller
                 $validatedData['status'] = 1;
                 if ($request->hasFile('attachment')) {
                     $fileName = time() . '_' . $request->file('attachment')->getClientOriginalName();
-                    $path = $request->file('attachment')->storeAs('public', $fileName);
+                    $path = $request->file('attachment')->storeAs('', $fileName, 'public');
                     $invoice->update(['attachment' => $path]);
                 }
+                 if ($request->hasFile('attachment1')) {
+                 $fileName = time() . '_' . $request->file('attachment1')->getClientOriginalName();
+                 $path = $request->file('attachment1')->storeAs('', $fileName, 'public');
+
+                 $invoice->update(['attachment1' => $path]);
+
+                 }
+                   if ($request->hasFile('attachment2')) {
+                   $fileName = time() . '_' . $request->file('attachment2')->getClientOriginalName();
+                   $path = $request->file('attachment2')->storeAs('', $fileName, 'public');
+
+                   $invoice->update(['attachment2' => $path]);
+                   }
+
+
                 $invoice->update($validatedData);
             }
             $poitem = PoItems::find($poItem_id);
@@ -682,6 +616,8 @@ class InvoiceController extends Controller
         ]);
         $validatedData['user_id'] = $user_id;
 
+
+
         if ($request->input('action') == 'send') {
 
             $painterUser = $request->user();
@@ -719,7 +655,7 @@ class InvoiceController extends Controller
 
 
                 $pdf = PDF::loadView('new_shop.invoice.invices_pdf', $data);
-                $attachmentPaths = [];
+
                 if ($request->status !== 2) {
                     $validatedData = $request->validate([
                         'status' => 'required|numeric',
@@ -732,27 +668,34 @@ class InvoiceController extends Controller
                     if ($invoice) {
                         $invoice->update($validatedData);
                     }
-                    for ($i = 0; $i <= 2; $i++) {
-                        $fieldName = 'attachment' . ($i ? $i : '');
-                        if ($request->hasFile($fieldName)) {
-                            $file = $request->file($fieldName);
-                            $fileName = time() . '_' . $file->getClientOriginalName();
-                            $filePath = $file->storeAs('', $fileName, 'public');
-                            $attachmentPaths[] = $filePath; // Add the file path
-                        }
-                    }
+
+
+                $attachmentPaths = [];
+                foreach (['attachment', 'attachment1', 'attachment2'] as $attachmentKey) {
+                if ($request->hasFile($attachmentKey)) {
+                    $file = $request->file($attachmentKey);
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $attachmentPaths[] = $file->storeAs('', $fileName, 'public');
+                }
+                }
+
                     // $invoice = Invoice::create($validatedData);
                 }
-                Mail::send('new_shop.invoice.invoice_mess', $data, function ($message) use ($data, $pdf, $attachmentPaths) {
-                    $message->to($data["send_email"])
-                        ->subject("Your Invoice - " . $data['address'])
-                        ->attachData($pdf->output(), "invoice.pdf");
+                Mail::send('new_shop.invoice.invoice_mess', [
+                'data' => $data
+                ], function ($message) use ($data, $pdf, $attachmentPaths) {
+                $message->to($data["send_email"])
+                ->subject("Your Invoice - " . $data['address'])
+                ->attachData($pdf->output(), "invoice.pdf");
 
-                    foreach ($attachmentPaths as $path) {
-                        $fullPath = public_path('uploads/' . $path);
-                        $message->attach($fullPath);
-                    }
+                foreach ($attachmentPaths as $path) {
+                if ($path) {
+                $fullPath = public_path('uploads/' . $path);
+                $message->attach($fullPath);
+                }
+                }
                 });
+
 
                 // Redirect with success message
                 return redirect()->back()->with('go_back', true)->with('success', 'Invoice Send to Email successfully.');
@@ -1150,16 +1093,72 @@ class InvoiceController extends Controller
         return response()->json(['invoiceSumas' => $invoiceSumas]);
     }
 
+        public function filterCustomer(Request $request)
+        {
+        // Retrieve the user ID from the authenticated user
+        $user_id = $request->user()->id;
 
-    public function pdf()
-    {
-        $customer_id = "Gj Gardener";
-        $invoices = Invoice::where('customer_id', $customer_id)
-            ->where('user_id', 25)
-            ->get();
+        // Retrieve the year from the query parameters
+        $year = $request->query('year');
+        if (is_numeric($year) && strlen($year) == 4) {
+        $startDate = "{$year}-01-01";
+        $endDate = "{$year}-12-31";
+        } else {
+        // Return a JSON response with a 400 status code for bad request
+        return response()->json(['error' => 'Invalid year format'], 400);
+        }
+
+        // Use Laravel's logging system to log the start and end dates if needed
+        \Log::info('Start Date: ' . $startDate);
+        \Log::info('End Date: ' . $endDate);
+
+        // Retrieve customer invoice sums filtered by year
+        $invoiceSumas = DB::table('invoices')
+        ->select('customer_id', DB::raw('SUM(total_due) as total_price'))
+        ->where('status', '=', 3)
+        ->where('user_id', '=', $user_id)
+        ->whereBetween('date', [$startDate, $endDate])
+        ->whereNotNull('customer_id')
+        ->groupBy('customer_id')
+        ->get();
+
+        // Return the data as JSON
+        return response()->json(['invoiceCustomerSumas' => $invoiceSumas]);
+        }
 
 
 
-        return view('new_shop.invoice.outstanding_pdf', compact('invoices')); // Assuming 'pdf.view' is the name of your view file
-    }
+
+     public function attachmentdelete(Request $request)
+     {
+        $invoice = Invoice::find($request->invoice_id);
+        $field = $request->attachment_field;
+        $allowedFields = ['attachment', 'attachment1', 'attachment2'];
+        if (!in_array($field, $allowedFields)) {
+             return response()->json(['success' => false, 'message' => 'Invalid field name'], 400);
+        }
+        if ($invoice && $invoice->$field) {
+      
+            Storage::disk('public')->delete($invoice->$field);
+            $invoice->$field = null; // Set the field to null after deleting the file
+            $invoice->save(); // Save the invoice record with the updated field
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false, 'message' => 'No such invoice or field is empty'], 404);
+     }
+
+
+
+
+        public function pdf()
+        {
+            $customer_id = "Gj Gardener";
+            $invoices = Invoice::where('customer_id', $customer_id)
+                ->where('user_id', 25)
+                ->get();
+
+
+
+            return view('new_shop.invoice.outstanding_pdf', compact('invoices')); // Assuming 'pdf.view' is the name of your view file
+        }
 }

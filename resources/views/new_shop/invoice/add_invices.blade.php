@@ -277,26 +277,31 @@
     </div>
     </div> --}}
 
-    <div class="row">
-        <div class="col-4 mb-1">
-            <input type="file" class="form-control" id="attachmentInput1" name="attachment">
-            @error('attachment.0')
-            <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        <div class="col-4 mb-1">
-            <input type="file" class="form-control" id="attachmentInput2" name="attachment1">
-            @error('attachment.1')
-            <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-        <div class="col-4 mb-1">
-            <input type="file" class="form-control" id="attachmentInput3" name="attachment2">
-            @error('attachment.2')
-            <div class="text-danger">{{ $message }}</div>
-            @enderror
-        </div>
-    </div>
+       <div class="row">
+           <div class="col-4 mb-1">
+               <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'preview1')">
+               <img id="preview1" style="display: none; max-height: 50px; width: auto;" />
+               @error('attachment.0')
+               <div class="text-danger">{{ $message }}</div>
+               @enderror
+           </div>
+           <div class="col-4 mb-1">
+               <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'preview2')">
+               <img id="preview2" style="display: none; max-height: 50px; width: auto;" />
+               @error('attachment.1')
+               <div class="text-danger">{{ $message }}</div>
+               @enderror
+           </div>
+           <div class="col-4 mb-1">
+               <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'preview3')">
+               <img id="preview3" style="display: none; max-height: 50px; width: auto;" />
+               @error('attachment.2')
+               <div class="text-danger">{{ $message }}</div>
+               @enderror
+           </div>
+       </div>
+
+
 
 
 
@@ -520,6 +525,33 @@
     });
 
 </script>
+
+
+
+
+<script>
+    function previewFile(input, previewId) {
+        var file = input.files[0];
+        var preview = document.getElementById(previewId);
+
+        if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block'; // Display the image element
+                preview.style.maxHeight = '150px';
+                preview.style.width = '100%';
+            };
+
+            reader.readAsDataURL(file); // Convert image to base64 string
+        } else {
+            preview.style.display = 'none'; // Hide the image element if no file is selected
+        }
+    }
+
+</script>
+
 
 
 </html>

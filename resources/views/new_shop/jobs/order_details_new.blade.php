@@ -746,7 +746,8 @@ require  public_path() . '/painter/header.php';
 
 <script>
     function confirmDelete(itemId) {
-    if(confirm('Are add your item, if you not add items please add?')) {
+    if(confirm('This will remove from your list')) {
+
         $.ajax({
             url: '/add_gerag/' + itemId, // Update the URL as per your route
             type: 'POST',

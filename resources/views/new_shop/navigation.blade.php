@@ -214,16 +214,17 @@
     </header>
 
     @include('layouts.partials.footer')
-    <main class="position-relative" style="padding-top:90px;">
+    <main class="position-relative" style="padding-top:65px;">
         <!-- card -->
-        <section>
-            <div class="search-bar">
+        <section >
+            <div class="search-bar" style=" z-index:99999; position:fixed;">
+
                 <input type="text" class="search-input bg-white" id="search-input" placeholder="Address or Customer" oninput="filterCards()">
                 <i class="fas fa-search search-icon"></i>
             </div>
 
 
-            <ul class="job-list px-2 d-flex justify-content-between fs-5 mt-3 portfolio-flters" style="color: #ff4500;  font-weight: bold;">
+            <ul class="job-list px-2 d-flex justify-content-between fs-5 mt-3 portfolio-flters" style="color: #ff4500;  font-weight: bold; padding-top:80px;">
                 <li id="filter-all" class="filter-active" hidden>All</li>
                 <li id="filter-new" class="filter-inactive">New {{$newCount ? $newCount : ''}}</li>
                 <li id="filter-started" class="filter-inactive">Started {{$startedCount ? $startedCount : ''}}</li>

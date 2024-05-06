@@ -331,7 +331,7 @@
 
         {{-- Photo Gallary end.. --}}
         <!-- Fullscreen Modal -->
-        <div class="modal fade mt-5" id="fullscreenModal" tabindex="-1" role="dialog" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
+        <div class="modal fade mt-5" style="z-index:9999;" id="fullscreenModal" tabindex="-1" role="dialog" aria-labelledby="fullscreenModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <button type="button" class="btn-close p-3" data-bs-dismiss="modal" aria-label="Close"></button>
