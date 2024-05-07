@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company Name</title>
+    <title>Create Invoice</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/style8.css') }}">
@@ -25,7 +25,7 @@
     <div class="container">
 
         @if(session('success'))
-        <div class="alert alert-success">
+        <div class="alert alert-success mt-2">
             {{ session('success') }}
         </div>
         @endif
@@ -166,26 +166,28 @@
                         @endif
 
                         @if(isset($jobs->users) && $jobs->users->id === auth()->user()->id)
-                        <input type="text" class="custom-input editable" placeholder="Short description of work" value="{{ $jobs->title }}" name="description">
+                        <input type="text" class="custom-input editable" placeholder="Short description of work" required value="{{ $jobs->title }}" name="description">
 
                         @endif
                     </div>
                 </div>
 
                 <!-- Attachment Field -->
-                <div class="row mb-3">
-                    <div class="col-2 d-flex align-items-center justify-content-center">
-                        <label class="form-label text-center">
-                            <i class="fas fa-paperclip"></i>
-                        </label>
-                    </div>
-                    <div class="col-10">
-                        <input type="file" class="form-control" id="attachmentInput" name="attachment">
-                        @error('attachment')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
+       
+                 <div class="row">
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')">
+                         <img id="previewImg1" class="img-fluid" style="display: none;"> <!-- Removed inline styles for max-width and height for cleaner CSS management -->
+                     </div>
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')">
+                         <img id="previewImg2" class="img-fluid" style="display: none;">
+                     </div>
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')">
+                         <img id="previewImg3" class="img-fluid" style="display: none;">
+                     </div>
+                 </div>
 
 
                 <!-- Total Due -->
@@ -271,6 +273,29 @@
 
 
 </body>
+
+<script>
+    function previewFile(input, previewId) {
+        var file = input.files[0];
+        var preview = document.getElementById(previewId);
+
+        if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block'; // Display the image element
+                 preview.style.maxHeight = '100px';
+                 preview.style.width = '100%';
+            };
+
+            reader.readAsDataURL(file); // Convert image to base64 string
+        } else {
+            preview.style.display = 'none'; // Hide the image element if no file is selected
+        }
+    }
+
+</script>
 
 <script type="text/javascript">
     $('.brand').on('change', function(e) {

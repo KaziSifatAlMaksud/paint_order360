@@ -231,26 +231,25 @@
                                 <img class="responsive-image" src="{{ asset('uploads/' . $invoice->attachment) }}" style="max-width: 80%; max-height: 400px;">
 
                             </a>
-
-                            <p onclick="deleteAttachment('{{ $invoice->id }}', 'attachment')" style="position: absolute; right: -15px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
-
-                                <i class="fas fa-times-circle fa-1x"></i>
-                            </p>
+                            @if($invoice && $invoice->status && $invoice->status == '1')
+                                <p onclick="deleteAttachment('{{ $invoice->id }}', 'attachment')" style="position: absolute; right: -15px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
+                                    <i class="fas fa-times-circle fa-1x"></i>
+                                </p>
+                            @endif
                         </div>
                         @endif
                     </div>
                     <div class="col-4 mb-1">
                         @if (!empty($invoice->attachment1))
                         <div class="position-relative" style="text-align: center;">
-
                             <a href="{{ asset('uploads/' . $invoice->attachment1) }}" download>
                                 <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style="max-width: 80%; max-height: 400px;">
-
-
                             </a>
-                             <p  onclick="deleteAttachment('{{ $invoice->id }}', 'attachment1')" style="position: absolute; right: -25px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
-                                 <i class="fas fa-times-circle fa-1x"></i>
-                             </p>
+                            @if($invoice && $invoice->status && $invoice->status == '1')
+                                <p  onclick="deleteAttachment('{{ $invoice->id }}', 'attachment1')" style="position: absolute; right: -25px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
+                                     <i class="fas fa-times-circle fa-1x"></i>
+                                </p>
+                             @endif
 
                         </div>
                         @endif
@@ -266,10 +265,11 @@
 
 
                             </a>
-
+                            @if($invoice && $invoice->status && $invoice->status == '1')
                              <p onclick="deleteAttachment('{{ $invoice->id }}', 'attachment2')" style="position: absolute; right: -25px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
                                  <i class="fas fa-times-circle fa-1x"></i>
                              </p>
+                            @endif
 
                         </div>
                         @endif
@@ -420,7 +420,7 @@
 
         <div class="row mt-3">
             <div class="col-4">
-                <button type="submit" name="action" class="btn btn-danger btn-block btnshow" id="deleteButton" value="delete">Delete</button>
+                <button type="submit" name="action" class="btn btn-danger btn-block btnshow" id="deleteButton1" value="delete">Delete</button>
             </div>
             <div class="col-4">
 
@@ -472,7 +472,7 @@
         }
 
 
-        document.getElementById('deleteButton').addEventListener('click', function(event) {
+        document.getElementById('deleteButton1').addEventListener('click', function(event) {
             // Show a confirmation dialog
             var confirmDeletion = confirm('Are you sure you want to delete this invoice?');
             if (!confirmDeletion) {
@@ -547,10 +547,11 @@
             , success: function(response) {
                 if (response.success) {
                     alert('Attachment deleted successfully.');
-                      window.location.reload(); 
+                    
                 } else {
                     alert('Failed to delete attachment: ' + response.message);
                 }
+                 window.location.reload(true); 
             }
             , error: function(xhr) {
                 alert('Error: ' + xhr.responseText); // Consider more detailed error handling

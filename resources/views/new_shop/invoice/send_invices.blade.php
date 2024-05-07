@@ -29,7 +29,7 @@
     @include('layouts.partials.footer')
     <div class="container">
         @if(session('success'))
-        <div class="alert alert-success">
+        <div class="alert alert-success mt-3">
             {{ session('success') }}
         </div>
         @endif
@@ -152,11 +152,12 @@
                                 <img class="responsive-image" src="{{ asset('uploads/' . $invoice->attachment) }}" style="max-width: 80%; max-height: 400px;">
 
                             </a>
-
+                        @if($invoice && $invoice->status && $invoice->status == '1')
                             <p onclick="deleteAttachment('{{ $invoice->id }}', 'attachment')" style="position: absolute; right: -15px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
 
                                 <i class="fas fa-times-circle fa-1x"></i>
                             </p>
+                        @endif
                         </div>
                         @endif
                     </div>
@@ -169,10 +170,11 @@
 
 
                             </a>
+                            @if($invoice && $invoice->status && $invoice->status == '1')
                              <p  onclick="deleteAttachment('{{ $invoice->id }}', 'attachment1')" style="position: absolute; right: -25px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
                                  <i class="fas fa-times-circle fa-1x"></i>
                              </p>
-
+                            @endif
                         </div>
                         @endif
                     </div>
@@ -186,11 +188,11 @@
 
 
                             </a>
-
+                            @if($invoice && $invoice->status && $invoice->status == '1')
                              <p onclick="deleteAttachment('{{ $invoice->id }}', 'attachment2')" style="position: absolute; right: -25px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
                                  <i class="fas fa-times-circle fa-1x"></i>
                              </p>
-
+                            @endif
                         </div>
                         @endif
                     </div>
@@ -352,8 +354,8 @@
             reader.onload = function(e) {
                 preview.src = e.target.result;
                 preview.style.display = 'block'; // Display the image element
-                 preview.style.maxHeight = '50px';
-                 preview.style.width = 'auto';
+                 preview.style.maxHeight = '100px';
+                 preview.style.width = '100%';
             };
 
             reader.readAsDataURL(file); // Convert image to base64 string
@@ -427,10 +429,11 @@
             , success: function(response) {
                 if (response.success) {
                     alert('Attachment deleted successfully.');
-                      window.location.reload(); 
+
                 } else {
                     alert('Failed to delete attachment: ' + response.message);
                 }
+                 window.location.reload(true); 
             }
             , error: function(xhr) {
                 alert('Error: ' + xhr.responseText); // Consider more detailed error handling

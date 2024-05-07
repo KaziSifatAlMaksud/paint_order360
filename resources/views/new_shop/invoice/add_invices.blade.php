@@ -80,7 +80,7 @@
     <div class="container">
 
         @if(session('success'))
-        <div class="alert alert-success">
+        <div class="alert alert-success mt-3">
             {{ session('success') }}
         </div>
         @endif
@@ -257,7 +257,7 @@
                         <label class="form-label"><i class="fa-regular fa-bookmark"></i> <span style="color: red;">*</span></label>
                     </div>
                     <div class="col-10">
-                        <input type="text" class="custom-input editable" placeholder="Short description of work " name="description">
+                        <input type="text" required class="custom-input editable" placeholder="Short description of work " name="description">
                     </div>
                 </div>
 
