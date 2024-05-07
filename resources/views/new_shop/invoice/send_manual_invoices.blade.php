@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/style8.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style77.css') }}">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .modal {
             display: none;
@@ -219,71 +220,80 @@
                 </div>
 
 
+
+
                 <div class="row">
                     <div class="col-4 mb-1">
                         @if (!empty($invoice->attachment))
-                        <div style="text-align: center; ">
+                        <div class="position-relative" style="text-align: center;">
 
                             <a href="{{ asset('uploads/' . $invoice->attachment) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment) }}" style="  max-width: 50px; height: auto;">
+                                <img class="responsive-image" src="{{ asset('uploads/' . $invoice->attachment) }}" style="max-width: 80%; max-height: 400px;">
 
                             </a>
+
+                            <p onclick="deleteAttachment('{{ $invoice->id }}', 'attachment')" style="position: absolute; right: -15px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
+
+                                <i class="fas fa-times-circle fa-1x"></i>
+                            </p>
                         </div>
                         @endif
-                        {{-- <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')"> --}}
-
                     </div>
                     <div class="col-4 mb-1">
-
-
                         @if (!empty($invoice->attachment1))
-                        <div style="text-align: center;">
+                        <div class="position-relative" style="text-align: center;">
+
                             <a href="{{ asset('uploads/' . $invoice->attachment1) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style="max-width: 50px; height: auto;">
+                                <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style="max-width: 80%; max-height: 400px;">
+
 
                             </a>
+                             <p  onclick="deleteAttachment('{{ $invoice->id }}', 'attachment1')" style="position: absolute; right: -25px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
+                                 <i class="fas fa-times-circle fa-1x"></i>
+                             </p>
+
                         </div>
                         @endif
-                        {{-- <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')"> --}}
-
-
                     </div>
+
                     <div class="col-4 mb-1">
 
                         @if (!empty($invoice->attachment2))
-                        <div style="text-align: center;">
+                        <div class="position-relative" style="text-align: center;">
+
                             <a href="{{ asset('uploads/' . $invoice->attachment2) }}" download>
-                                <img src="{{ asset('uploads/' . $invoice->attachment2) }}" style="max-width: 50px; height: auto;">
+                                <img class="responsive-image" src="{{ asset('uploads/' . $invoice->attachment2) }}" style="max-width: 80%; max-height: 400px;">
+
 
                             </a>
+
+                             <p onclick="deleteAttachment('{{ $invoice->id }}', 'attachment2')" style="position: absolute; right: -25px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
+                                 <i class="fas fa-times-circle fa-1x"></i>
+                             </p>
+
                         </div>
                         @endif
-                        {{-- <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')"> --}}
-
-
                     </div>
                 </div>
 
 
 
-                <!-- Attachment Field -->
-                {{-- <div class="row mb-3">
-                    <div class="col-2 d-flex align-items-center justify-content-center">
-                        <label class="form-label text-center">
-                            <i class="fas fa-paperclip"></i>
-                        </label>
-                    </div>
-                        <div class="col-10">
-                        <input type="file" class="form-control" id="attachmentInput" name="attachment">
-                        @error('attachment')
-                            <div class="text-danger">{{ $message }}
-    </div>
-    @enderror
-    </div>
-    </div> --}}
-
-
-
+            @if($invoice && $invoice->status && $invoice->status == '1')
+                 <div class="row">
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')">
+                         <img id="previewImg1" class="img-fluid" style="display: none;"> <!-- Removed inline styles for max-width and height for cleaner CSS management -->
+                     </div>
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')">
+                         <img id="previewImg2" class="img-fluid" style="display: none;">
+                     </div>
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')">
+                         <img id="previewImg3" class="img-fluid" style="display: none;">
+                     </div>
+                 </div>            
+            @endif
 
     <hr>
 
@@ -418,7 +428,6 @@
             @if($invoice && $invoice->status !== null)
             <div class="col-4">
                 <button type="submit" name="action" class="btn btn-warning btn-block btnshow" value="update">Edit</button>
-
             </div>
             @else
             <div class="col-4">
@@ -491,6 +500,66 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
+<script>
+    function previewFile(input, previewId) {
+        var file = input.files[0];
+        var preview = document.getElementById(previewId);
+
+        if (file) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block'; // Display the image element
+                 preview.style.maxHeight = '100px';
+                 preview.style.width = '100%';
+            };
+
+            reader.readAsDataURL(file); // Convert image to base64 string
+        } else {
+            preview.style.display = 'none'; // Hide the image element if no file is selected
+        }
+    }
+
+</script>
+
+<script>
+    // Ensure that the document is ready before attaching event handlers
+    jQuery(document).ready(function() {
+        // Function can be defined here if it's only used after the document is ready
+    });
+
+    function deleteAttachment(invoiceId, attachmentField) {
+        // Confirmation dialog to ensure the user wants to proceed
+        if (!confirm('Are you sure you want to delete this attachment?')) return;
+
+        // Proceed with AJAX call
+        jQuery.ajax({
+            url: '/attachment/delete-attachment', // Make sure the URL is correct and accessible
+            type: 'POST',
+                data: {
+                invoice_id: invoiceId,
+                attachment_field: attachmentField,
+                _token: jQuery('meta[name="csrf-token"]').attr('content')
+                }
+
+
+            , success: function(response) {
+                if (response.success) {
+                    alert('Attachment deleted successfully.');
+                      window.location.reload(); 
+                } else {
+                    alert('Failed to delete attachment: ' + response.message);
+                }
+            }
+            , error: function(xhr) {
+                alert('Error: ' + xhr.responseText); // Consider more detailed error handling
+            }
+        });
+    }
+
+</script>
+
 
     <script>
         $(document).ready(function() {
@@ -502,13 +571,6 @@
                 var totalDue = < ? php echo json_encode(number_format($invoice - > total_due, 2)); ? > ;
                 var amountMainValue = $('#amount_main').val();
                 var remaningamout = totalDue - amountMainValue;
-                //    var isConfirmed = confirm("Total due                     : " + totalDue + "\nYour amount               : " + amountMainValue + "\n-----------------------------------------\nYour Remaining          : " + remaningamout + "\n\nAre you sure you want to submit the payment?");
-
-                //     if (!isConfirmed) {
-
-                //         return;
-                //     }
-
                 $.ajax({
                     url: '{{ route("invoicePayment.store") }}'
                     , method: 'POST'

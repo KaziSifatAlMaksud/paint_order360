@@ -100,13 +100,36 @@ class InvoiceController extends Controller
                     $attachmentPath = $file->storeAs('', $fileName, 'public');
                     $validatedData['attachment'] = $attachmentPath;
                 }
-                Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath,  'company_name' => $company_name, 'username' => $user_name], function ($message) use ($data, $pdf, $attachmentPath) {
+
+                if ($request->hasFile('attachment1')) {
+                    $file1 = $request->file('attachment1');
+                    $fileName1 = time() . '_' . $file1->getClientOriginalName();
+                    $attachmentPath1 = $file1->storeAs('', $fileName1, 'public');
+                    $validatedData['attachment1'] = $attachmentPath1;
+                   
+                }
+
+                if ($request->hasFile('attachment2')) {
+                    $file2 = $request->file('attachment2');
+                    $fileName2 = time() . '_' . $file2->getClientOriginalName();
+                    $attachmentPath2 = $file2->storeAs('', $fileName2, 'public');
+                    $validatedData['attachment2'] = $attachmentPath2;
+            }
+                Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath, 'attachmentPath1' => $attachmentPath1, 'attachmentPath2' => $attachmentPath2,  'company_name' => $company_name, 'username' => $user_name], function ($message) use ($data, $pdf, $attachmentPath,$attachmentPath1,$attachmentPath2 ) {
                     $message->to($data["send_email"])
                         ->subject("Your Invoice - " . $data['address'])
                         ->attachData($pdf->output(), "invoice.pdf");
-                    if ($attachmentPath) {
-                        $fullPath = public_path('uploads/' . $attachmentPath);
-                        $message->attach($fullPath);
+                   if ($attachmentPath) {
+                    $fullPath = public_path('uploads/' . $attachmentPath);
+                    $message->attach($fullPath);
+                    }
+                    if ($attachmentPath1) {
+                        $fullPath1 = public_path('uploads/' . $attachmentPath1);
+                        $message->attach($fullPath1);
+                    }
+                    if ($attachmentPath2) {
+                        $fullPath2 = public_path('uploads/' . $attachmentPath2);
+                        $message->attach($fullPath2);
                     }
                 });
                 $validatedData['status'] = 2;
@@ -618,92 +641,109 @@ class InvoiceController extends Controller
 
 
 
-        if ($request->input('action') == 'send') {
+              if ($request->input('action') == 'send') {
 
-            $painterUser = $request->user();
-            $user = User::find($painterUser->id);
-            $company_name = $user->company_name;
-            $user_address = $user->address;
-            $user_name = $user->first_name;
-            $user_phone = $user->phone;
-            $user_abn = $user->abn;
-            // Prepare data for the PDF
-            $data = [
-                'user_id' => $request->user()->id,
-                'company_name' => $company_name,
-                'user_address' => $user_address,
-                'user_name' =>  $user_name,
-                'user_phone' =>  $user_phone,
-                'abn' => $user_abn,
-                'customer_id' => $request->customer_id,
-                'send_email' => $request->send_email,
-                'inv_number' =>  $request->inv_number,
-                'date' =>  $request->date,
-                'purchase_order' =>  $request->purchase_order,
-                'job_id' =>  $request->job_id,
-                'description' =>   $request->description,
-                'address' =>  $request->address,
-                'job_details' =>  $request->job_details,
-                'amount' =>  $request->amount,
-                'gst' =>  $request->gst,
-                'total_due' =>  $request->total_due,
-                'status' =>  $request->status,
-                'batch' => $request->batch,
-            ];
+              $painterUser = $request->user();
+              $user = User::find($painterUser->id);
+              $company_name = $user->company_name;
+              $user_address = $user->address;
+              $user_name = $user->first_name;
+              $user_phone = $user->phone;
+              $user_abn = $user->abn;
+              // Prepare data for the PDF
+              $data = [
+              'user_id' => $request->user()->id,
+              'company_name' => $company_name,
+              'user_address' => $user_address,
+              'user_name' => $user_name,
+              'user_phone' => $user_phone,
+              'abn' => $user_abn,
+              'customer_id' => $request->customer_id,
+              'send_email' => $request->send_email,
+              'inv_number' => $request->inv_number,
+              'date' => $request->date,
+              'purchase_order' => $request->purchase_order,
+              'job_id' => $request->job_id,
+              'description' => $request->description,
+              'address' => $request->address,
+              'job_details' => $request->job_details,
+              'amount' => $request->amount,
+              'gst' => $request->gst,
+              'total_due' => $request->total_due,
+              'status' => $request->status,
+              'batch' => $request->batch,
+              ];
 
-            try {
-
-
-                $pdf = PDF::loadView('new_shop.invoice.invices_pdf', $data);
-
-                if ($request->status !== 2) {
-                    $validatedData = $request->validate([
-                        'status' => 'required|numeric',
-                    ]);
-
-                    $validatedData['status'] = 2;
-                    $validatedData['send_to'] = Carbon::now()->format('d-m-Y H:i:s');
-
-                    $invoice = Invoice::find($invoice_id);
-                    if ($invoice) {
-                        $invoice->update($validatedData);
-                    }
+              try {
 
 
-                $attachmentPaths = [];
-                foreach (['attachment', 'attachment1', 'attachment2'] as $attachmentKey) {
-                if ($request->hasFile($attachmentKey)) {
-                    $file = $request->file($attachmentKey);
-                    $fileName = time() . '_' . $file->getClientOriginalName();
-                    $attachmentPaths[] = $file->storeAs('', $fileName, 'public');
+              $pdf = PDF::loadView('new_shop.invoice.invices_pdf', $data);
+              $attachmentPath = null;
+              $attachmentPath1 = null;
+              $attachmentPath2 = null;
+              if ($request->status !== 2) {
+                $validatedData = $request->validate([
+                'status' => 'required|numeric',
+              ]);
+
+              $validatedData['status'] = 2;
+              $validatedData['send_to'] = Carbon::now()->format('d-m-Y H:i:s');
+
+              $invoice = Invoice::find($invoice_id);
+              if ($invoice) {
+                 $invoice->update($validatedData);
+              }
+              if ($request->hasFile('attachment')) {
+                 $file = $request->file('attachment');
+                 $fileName = time() . '_' . $file->getClientOriginalName();
+                 $attachmentPath = $file->storeAs('', $fileName, 'public');
+                 $validatedData['attachment'] = $attachmentPath;
+              }
+            if ($request->hasFile('attachment1')) {
+                    $file1 = $request->file('attachment1');
+                    $fileName1 = time() . '_' . $file1->getClientOriginalName();
+                    $attachmentPath1 = $file1->storeAs('', $fileName1, 'public');
+                    $validatedData['attachment1'] = $attachmentPath1;
+                    Log::info('Attachment1 stored at: ' . $attachmentPath1);
                 }
-                }
-
-                    // $invoice = Invoice::create($validatedData);
-                }
-                Mail::send('new_shop.invoice.invoice_mess', [
-                'data' => $data
-                ], function ($message) use ($data, $pdf, $attachmentPaths) {
-                $message->to($data["send_email"])
-                ->subject("Your Invoice - " . $data['address'])
-                ->attachData($pdf->output(), "invoice.pdf");
-
-                foreach ($attachmentPaths as $path) {
-                if ($path) {
-                $fullPath = public_path('uploads/' . $path);
-                $message->attach($fullPath);
-                }
-                }
-                });
 
 
-                // Redirect with success message
-                return redirect()->back()->with('go_back', true)->with('success', 'Invoice Send to Email successfully.');
-            } catch (\Exception $e) {
-                // Handle the exception
-                return response()->json(['error' => $e->getMessage()], 500);
+          if ($request->hasFile('attachment2')) {
+                $file2 = $request->file('attachment2');
+                $fileName2 = time() . '_' . $file2->getClientOriginalName();
+                $attachmentPath2 = $file2->storeAs('', $fileName2, 'public');
+                $validatedData['attachment2'] = $attachmentPath2;
+                Log::info('Attachment2 stored at: ' . $attachmentPath2);
             }
-        }
+
+              // $invoice = Invoice::create($validatedData);
+              }
+              Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath, 'attachmentPath1' => $attachmentPath1, 'attachmentPath2' => $attachmentPath2, 'company_name' => $company_name, 'username' => $user_name], function ($message) use ($data, $pdf, $attachmentPath,$attachmentPath1,$attachmentPath2 ) {
+              $message->to($data["send_email"])
+              ->subject("Your Invoice - " . $data['address'])
+              ->attachData($pdf->output(), "invoice.pdf");
+              if ($attachmentPath) {
+                $fullPath = public_path('uploads/' . $attachmentPath);
+                $message->attach($fullPath);
+              }
+               if ($attachmentPath1) {
+                $fullPath1 = public_path('uploads/' . $attachmentPath1);
+                $message->attach($fullPath1);
+              }
+               if ($attachmentPath2) {
+                $fullPath2 = public_path('uploads/' . $attachmentPath2);
+                $message->attach($fullPath2);
+              }
+              });
+
+              // Redirect with success message
+              return redirect()->back()->with('go_back', true)->with('success', 'Invoice Send to Email successfully.');
+              } catch (\Exception $e) {
+              // Handle the exception
+              return response()->json(['error' => $e->getMessage()], 500);
+              }
+              }
+
 
 
         if ($request->input('action') == 'update') {
@@ -712,11 +752,28 @@ class InvoiceController extends Controller
 
                 $validatedData['status'] = 1;
 
-                if ($request->hasFile('attachment')) {
-                    $fileName = time() . '_' . $request->file('attachment')->getClientOriginalName();
-                    $path = $request->file('attachment')->storeAs('public', $fileName);
-                    $invoice->update(['attachment' => $path]);
+               if ($request->hasFile('attachment')) {
+                 $file = $request->file('attachment');
+                 $fileName = time() . '_' . $file->getClientOriginalName();
+                 $attachmentPath = $file->storeAs('', $fileName, 'public');
+                 $validatedData['attachment'] = $attachmentPath;
+              }
+               if ($request->hasFile('attachment1')) {
+                    $file1 = $request->file('attachment1');
+                    $fileName1 = time() . '_' . $file1->getClientOriginalName();
+                    $attachmentPath1 = $file1->storeAs('', $fileName1, 'public');
+                    $validatedData['attachment1'] = $attachmentPath1;
+                  
                 }
+            if ($request->hasFile('attachment2')) {
+                $file2 = $request->file('attachment2');
+                $fileName2 = time() . '_' . $file2->getClientOriginalName();
+                $attachmentPath2 = $file2->storeAs('', $fileName2, 'public');
+                $validatedData['attachment2'] = $attachmentPath2;
+           
+            }
+
+
                 $invoice->update($validatedData);
                 // No need to update the invoice again, it's already updated
                 return redirect()->route('invoices_all')->with('go_back', true)->with('success', 'Invoice updated successfully.');

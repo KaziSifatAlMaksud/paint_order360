@@ -279,22 +279,25 @@
 
        <div class="row">
            <div class="col-4 mb-1">
+              <img id="preview1" style="display: none; max-height: 50px; width: auto;" />
                <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'preview1')">
-               <img id="preview1" style="display: none; max-height: 50px; width: auto;" />
+             
                @error('attachment.0')
                <div class="text-danger">{{ $message }}</div>
                @enderror
            </div>
            <div class="col-4 mb-1">
-               <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'preview2')">
                <img id="preview2" style="display: none; max-height: 50px; width: auto;" />
+               <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'preview2')">
+            
                @error('attachment.1')
                <div class="text-danger">{{ $message }}</div>
                @enderror
            </div>
            <div class="col-4 mb-1">
+                <img id="preview3" style="display: none; max-height: 50px; width: auto;" />
                <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'preview3')">
-               <img id="preview3" style="display: none; max-height: 50px; width: auto;" />
+           
                @error('attachment.2')
                <div class="text-danger">{{ $message }}</div>
                @enderror

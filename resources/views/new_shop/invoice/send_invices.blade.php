@@ -427,6 +427,7 @@
             , success: function(response) {
                 if (response.success) {
                     alert('Attachment deleted successfully.');
+                      window.location.reload(); 
                 } else {
                     alert('Failed to delete attachment: ' + response.message);
                 }
