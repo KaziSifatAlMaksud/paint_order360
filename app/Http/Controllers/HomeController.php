@@ -555,18 +555,14 @@ return response()->json(['error' => 'User is not authenticated.'], 401);
         {
 
     //    $firebaseToken = User:: whereNotNull('device_token')->pluck('device_token')->all();
-$user = User::find(38);
-if ($user) {
-$firebaseToken = $user->device_token; // Accessing the device token of the user with ID 38
+            $user = User::find(38);
+            if ($user) {
+            $firebaseToken = $user->device_token; // Accessing the device token of the user with ID 38
 
-} else {
-$firebaseToken = null; // User not found, handle accordingly
+            } else {
+            $firebaseToken = null; // User not found, handle accordingly
 
-}
-
-
-
-
+            }
     // whereNotNull('device_token')->pluck('device_token')->all();
 
 
@@ -601,7 +597,7 @@ $firebaseToken = null; // User not found, handle accordingly
 
         $response = curl_exec($ch);
 
-        dd($response);
+        // dd($response);
         }
 
 

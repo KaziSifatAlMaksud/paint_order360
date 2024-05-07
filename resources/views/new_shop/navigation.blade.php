@@ -324,7 +324,7 @@
 
         @endif
 
-      <form action="{{ route('send.notification') }}" method="POST">
+      {{-- <form action="{{ route('send.notification') }}" method="POST">
           @csrf
           <div class="form-group">
               <label for="title">Title</label>
@@ -335,7 +335,7 @@
               <textarea class="form-control" name="body" id="body"></textarea>
           </div>
           <button type="submit" class="btn btn-primary">Send Notification</button>
-      </form>
+      </form> --}}
 
 
 
