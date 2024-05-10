@@ -111,6 +111,7 @@
                 <form id="customerForm" action="{{ route('customer.popsotre') }}" method="POST">
                     @csrf
                     <!-- CSRF Token for security -->
+                   
 
                     <div>
                         <label for="companyName" class="form-label">Customer Company Name: <span class="text-danger " style="font-size: 1.2em">*</span></label>
@@ -163,6 +164,8 @@
 
         <form action="{{ route('invoices.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+             <input type="hidden" name="referrer" value="{{ url()->current() }}">
+
             <fieldset class="m-3">
                 <div class="row mb-3 mt-3">
                     <div class="col-2 d-flex align-items-center justify-content-center">

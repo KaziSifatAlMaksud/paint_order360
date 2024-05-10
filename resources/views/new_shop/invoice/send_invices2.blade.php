@@ -14,7 +14,8 @@
     <header>
         <div class="header-row">
             <div class="header-item">
-                <a href="{{ url()->previous() }}"> <i class="fa-solid fa-arrow-left"></i> </a>
+          	   <a href="{{ url()->previous() }}"> <i class="fa-solid fa-arrow-left"></i> </a>
+
                 <span> Create Invoice </span>
                 <a href="<?php echo '/main' ?>"> <img src="/image/logo-phone.png" alt="Logo"> </a>
             </div>
@@ -31,17 +32,18 @@
         </div>
         @endif
         @if(session('go_back'))
-        <script>
+        {{-- <script>
             setTimeout(function() {
-                window.location.href = '/invoice/all?reload=true';
+                window.location.href = '/invoiceing/';
             }, 1000);
 
         </script>
+         --}}
+
         @elseif(session('go_back_invoiceing'))
         <script>
             setTimeout(function() {
-                window.location.href = '/invoiceing/{{ $job_number ?? '
-                ' }}?reload=true';
+                window.location.href = '/invoiceing/{{ $job_number ?? '' }}';
             }, 1000);
 
         </script>
@@ -66,20 +68,21 @@
 
         <form action="{{ route('invoices.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
+
+            <input type="hidden" name="referrer" value="{{ url()->current() }}">
             <fieldset class="m-3">
                 <div class="row mb-3 mt-3">
                     <div class="col-2 d-flex align-items-center justify-content-center">
                         <label class="form-label"> To <span style="color: red;">*</span> </label>
                     </div>
-
-                    {{-- {{$jobs}} --}}
-
                     <div class="col-10">
                       @if($jobs->assignedJob && $jobs->assignedJob->assigned_painter_id === auth()->id())
                         <input name="customer_id" type="text" value="{{ $jobs->users->company_name }}" class="custom-input" readonly>
-                        @endif
-                        @if($jobs->users->id === auth()->user()->id )
-                        <input name="customer_id" type="text" value="{{  $customer_id     }}" class="custom-input" readonly>
+                        
+                        @elseif($jobs->users->id === auth()->user()->id )
+                            <input name="customer_id" type="text" value="{{  $customer_id     }}" class="custom-input" readonly>
+                        @else
+                            <input name="customer_id" type="text" value="{{  $customer_id  ?? ''   }}" class="custom-input">
                         @endif
                     </div>
                 </div>
@@ -91,10 +94,12 @@
                     <div class="col-10">
                         @if($jobs->assignedJob && $jobs->assignedJob->assigned_painter_id === auth()->id())
                         {{-- @if($jobs->assignedJob->assigned_painter_name === auth()->user()->id ) --}}
-                        <input type="email" class="custom-input editable" id="customer_email" value="{{ $jobs->users->email }}" name="send_email" placeholder="Enter Email" required>
-                        @endif
-                        @if($jobs->users->id === auth()->user()->id )
-                        <input type="email" class="custom-input editable" id="customer_email" value="{{ $customer_email }}" name="send_email" placeholder="Enter Email" required>
+                            <input type="email" class="custom-input editable" id="customer_email" value="{{ $jobs->users->email }}" name="send_email" placeholder="Enter Email" required>
+                        @elseif($jobs->users->id === auth()->user()->id )
+                        <input type="email" class="custom-input editable" id="customer_email" value="{{ $customer_email  }}" name="send_email" placeholder="Enter Email" required>
+
+                        @else
+                           <input type="email" class="custom-input editable" id="customer_email" value="{{ $customer_email ?? '' }}" name="send_email" placeholder="Enter Email">
                         @endif
 
 
@@ -164,11 +169,10 @@
 
                         <input type="text" class="custom-input editable" placeholder="Short description of work" value="{{ isset($jobs->assignedJob) ? $jobs->assignedJob->assign_job_description : '' }}" name="description">
 
-                        @endif
-
-                        @if(isset($jobs->users) && $jobs->users->id === auth()->user()->id)
+                        @elseif(isset($jobs->users) && $jobs->users->id === auth()->user()->id)
                         <input type="text" class="custom-input editable" placeholder="Short description of work" required value="{{ $jobs->title }}" name="description">
-
+                        @else
+                           <input type="text" class="custom-input editable" placeholder="Short description of work" required value="{{ $jobs->title ?? '' }}" name="description">
                         @endif
                     </div>
                 </div>

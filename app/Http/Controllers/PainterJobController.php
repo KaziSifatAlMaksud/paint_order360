@@ -16,10 +16,12 @@ use App\Models\PainterJob;
 use App\Models\Superviser;
 use App\Models\BuilderModel;
 use App\Models\AssignedPainterJob;
+use App\Models\AllowNotification;
 use Illuminate\Bus\Batch;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 
 class PainterJobController extends Controller
@@ -251,6 +253,43 @@ class PainterJobController extends Controller
         }
 
 
+          //push notification shart
+            $users = AllowNotification::where('user_id',  $user_id)->get();
+            $firebaseTokens = $users->pluck('device_token')->toArray();
+                 if (empty($firebaseTokens)) {
+                // Handle the case where there are no tokens
+                $firebaseTokens = null;
+            }
+            $SERVER_API_KEY = 'AAAA-_tCmgY:APA91bGCOWTO-2jSJ_PHwatoh_ihC0sB_LBWMlRphSwgP7HCRz4vqVBuPWAIiECM9fCAQfZcnH3_Qoi3SrLghvW1V0J4qbjTgTWAKHwEhJbfTjYMXZLgXcladYR7PbxYGIKBYUODZUcn';
+            $notificationBody = isset($painterJob) ? $painterJob->address : 'New Job Available!';
+            $data = ["registration_ids" => $firebaseTokens,
+            "notification" => [
+            "title" => "You Have Received a New Job !",
+            "body" =>   $notificationBody,
+            "content_available" => true,
+            "priority" => "high",
+            ]
+            ];
+            $dataString = json_encode($data);
+
+            $headers = [
+            'Authorization: key=' . $SERVER_API_KEY,
+            'Content-Type: application/json',
+            ];
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+
+            $response = curl_exec($ch);
+        //push notification end
+
+
         if ($request->po_item) {
           
             $MainPainter = User::find($user_id);
@@ -313,6 +352,9 @@ class PainterJobController extends Controller
             }
         }
 
+
+
+          
 
 
 

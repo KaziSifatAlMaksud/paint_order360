@@ -10,6 +10,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <meta name="user-id" content="{{ Auth::user()->id }}">
 
     <link rel="stylesheet" href="{{ asset('css/style10.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -373,12 +374,13 @@
                 .then(function(token) {
                     console.log(token);
 
-                
+                var user_id = $('meta[name="user-id"]').attr('content');
 
                $.ajax({
                url: '/save-token',
                type: 'post',
                data: {
+               user_id: user_id,
                token: token,
                '_token': $('meta[name="csrf-token"]').attr('content') // Include CSRF token
                },
@@ -390,11 +392,6 @@
                console.log('User Chat Token Error: ' + err);
                },
                });
-
-
-
-
-
                 }).catch(function(err) {
                     console.log('User Chat Token Error' + err);
                 });

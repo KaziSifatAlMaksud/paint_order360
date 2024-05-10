@@ -227,7 +227,10 @@ Route::group(['middleware' => ['auth']], function () {
 	Route::post('/subcontractors', [SubcustomerController::class, 'store'])->name('subcustomers.store');
 	Route::get('/paint_Acount', array('uses' => 'PainterController@paint_acount'))->name('painter.paint_acount');
 	Route::get('/manual_invoice/{id}', [InvoiceController::class, 'manual_invoice'])->name('manual_invoice');
+	Route::get('/manual_invoice_job/{id}', [InvoiceController::class, 'manual_invoice'])->name('manual_invoice_job');
 	Route::post('/manual_invoice/{id}/store', [InvoiceController::class, 'manual_invoice_store'])->name('manual_invoice_store');
+	
+	Route::post('/manual_invoice_job/{id}/store', [InvoiceController::class, 'manual_invoice_store'])->name('manual_invoice_job_store');
 	Route::delete('/delete-invoice/{id}', 'InvoiceController@delete')->name('delete.invoice');
 	Route::get('/customers', 'CustomerController@all_customers');
 	Route::get('/subcontractors', 'SubcustomerController@all_subc');

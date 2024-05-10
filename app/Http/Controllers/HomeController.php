@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Notifications\WelcomeEmailNotification;
 use Illuminate\Support\Facades\Storage;
+use App\Models\AllowNotification;
 
 
 class HomeController extends Controller
@@ -521,27 +522,57 @@ class HomeController extends Controller
 
 
    
-public function saveToken(Request $request)
+        // public function saveToken(Request $request)
+        // {
+        // // First, validate the incoming request to ensure a token is provided
+        // $request->validate([
+        // 'token' => 'required|string',
+        // ]);
+
+        // // Retrieve the authenticated user
+        // $user = auth()->user();
+
+        // if ($user) {
+        // // Update the user's device token
+        // $user->device_token = $request->token;
+        // $user->save();
+
+        // // Return a JSON response indicating success
+        // return response()->json(['message' => 'Token saved successfully.']);
+        // }
+
+        // Return an error response if the user is not authenticated
+        // return response()->json(['error' => 'User is not authenticated.'], 401);
+        // }
+    public function saveToken(Request $request)
 {
-// First, validate the incoming request to ensure a token is provided
-$request->validate([
-'token' => 'required|string',
-]);
+    $request->validate([
+        'token' => 'required|string',
+    ]);
 
-// Retrieve the authenticated user
-$user = auth()->user();
+    $user = auth()->user();
+    if (!$user) {
+        // Return an error response if the user is not authenticated
+        return response()->json(['error' => 'User is not authenticated.'], 401);
+    }
 
-if ($user) {
-// Update the user's device token
-$user->device_token = $request->token;
-$user->save();
+    // Check if a token for the same user and device already exists
+    $existingToken = AllowNotification::where('user_id', $user->id)
+                                      ->where('device_token', $request->token)
+                                      ->first();
 
-// Return a JSON response indicating success
-return response()->json(['message' => 'Token saved successfully.']);
-}
+    if ($existingToken) {
+        // Return a JSON response indicating the token already exists
+        return response()->json(['message' => 'Token already exists.']);
+    }
+    $allownotification = new AllowNotification();
+    $allownotification->user_id = $user->id;  // Make sure the field is named correctly as user_id
+    $allownotification->device_token = $request->token;
+    $allownotification->status = 1;
+    $allownotification->save();
 
-// Return an error response if the user is not authenticated
-return response()->json(['error' => 'User is not authenticated.'], 401);
+    // Return a JSON response indicating success
+    return response()->json(['message' => 'Token saved successfully.']);
 }
 
 

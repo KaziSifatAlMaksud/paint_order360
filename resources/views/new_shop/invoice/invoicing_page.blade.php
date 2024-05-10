@@ -106,6 +106,36 @@
         @endif
 
 
+     @if(session('success'))
+        <div class="alert alert-success mt-3">
+            {{ session('success') }}
+        </div>
+        <script>
+            // Ensure the script runs after the document is fully loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(function() {
+                    window.location.reload(); 
+                }, 1000); 
+            });
+        </script>
+    @endif
+
+       @if(session('delete'))
+        <div class="alert alert-danger mt-3">
+            {{ session('delete') }}
+        </div>
+        <script>
+            // Ensure the script runs after the document is fully loaded
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(function() {
+                    window.location.reload(); 
+                }, 1000); 
+            });
+        </script>
+    @endif
+
+
+
 
         <section class="invoice-doc jobs_area InvoicePortfolio">
             @if($jobs->user_id && $jobs->user_id == auth()->id())
@@ -250,7 +280,7 @@
 
         <section class="invoice-doc jobs_area InvoicePortfolio">
             @foreach ($invoices as $invoice)
-            <a href="{{ '/manual_invoice/' . $invoice->id }}" style="text-decoration: none; color:black;">
+            <a href="{{ '/manual_invoice_job/' . $invoice->id }}" style="text-decoration: none; color:black;">
                 <div class="docs_part1 docs_prt1 position-relative portfolio-item" style="line-height: 1;">
                     <div class="invoice-cart">
                         <h5 class="addressText mt-2 showinline address_text">{{ $invoice->address }}</h5>

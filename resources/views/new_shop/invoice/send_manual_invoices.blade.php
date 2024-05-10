@@ -75,11 +75,10 @@
     <!-- Ensure you're using the full version of jQuery -->
 
 
-
     <header>
         <div class="header-row">
             <div class="header-item">
-                <a href="{{ route('invoice')}}"> <i class="fa-solid fa-arrow-left"></i> </a>
+                <a href="{{ url()->previous() }}"> <i class="fa-solid fa-arrow-left"></i> </a>
                 <span> Send Invoice </span>
                 <a href="<?php echo '/main' ?>"> <img src="/image/logo-phone.png" alt="Logo"> </a>
             </div>
@@ -96,7 +95,7 @@
         @if(session('go_back'))
         <script>
             setTimeout(function() {
-                window.location.href = '/invoice/all?reload=true';
+                window.location.href = '/invoice/all';
             }, 1000);
 
         </script>
@@ -110,7 +109,7 @@
 
                 <!-- Laravel Form Starts Here -->
                 <div class="alert alert-warning">
-                    <p>Your Total Remaining Due: ${{ number_format($invoice->total_due - $totalAmountMain , 2) }}</p>
+                    <p>Your Total Remaining Due: ${{ number_format($invoice->total_due ?? '0' - $totalAmountMain , 2) }}</p>
                 </div>
 
                 <form id="amountNotesForm" action="{{ route('invoicePayment.store') }}" method="POST">
@@ -141,8 +140,13 @@
             </div>
         </div>
 
-        <form action="{{ route('manual_invoice_store', ['id' => $invoice->id]) }}" method="POST" enctype="multipart/form-data">
+         @if(request()->is('/manual_invoice/' . $invoice->id))
+                <form action="{{ route('manual_invoice_store', ['id' => $invoice->id]) }}" method="POST" enctype="multipart/form-data">
+        @else
+                <form action="{{ route('manual_invoice_job_store', ['id' => $invoice->id]) }}" method="POST" enctype="multipart/form-data">
+        @endif
             @csrf
+            <input type="hidden" name="referrer" value="{{ url()->current() }}">
             <fieldset class="m-3">
                 <div class="row mb-3 mt-2">
                     <div class="col-2 d-flex align-items-center justify-content-center">
@@ -466,6 +470,19 @@
 
 
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var deleteButton = document.getElementById('deleteButton1');
+            deleteButton.addEventListener('click', function(event) {
+                // Show a confirmation dialog
+                var confirmDeletion = confirm('Are you sure you want to delete this invoice?');
+                if (!confirmDeletion) {
+                    event.preventDefault(); // Prevent form submission if the user cancels
+                }
+            });
+        });
+    </script>
+
 
     <script>
         var modal = document.getElementById("amountNotesModal");
@@ -486,13 +503,7 @@
         }
 
 
-        document.getElementById('deleteButton1').addEventListener('click', function(event) {
-            // Show a confirmation dialog
-            var confirmDeletion = confirm('Are you sure you want to delete this invoice?');
-            if (!confirmDeletion) {
-                event.preventDefault();
-            }
-        });
+   
         var dateInput = document.getElementById("dateInput");
         if (!dateInput.value) {
             var currentDate = new Date();

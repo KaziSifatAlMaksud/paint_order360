@@ -138,7 +138,16 @@ class InvoiceController extends Controller
                 $validatedData['send_to'] = Carbon::now()->format('d-m-Y H:i:s');
                 $invoice = Invoice::create($validatedData);
                 // $poitem = Poitem::find($poitemId);
-                return redirect()->back()->with('go_back', true)->with('success', 'Invoice created & Send successfully.');
+
+                  $referrer = $request->input('referrer');               
+                      
+            if ($referrer === url('/invoice/create')) {
+                    $invoice = Invoice::create($validatedData);
+                    return redirect()->back()->with('go_back', true)->with('success', 'Invoice created & Sent successfully.');
+            }else{
+                    $invoice = Invoice::create($validatedData);
+                 return redirect()->to("/invoicing/{$request->job_id}")->with('success', 'Invoice created & Sent successfully.');
+            }
             } catch (\Exception $e) {
                 // Handle the exception
                 return response()->json(['error' => $e->getMessage()], 500);
@@ -159,20 +168,23 @@ class InvoiceController extends Controller
                 $fileName = time() . '_' . $request->file('attachment2')->getClientOriginalName();
                 $validatedData['attachment2'] = $request->file('attachment2')->storeAs('', $fileName, 'public');
             }
-            $invoice = Invoice::create($validatedData);
-            return redirect()->back()->with('go_back', true)->with('success', 'Invoice created successfully.');
+         
+
+            
+                  $referrer = $request->input('referrer');               
+                      
+            if ($referrer === url('/invoice/create')) {
+                    $invoice = Invoice::create($validatedData);
+                    return redirect()->back()->with('go_back', true)->with('success', 'Invoice Save successfully.');
+            }else{
+                    $invoice = Invoice::create($validatedData);
+                 return redirect()->to("/invoiceing/{$request->job_id}")->with('success', 'Invoice Save successfully.');
+            }
+
+          
+           
         }
     }
-
-    // public function send_statement_by_id(Request $request)
-    // {
-    //     $customer_id = $request->input('customer_id');
-    //     $invoices = Invoice::with('invoicePayments', 'customer')->where('customer_id', $customer_id)
-    //         ->where('status', 2)
-    //         ->where('user_id', $request->user()->id)
-    //         ->get();
-    //     return response()->json($invoices);
-    // }
 
     public function send_statement_by_id(Request $request)
     {
@@ -738,7 +750,15 @@ class InvoiceController extends Controller
                     }
                 });
 
-              return redirect()->back()->with('go_back', true)->with('success', 'Invoice Send to Email successfully.');
+
+
+                  $referrer = $request->input('referrer');               
+                      
+                if ($referrer === url('/manual_invoice_job/{$invoice_id}')) {
+                    return redirect()->to("/invoiceing/{$request->job_id}")->with('success', 'Invoice Send to Email successfully.');
+                }else{                      
+                 return redirect()->back()->with('go_back', true)->with('success', 'Invoice Send to Email successfully.');
+                }
               } catch (\Exception $e) {
               // Handle the exception
               return response()->json(['error' => $e->getMessage()], 500);
@@ -752,6 +772,8 @@ class InvoiceController extends Controller
             if ($invoice) {
 
                 $validatedData['status'] = 1;
+                  $validatedData['job_id'] = $invoice->job_id;
+
 
                if ($request->hasFile('attachment')) {
                  $file = $request->file('attachment');
@@ -775,9 +797,22 @@ class InvoiceController extends Controller
             }
 
 
-                $invoice->update($validatedData);
+               
                 // No need to update the invoice again, it's already updated
-                return redirect()->route('invoices_all')->with('go_back', true)->with('success', 'Invoice updated successfully.');
+
+              $referrer = $request->input('referrer');
+
+                if ($referrer === url('/manual_invoice_job/{ $invoice_id}')) {
+                     $invoice->update($validatedData);
+                       return redirect()->to("/invoiceing/{$request->job_id}")->with('success', 'Invoice updated successfully.');
+                      
+                
+                } else {
+                    $invoice->update($validatedData);
+                      return redirect()->route('invoices_all')->with('go_back', true)->with('success', 'Invoice updated successfully.');
+                   
+                }
+              
             }
         }
         if ($request->input('action') == 'paid') {
@@ -787,18 +822,43 @@ class InvoiceController extends Controller
             $validatedData['status'] = 3;
 
             $invoice = Invoice::find($invoice_id);
-            if ($invoice) {
-                $invoice->update($validatedData);
-            }
-            return redirect()->route('invoices_all')->with('go_back', true)->with('success', 'Customer Paid Successfully .');
+         
+           $referrer = $request->input('referrer');
+
+                            if ($referrer === route('manual_invoice', ['id' => $invoice_id])) {
+                                // Logic for manual_invoice route
+                                if ($invoice) {
+                                    $invoice->update($validatedData);
+                                }
+                                return redirect()->to("/invoiceing/{$request->job_id}")->with('success', 'Customer Paid Successfully.');
+                            } elseif ($referrer === route('manual_invoice_job', ['id' => $invoice_id])) {
+                                // Logic for manual_invoice_job route
+                                if ($invoice) {
+                                    $invoice->update($validatedData);
+                                }
+                                return redirect()->route('invoices_all')->with('go_back', true)->with('success', 'Customer Paid Successfully.');
+                            }
+         
         }
 
         if ($request->input('action') == 'delete') {
             $invoice = Invoice::find($invoice_id);
 
             if ($invoice) {
-                $invoice->delete();
-                return redirect()->route('invoices_all')->with('success', 'Invoice deleted successfully.');
+              
+
+
+                   $referrer = $request->input('referrer');
+
+                          if ($referrer === url("/manual_invoice/{$invoice_id}")) {
+                                // Logic for manual_invoice route
+                                 $invoice->delete();
+                                      return redirect()->route('invoices_all')->with('go_back', true)->with('delete', 'Invoice deleted successfully.');
+                            } elseif ($referrer === route('manual_invoice_job', ['id' => $invoice_id])) {
+                               $invoice->delete();
+                             return redirect()->to("/invoiceing/{$invoice->job_id}")->with('delete', 'Invoice deleted successfully.');
+                            }
+            
             }
 
             return redirect()->back()->with('error', 'Invoice not found.');
@@ -855,9 +915,6 @@ class InvoiceController extends Controller
     public function invoices_all(Request $request)
     {
         $user_id = $request->user()->id;
-
-
-
         $inv_numbers = Invoice::max('id') ?? 0;
         $today = now();
         $fiveDaysAgo = $today->subDays(3);

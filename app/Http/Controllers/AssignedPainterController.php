@@ -7,6 +7,7 @@ use App\Models\AssignedPainterJob;
 use App\Models\PainterJob;
 use App\Models\Invoice;
 use App\Models\User;
+use App\Models\AllowNotification;
 use Illuminate\Support\Facades\Redirect;
 
 class AssignedPainterController extends Controller
@@ -52,40 +53,90 @@ class AssignedPainterController extends Controller
             ]);
 
             //push notification shart
-            $user = User::find( $painterId);
-            if ($user) {
-            $firebaseToken = $user->device_token; 
-            } else {
-            $firebaseToken = null; 
+        $users = AllowNotification::where('user_id', $painterId)->get();
+        $firebaseTokens = $users->pluck('device_token')->toArray();
+
+            if (empty($firebaseTokens)) {
+                // Handle the case where there are no device tokens
+                error_log('No device tokens available.');
+                return; // Optionally return or exit depending on your application structure
             }
-            $SERVER_API_KEY = 'AAAA-_tCmgY:APA91bGCOWTO-2jSJ_PHwatoh_ihC0sB_LBWMlRphSwgP7HCRz4vqVBuPWAIiECM9fCAQfZcnH3_Qoi3SrLghvW1V0J4qbjTgTWAKHwEhJbfTjYMXZLgXcladYR7PbxYGIKBYUODZUcn';
-            $notificationBody = isset($painterJob) ? $painterJob->address : 'New Job Available!';
-            $data = ["registration_ids" => [$firebaseToken],
+        $SERVER_API_KEY = 'AAAA-_tCmgY:APA91bGCOWTO-2jSJ_PHwatoh_ihC0sB_LBWMlRphSwgP7HCRz4vqVBuPWAIiECM9fCAQfZcnH3_Qoi3SrLghvW1V0J4qbjTgTWAKHwEhJbfTjYMXZLgXcladYR7PbxYGIKBYUODZUcn';
 
-            "notification" => [
-            "title" => "You Have Received a New Job !",
-            "body" =>   $notificationBody,
-            "content_available" => true,
-            "priority" => "high",
-            ]
-            ];
+        $data = [
+        // "registration_ids" => [$firebaseToken], if there is single valuo.. 
+        "registration_ids" => $firebaseTokens,
+
+        "notification" => [
+        "title" => $request->title,
+        "body" => $request->body,
+        "content_available" => true,
+        "priority" => "high",
+        ]
+        ];
+        $dataString = json_encode($data);
             $dataString = json_encode($data);
+            if ($dataString === false) {
+                error_log('Failed to encode data as JSON.');
+                return; // Handle error appropriately
+            }
+        $headers = [
+        'Authorization: key=' . $SERVER_API_KEY,
+        'Content-Type: application/json',
+        ];
 
-            $headers = [
-            'Authorization: key=' . $SERVER_API_KEY,
-            'Content-Type: application/json',
-            ];
+        $ch = curl_init();
 
-            $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+        $response = curl_exec($ch);
+        if ($response === false) {
+            error_log('cURL error: ' . curl_error($ch));
+        }
+        $response = curl_exec($ch);
 
-            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
 
-            $response = curl_exec($ch);
+
+
+
+            // $user = User::find( $painterId);
+            // if ($user) {
+            // $firebaseToken = $user->device_token; 
+            // } else {
+            // $firebaseToken = null; 
+            // }
+            // $SERVER_API_KEY = 'AAAA-_tCmgY:APA91bGCOWTO-2jSJ_PHwatoh_ihC0sB_LBWMlRphSwgP7HCRz4vqVBuPWAIiECM9fCAQfZcnH3_Qoi3SrLghvW1V0J4qbjTgTWAKHwEhJbfTjYMXZLgXcladYR7PbxYGIKBYUODZUcn';
+            // $notificationBody = isset($painterJob) ? $painterJob->address : 'New Job Available!';
+            // $data = ["registration_ids" => [$firebaseToken],
+
+            // "notification" => [
+            // "title" => "You Have Received a New Job !",
+            // "body" =>   $notificationBody,
+            // "content_available" => true,
+            // "priority" => "high",
+            // ]
+            // ];
+            // $dataString = json_encode($data);
+
+            // $headers = [
+            // 'Authorization: key=' . $SERVER_API_KEY,
+            // 'Content-Type: application/json',
+            // ];
+
+            // $ch = curl_init();
+
+            // curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+            // curl_setopt($ch, CURLOPT_POST, true);
+            // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            // curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+
+            // $response = curl_exec($ch);
             //push notification end
 
             // Find the painter user

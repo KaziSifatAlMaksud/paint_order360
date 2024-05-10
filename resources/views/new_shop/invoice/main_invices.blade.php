@@ -164,7 +164,7 @@
     <header>
         <div class="header-row">
             <div class="header-item">
-                <a href="{{ url()->previous() }}" style="color: black;"> <i class="fa-solid fa-arrow-left"></i> </a>
+                <a href="{{ route('invoice')}}" style="color: black;"> <i class="fa-solid fa-arrow-left"></i> </a>
                 <span> Invoice </span>
                 <a href="<?php echo '/main'; ?>"> <img src="/image/logo-phone.png" alt="Logo"> </a>
             </div>
@@ -214,9 +214,31 @@
             </div>
 
             @if (session('success'))
-            <div class="alert alert-success">
+            <div class="alert alert-success mt-2">
                 {{ session('success') }}
             </div>
+              @if(session('go_back'))
+                <script>
+                    setTimeout(function() {
+                        window.location.href = '/invoice/all';
+                    }, 1000);
+
+                </script>
+                @endif
+            @endif
+
+              @if (session('delete'))
+            <div class="alert alert-danger mt-2">
+                {{ session('delete') }}
+            </div>
+              @if(session('go_back'))
+                <script>
+                    setTimeout(function() {
+                        window.location.href = '/invoice/all';
+                    }, 1000);
+
+                </script>
+                @endif
             @endif
             <div class="px-2 border-custom"></div>
         </section>
