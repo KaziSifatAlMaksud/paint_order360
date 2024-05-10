@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Company Name</title>
+    <title>Create Invoice | Orderr360</title>
+     <link rel="icon" href="{{ asset('image/favicon.png') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/style8.css') }}">
@@ -277,32 +278,31 @@
     </div>
     </div> --}}
 
-       <div class="row">
-           <div class="col-4 mb-1">
-              <img id="preview1" style="display: none; max-height: 50px; width: auto;" />
-               <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'preview1')">
-             
-               @error('attachment.0')
-               <div class="text-danger">{{ $message }}</div>
-               @enderror
-           </div>
-           <div class="col-4 mb-1">
-               <img id="preview2" style="display: none; max-height: 50px; width: auto;" />
-               <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'preview2')">
-            
-               @error('attachment.1')
-               <div class="text-danger">{{ $message }}</div>
-               @enderror
-           </div>
-           <div class="col-4 mb-1">
-                <img id="preview3" style="display: none; max-height: 50px; width: auto;" />
-               <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'preview3')">
-           
-               @error('attachment.2')
-               <div class="text-danger">{{ $message }}</div>
-               @enderror
-           </div>
-       </div>
+                <div class="row my-2" id="imarow" style="margin: 0px; padding: 0px;">
+                    <div class="col-4" style="padding: 4px;">
+                        <img id="previewImg1" class="img-fluid"  style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    </div>
+                    <div class="col-4" style="padding: 4px;">
+                        <img id="previewImg2" class="img-fluid"  style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    </div>
+                    <div class="col-4" style="padding: 4px;">
+                        <img id="previewImg3" class="img-fluid"  style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    </div>
+                </div>
+                <div class="row">
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')">
+              
+                     </div>
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')">
+                
+                     </div>
+                     <div class="col-md-4 mb-1">
+                         <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')">
+                     
+                     </div>
+                 </div>
 
 
 
@@ -536,15 +536,14 @@
     function previewFile(input, previewId) {
         var file = input.files[0];
         var preview = document.getElementById(previewId);
-
         if (file) {
             var reader = new FileReader();
 
             reader.onload = function(e) {
                 preview.src = e.target.result;
                 preview.style.display = 'block'; // Display the image element
-                preview.style.maxHeight = '150px';
-                preview.style.width = '100%';
+                 preview.style.maxHeight = '100px';
+                 preview.style.width = '100%';
             };
 
             reader.readAsDataURL(file); // Convert image to base64 string

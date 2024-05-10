@@ -954,22 +954,22 @@ require public_path() . '/admin/footer.blade.php';
 
 
 
-    document.addEventListener('DOMContentLoaded', function() {
+    // document.addEventListener('DOMContentLoaded', function() {
 
-        var builderCompanySelect = document.getElementById('builder_company');
+    //     var builderCompanySelect = document.getElementById('builder_company');
 
-        builderCompanySelect.addEventListener('change', function() {
+    //     builderCompanySelect.addEventListener('change', function() {
 
-            var selectedCompanyId = this.value;
-            var assignCompanySelect = document.getElementById('assign_company_id');
-            for (var i = 0; i < assignCompanySelect.options.length; i++) {
-                if (assignCompanySelect.options[i].value === selectedCompanyId) {
-                    assignCompanySelect.selectedIndex = i;
-                    break;
-                }
-            }
-        });
-    });
+    //         var selectedCompanyId = this.value;
+    //         var assignCompanySelect = document.getElementById('assign_company_id');
+    //         for (var i = 0; i < assignCompanySelect.options.length; i++) {
+    //             if (assignCompanySelect.options[i].value === selectedCompanyId) {
+    //                 assignCompanySelect.selectedIndex = i;
+    //                 break;
+    //             }
+    //         }
+    //     });
+    // });
 
 </script>
 

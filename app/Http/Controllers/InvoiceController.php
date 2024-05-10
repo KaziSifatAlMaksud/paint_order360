@@ -586,7 +586,7 @@ class InvoiceController extends Controller
                 ]);
             }
             if ($invoice) {
-                // $invoice->delete();
+                 $invoice->delete();
 
                 $invoice->update([
                     "amount" => 0.00,

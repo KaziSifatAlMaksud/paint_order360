@@ -215,7 +215,7 @@ class PainterJobController extends Controller
             $painterjob->assign_painter = $request->assigned_painter_name;
         }
 
-
+        $user_id = $request->user_id;
         $painterjob->fill($data)->save();
         if (!empty($request->assigned_painter_name) && !empty($request->assign_company_id) && !empty($request->assign_price_job)) {
             // if ($request->has('assigned_painter_name') && $request->has('assign_company_id')) {
@@ -252,7 +252,7 @@ class PainterJobController extends Controller
 
 
         if ($request->po_item) {
-            $user_id = $request->user_id;
+          
             $MainPainter = User::find($user_id);
             $MainPainterEmail = $MainPainter->email;
             $admin_company_id = $request->company_id;

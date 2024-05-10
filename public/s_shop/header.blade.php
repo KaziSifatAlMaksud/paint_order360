@@ -36,7 +36,7 @@ foreach ($nameArray as $key => $value) {
     <meta name="description" content="bootstrap admin template">
     <meta name="author" content="">
     <title><?php echo APP_NAME ?> | Shop</title>
-
+    <link rel="icon" href="{{ asset('image/favicon.png') }}" />
     <link rel="apple-touch-icon" href="<?php echo PUBLIC_PATH; ?>/image/favicon.png">
     <link rel="shortcut icon" href="<?php echo PUBLIC_PATH; ?>/image/favicon.png">
     <!-- Stylesheets -->

@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> | Shop </title>
+     <title>Send PDF | Orderr360</title>
+     <link rel="icon" href="{{ asset('image/favicon.png') }}" />
     <style>
         body {
             background-color: #F6F6F6;

@@ -200,13 +200,13 @@ Profile Page Style
 }
 
 .company-logo {
-  /* width: 100px !important; */
-  /* Uncomment this line if width needs to be set */
+  width: 120px !important;
   height: 100px !important;
 }
 
 @media (max-width: 576px) {
   .company-logo {
+    width: 80px !important;
     height: 60px !important;
   }
 }

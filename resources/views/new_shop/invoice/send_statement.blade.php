@@ -4,9 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>| Shop</title>
-
-    <link rel="icon" href="images/favicon.ico" />
+    <title>Invoice | Orderr360</title>
+     <link rel="icon" href="{{ asset('image/favicon.png') }}" />
     <!--icon link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
@@ -229,7 +228,7 @@
     <header style=" margin-top: -100px!important;">
         <div class="header-row">
             <div class="header-item">
-                <a href="{{ route('invoice')}}"> <i class="fa-solid fa-arrow-left"></i> </a>
+                <a href="{{ route('invoice')}}" style="color: black;"> <i class="fa-solid fa-arrow-left"></i> </a>
 
                 <span> Outstanding Report </span>
 

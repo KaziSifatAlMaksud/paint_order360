@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Invoice</title>
+    <title>Send Invoice | Orderr360</title>
+     <link rel="icon" href="{{ asset('image/favicon.png') }}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/style8.css') }}">
@@ -74,7 +75,7 @@
                     {{-- {{$jobs}} --}}
 
                     <div class="col-10">
-                        @if($jobs->assignedJob->assigned_painter_name === auth()->user()->id )
+                      @if($jobs->assignedJob && $jobs->assignedJob->assigned_painter_id === auth()->id())
                         <input name="customer_id" type="text" value="{{ $jobs->users->company_name }}" class="custom-input" readonly>
                         @endif
                         @if($jobs->users->id === auth()->user()->id )
@@ -88,8 +89,8 @@
                         <label class="form-label"><i class="fa-solid fa-envelope"></i> <span style="color: red;">*</span></label>
                     </div>
                     <div class="col-10">
-
-                        @if($jobs->assignedJob->assigned_painter_name === auth()->user()->id )
+                        @if($jobs->assignedJob && $jobs->assignedJob->assigned_painter_id === auth()->id())
+                        {{-- @if($jobs->assignedJob->assigned_painter_name === auth()->user()->id ) --}}
                         <input type="email" class="custom-input editable" id="customer_email" value="{{ $jobs->users->email }}" name="send_email" placeholder="Enter Email" required>
                         @endif
                         @if($jobs->users->id === auth()->user()->id )
@@ -173,19 +174,31 @@
                 </div>
 
                 <!-- Attachment Field -->
-       
+
+                 <div class="row my-2" id="imarow" style="margin: 0px; padding: 0px;">
+                    <div class="col-4" style="padding: 4px;">
+                        <img id="previewImg1" class="img-fluid"  style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    </div>
+                    <div class="col-4" style="padding: 4px;">
+                        <img id="previewImg2" class="img-fluid"  style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    </div>
+                    <div class="col-4" style="padding: 4px;">
+                        <img id="previewImg3" class="img-fluid"  style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    </div>
+                </div>
+
                  <div class="row">
                      <div class="col-md-4 mb-1">
                          <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')">
-                         <img id="previewImg1" class="img-fluid" style="display: none;"> <!-- Removed inline styles for max-width and height for cleaner CSS management -->
+              
                      </div>
                      <div class="col-md-4 mb-1">
                          <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')">
-                         <img id="previewImg2" class="img-fluid" style="display: none;">
+                
                      </div>
                      <div class="col-md-4 mb-1">
                          <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')">
-                         <img id="previewImg3" class="img-fluid" style="display: none;">
+                     
                      </div>
                  </div>
 
@@ -278,7 +291,6 @@
     function previewFile(input, previewId) {
         var file = input.files[0];
         var preview = document.getElementById(previewId);
-
         if (file) {
             var reader = new FileReader();
 
