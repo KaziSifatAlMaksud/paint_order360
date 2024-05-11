@@ -215,6 +215,9 @@
         </div>
     </header>
 
+
+  
+
     @include('layouts.partials.footer')
     <main class="position-relative" style="padding-top:65px;">
         <!-- card -->
@@ -289,10 +292,12 @@
                                 <div style="display: flex;  align-items: flex-end; margin: 0px 0px 6px 0px;">
 
 
+                            {{-- you can assind painter from here  --}}
                                     @if($job->assign_painter && $job->assignedJob && $job->assignedJob->assigned_painter_name == auth()->id())
                                     {{-- @if( $job->assign_painter && $job->assignedJob->assigned_painter_name == auth()->id()) --}}
-                                    <div> I </div>
+                                    <div> </div>
                                     @endif
+                            {{-- you can assind painter from here  --}}
                                     @if($job->assign_painter && $job->user_id === auth()->id())
                                     <div class="red-dot"></div>
                                     @endif
@@ -342,12 +347,15 @@
 
 
     </main>
-
+  {{-- @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif --}}
 
   <center>
       <button id="btn-nft-enable" onclick="initFirebaseMessagingRegistration()" class="btn btn-danger btn-xs btn-flat">Allow for Notification</button>
   </center>
-  
     <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script>
@@ -386,7 +394,8 @@
                },
                dataType: 'JSON',
                success: function(response) {
-               alert('Token saved successfully.');
+            //    alert('Token saved successfully.');
+                    alert(response.message);
                },
                error: function(err) {
                console.log('User Chat Token Error: ' + err);
@@ -407,6 +416,7 @@
         });
 
     </script>
+
 
 
     <script src="{{ asset('js/script.js') }}"></script>

@@ -479,14 +479,12 @@ class PainterJobController extends Controller
                     $invoice->gst = $poValue['price'] * 0.10; // Calculate GST as 10% of the price.
                     $invoice->total_due = $poValue['price'] * 1.10; // Total due includes the price plus GST.
 
-                    // Handling the file, assuming it's supposed to be associated directly with the invoice
                     if ($request->hasFile("po_item.$poKey.file")) {
                         $file = $request->file("po_item.$poKey.file");
-                        // Get the original file name without changing it
-                        $fileName = $file->getClientOriginalName();
-                        // Assuming manageFile() stores the file and just the file name is needed here
-                        $this->manageFile($request, "po_item.$poKey.file", $poValue, $poItem, 'file');
-                        $invoice->attachment = $fileName;
+                        $fileName = time() . '_' . $file->getClientOriginalName();
+                        $attachmentPath = $file->storeAs('', $fileName, 'public');
+                        // $this->manageFile($request, "po_item.$poKey.file", $poValue, $poItem, 'file');
+                        $invoice->attachment =  $attachmentPath;
                     }
 
                     $invoice->job_details = $poValue['job_details'];

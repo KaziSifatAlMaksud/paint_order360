@@ -221,7 +221,8 @@ class HomeController extends Controller
                     'password' => $request->password
                 );
                 if (Auth::attempt($userdata)) {
-                    return Redirect::route('main')->withErrors(['email' => 'Please check your password!']);
+                     return Redirect::route('main')->with('success', 'Login successful!');
+                    // return Redirect::route('main')->withErrors(['email' => 'Please check your password!']);
                 } else {
                     return Redirect::route('login')->withErrors(['email' => 'Please check your password!']);
                 }

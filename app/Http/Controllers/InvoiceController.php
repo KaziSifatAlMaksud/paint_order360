@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\AdminAccountController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SubcustomerController;
 use App\Http\Controllers\PainterJobPlanController;
+use App\Models\AssignedPainterJob;
 use App\Models\InvoicePayment;
 use Dflydev\DotAccessData\Data;
 use Illuminate\Support\Facades\DB;
@@ -416,6 +417,10 @@ class InvoiceController extends Controller
 
                     ]);
 
+                       $attachmentPath = null;
+                        $attachmentPath1 = null;
+                        $attachmentPath2 = null;
+
                     $validatedData['user_id'] = $painterUser->id;
                     $validatedData['status'] = 2;
                     $validatedData['send_to'] = Carbon::now()->format('d-m-Y H:i:s');
@@ -424,18 +429,29 @@ class InvoiceController extends Controller
                     if ($invoice) {
                         $invoice->update($validatedData);
                     }
-
-                    
-          foreach (['attachment', 'attachment1', 'attachment2'] as $key => $fileKey) {
-                if ($request->hasFile($fileKey)) {
-                    $file = $request->file($fileKey);
-                    $fileName = time() . '_' . $file->getClientOriginalName();
-                    $attachmentPath[$key] = $file->storeAs('', $fileName, 'public');
-                    $validatedData[$fileKey] = $attachmentPats[$key];
-                } else {
-                    $attachmentPath[$key] = null; // Ensure every index is initialized
+          if ($request->hasFile('attachment')) {
+                 $file = $request->file('attachment');
+                 $fileName = time() . '_' . $file->getClientOriginalName();
+                 $attachmentPath = $file->storeAs('', $fileName, 'public');
+                 $validatedData['attachment'] = $attachmentPath;
+              }
+            if ($request->hasFile('attachment1')) {
+                    $file1 = $request->file('attachment1');
+                    $fileName1 = time() . '_' . $file1->getClientOriginalName();
+                    $attachmentPath1 = $file1->storeAs('', $fileName1, 'public');
+                    $validatedData['attachment1'] = $attachmentPath1;
+              
                 }
-          }
+
+
+          if ($request->hasFile('attachment2')) {
+                $file2 = $request->file('attachment2');
+                $fileName2 = time() . '_' . $file2->getClientOriginalName();
+                $attachmentPath2 = $file2->storeAs('', $fileName2, 'public');
+                $validatedData['attachment2'] = $attachmentPath2;
+           
+            }
+
 
 
                     $poitem = PoItems::find($poItem_id);
@@ -448,31 +464,22 @@ class InvoiceController extends Controller
                         "invoice_id" => $invoice->id,
                     ]);
                 }
-                Mail::send('new_shop.invoice.invoice_mess', [
-                'data' => $data,
-                'attachmentPath' => $attachmentPath,
-                'attachmentPath1' => $attachmentPath1,
-                'attachmentPath2' => $attachmentPath2,
-                'company_name' => $company_name,
-                'user_name' => $user_name
-                ], function ($message) use ($data, $pdf, $attachmentPath, $attachmentPath1, $attachmentPath2) {
-
-
-
+                Mail::send('new_shop.invoice.invoice_mess', ['data' => $data, 'attachmentPath' => $attachmentPath, 'attachmentPath1' => $attachmentPath1, 'attachmentPath2' => $attachmentPath2,  'company_name' => $company_name, 'username' => $user_name], function ($message) use ($data, $pdf, $attachmentPath,$attachmentPath1,$attachmentPath2 ) {
                     $message->to($data["send_email"])
                         ->subject("Your Invoice - " . $data['address'])
                         ->attachData($pdf->output(), "invoice.pdf");
-                        
-                    
-                    foreach ($attachmentPaths as $index => $path) {
-                    if ($path) {
-                    $fullPath = public_path('uploads/' . $path);
+                   if ($attachmentPath) {
+                    $fullPath = public_path('uploads/' . $attachmentPath);
                     $message->attach($fullPath);
                     }
+                    if ($attachmentPath1) {
+                        $fullPath1 = public_path('uploads/' . $attachmentPath1);
+                        $message->attach($fullPath1);
                     }
-
-
-
+                    if ($attachmentPath2) {
+                        $fullPath2 = public_path('uploads/' . $attachmentPath2);
+                        $message->attach($fullPath2);
+                    }
                 });
 
                 // Redirect with success message
@@ -797,6 +804,7 @@ class InvoiceController extends Controller
             }
 
 
+              
                
                 // No need to update the invoice again, it's already updated
 
@@ -822,22 +830,25 @@ class InvoiceController extends Controller
             $validatedData['status'] = 3;
 
             $invoice = Invoice::find($invoice_id);
+
          
            $referrer = $request->input('referrer');
 
-                            if ($referrer === route('manual_invoice', ['id' => $invoice_id])) {
-                                // Logic for manual_invoice route
-                                if ($invoice) {
-                                    $invoice->update($validatedData);
-                                }
-                                return redirect()->to("/invoiceing/{$request->job_id}")->with('success', 'Customer Paid Successfully.');
-                            } elseif ($referrer === route('manual_invoice_job', ['id' => $invoice_id])) {
-                                // Logic for manual_invoice_job route
-                                if ($invoice) {
-                                    $invoice->update($validatedData);
-                                }
-                                return redirect()->route('invoices_all')->with('go_back', true)->with('success', 'Customer Paid Successfully.');
-                            }
+            if ($referrer === url('/manual_invoice_job/{$invoice_id}')) {
+                if ($invoice) {
+                    $invoice->update($validatedData);
+                }
+                 return redirect()->to("/invoiceing/{$request->job_id}")->with('success', 'Customer Paid Successfully.');
+                
+            } else{
+                // Logic for manual_invoice route
+                if ($invoice) {
+                    $invoice->update($validatedData);
+                }
+                 return redirect()->route('invoices_all')->with('go_back', true)->with('success', 'Customer Paid Successfully.');
+              
+                
+            }
          
         }
 
@@ -850,13 +861,14 @@ class InvoiceController extends Controller
 
                    $referrer = $request->input('referrer');
 
-                          if ($referrer === url("/manual_invoice/{$invoice_id}")) {
-                                // Logic for manual_invoice route
+                            if ($referrer === url('/manual_invoice_job/{$invoice_id}')) {
                                  $invoice->delete();
-                                      return redirect()->route('invoices_all')->with('go_back', true)->with('delete', 'Invoice deleted successfully.');
-                            } elseif ($referrer === route('manual_invoice_job', ['id' => $invoice_id])) {
-                               $invoice->delete();
                              return redirect()->to("/invoiceing/{$invoice->job_id}")->with('delete', 'Invoice deleted successfully.');
+                               
+                            } else{
+                                  $invoice->delete();
+                                      return redirect()->route('invoices_all')->with('go_back', true)->with('delete', 'Invoice deleted successfully.');
+                              
                             }
             
             }
@@ -1237,8 +1249,12 @@ class InvoiceController extends Controller
         ->groupBy('customer_id')
         ->get();
 
+
+
+
+
         // Return the data as JSON
-        return response()->json(['invoiceCustomerSumas' => $invoiceSumas]);
+        return response()->json(['invoiceCustomerSumas' => $invoiceSumas ,'invoiceLaborSumas', $LaborSumas ]);
         }
 
 

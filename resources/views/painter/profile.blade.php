@@ -69,6 +69,18 @@
         </div>
     </div>
     </a>
+
+    {{-- <div class="docs_part docs_prt1" onclick="initFirebaseMessagingRegistration()" style="cursor: pointer;">
+      
+        <div class="docs_left">
+            <h4> <b> Allow Notification </b> </h4>
+            <p>To get notifications on your current devices <br> simply click on this card.</p>
+        </div>
+        <div class="docs_right">
+            <img src="image/icon1/notification.png" alt="">
+        </div>
+    </div> --}}
+
 </section>
 <!-- docs_area end -->
 <div class="d-flex justify-content-center">
@@ -82,12 +94,19 @@
 </div>
 <div style="margin: 20px 0px 300px 0px;"></div>
 
+ 
+
 @endsection
     @section('js')
 
 
+
+
+
+
+
+
     <script src="{{ asset('js/script.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>

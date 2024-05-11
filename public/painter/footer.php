@@ -100,10 +100,10 @@
     // of the Google Places API to help users fill in the information.
     // This example requires the Places library. Include the libraries=places
     // parameter when you first load the API. For example:
-    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
     var placeSearch, autocomplete;
     var componentForm = {
-        // route: 'long_name',
+         route: 'long_name',
         locality: 'long_name',
         administrative_area_level_1: 'short_name',
         country: 'long_name',
@@ -127,7 +127,7 @@
         // Get the place details from the autocomplete object.
         var place = autocomplete.getPlace();
         console.log(place);
-        /*for (var component in componentForm) {
+        for (var component in componentForm) {
             document.getElementById(component).value = '';
             document.getElementById(component).disabled = false;
         }
@@ -140,7 +140,7 @@
                 var val = place.address_components[i][componentForm[addressType]];
                 document.getElementById(addressType).value = val;
             }
-        }*/
+        }
         $("#latitude").val(place.geometry.location.lat());
         $("#longitude").val(place.geometry.location.lng());
     }

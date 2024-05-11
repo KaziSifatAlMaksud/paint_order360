@@ -199,25 +199,90 @@
                     </div>
                 </div>
 
-@if($invoice && $invoice->status && $invoice->status == '1')
+            
+                {{-- <div class="row">
+                    <div class="col-4 mb-1">
+                        @if (!empty($invoice->attachment))
+                        <div class="position-relative" style="text-align: center;">
+
+                            <a href="{{ asset('uploads/' . $invoice->attachment) }}" download>
+                                <img class="responsive-image" src="{{ asset('uploads/' . $invoice->attachment) }}" style=" width: 100%; height: 100px; object-fit: cover;">
+
+                            </a>
+                            @if($invoice && $invoice->status && $invoice->status == '1')
+                                <p onclick="deleteAttachment('{{ $invoice->id }}', 'attachment')" style="position: absolute; right: -15px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
+                                    <i class="fas fa-times-circle fa-1x"></i>
+                                </p>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
+                    <div class="col-4 mb-1">
+                        @if (!empty($invoice->attachment1))
+                        <div class="position-relative" style="text-align: center;">
+                            <a href="{{ asset('uploads/' . $invoice->attachment1) }}" download>
+                                <img src="{{ asset('uploads/' . $invoice->attachment1) }}" style=" width: 100%; height: 100px; object-fit: cover;">
+                            </a>
+                            @if($invoice && $invoice->status && $invoice->status == '1')
+                                <p  onclick="deleteAttachment('{{ $invoice->id }}', 'attachment1')" style="position: absolute; right: -25px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
+                                     <i class="fas fa-times-circle fa-1x"></i>
+                                </p>
+                             @endif
+
+                        </div>
+                        @endif
+                    </div>
+
+                    <div class="col-4 mb-1">
+
+                        @if (!empty($invoice->attachment2))
+                        <div class="position-relative" style="text-align: center;">
+
+                            <a href="{{ asset('uploads/' . $invoice->attachment2) }}" download>
+                                <img class="responsive-image" src="{{ asset('uploads/' . $invoice->attachment2) }}" style=" width: 100%; height: 100px; object-fit: cover;">
 
 
-                 <div class="row">
+                            </a>
+                            @if($invoice && $invoice->status && $invoice->status == '1')
+                             <p onclick="deleteAttachment('{{ $invoice->id }}', 'attachment2')" style="position: absolute; right: -25px; top: -25px; background: transparent; border: none; color: red; padding: 15px; font-size: 1.25em;">
+                                 <i class="fas fa-times-circle fa-1x"></i>
+                             </p>
+                            @endif
+
+                        </div>
+                        @endif
+                    </div>
+                </div> --}}
+
+            @if($invoice && $invoice->status && $invoice->status == '1')
+
+              <div class="row my-2" id="imarow" style="margin: 0px; padding: 0px;">
+                    <div class="col-4" style="padding: 4px;">
+                        <img id="previewImg1" class="img-fluid"  style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    </div>
+                    <div class="col-4" style="padding: 4px;">
+                        <img id="previewImg2" class="img-fluid"  style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    </div>
+                    <div class="col-4" style="padding: 4px;">
+                        <img id="previewImg3" class="img-fluid"  style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                    </div>
+                </div>
+                <div class="row">
                      <div class="col-md-4 mb-1">
                          <input type="file" class="form-control" id="attachmentInput1" name="attachment" onchange="previewFile(this, 'previewImg1')">
-                         <img id="previewImg1" class="img-fluid" style="display: none;"> <!-- Removed inline styles for max-width and height for cleaner CSS management -->
+              
                      </div>
                      <div class="col-md-4 mb-1">
                          <input type="file" class="form-control" id="attachmentInput2" name="attachment1" onchange="previewFile(this, 'previewImg2')">
-                         <img id="previewImg2" class="img-fluid" style="display: none;">
+                
                      </div>
                      <div class="col-md-4 mb-1">
                          <input type="file" class="form-control" id="attachmentInput3" name="attachment2" onchange="previewFile(this, 'previewImg3')">
-                         <img id="previewImg3" class="img-fluid" style="display: none;">
+                     
                      </div>
                  </div>
-            
-@endif
+
+            @endif
 
 
 
@@ -286,11 +351,22 @@
                 @endif
 
                 <div class="col-12 p-0">
+                     {{-- @if($invoice && $invoice->status == 2 && $invoice->status !== 3)
+                        <button type="submit" name="action" class="btn btn-success btn-block btnshow" value="paid" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <span style="display: inline-block; padding-left: 15px;">Got Paid</span>
+                            <span style="display: inline-block; padding-right: 15px;">${{ number_format($invoice->total_due - $totalAmountMain , 2) }} </span>
+                        </button>
+
+
+                        @endif --}}
                     @if($invoice && $invoice->status == 2)
-                    <div class="alert alert-warning">
-                        <p> Click Here If You Were Paid Less then This total. </p>
-                        {{-- <p class="text-center">Email Has Already Been Sent to Customer.</p> --}}
-                    </div>
+                        <a href="{{ url('/invoice/all') }}">
+                            <div class="alert alert-warning">
+                                <p class="text-center">If you want to pay less, press this card to go to the main invoice page.</p>
+                                {{-- <p class="text-center">Email Has Already Been Sent to Customer.</p> --}}
+                            </div>
+                        </a>
+
                     @elseif($invoice && $invoice->status == 1 && $invoice->status !== 3)
                     <button type="submit" name="action" class="btn btn-primary btn-block btnshow" value="send"> Send Invoice</button>
                     @elseif(!$invoice)

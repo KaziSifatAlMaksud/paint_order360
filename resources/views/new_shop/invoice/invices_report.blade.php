@@ -244,9 +244,35 @@
                             </tbody>
 
 
-
-
                         </table>
+
+                       <div class="mt-3 mb-3">
+                            <h6 class="mb-3">Total Expense and Profit</h6>
+                            <table class="table  w-100">
+                                <tbody>
+                                    <tr class="row-spacing">
+                                        <td class="fs-6">Total Income:</td>
+                                        <td class="fs-6 text-right" id="total_income"></td>
+                                    </tr>
+                                    <tr class="row-spacing">
+                                        <td class="fs-6">Paint Cost:</td>
+                                        <td class="fs-6 text-right" id="paint_cost" ></td>
+                                    </tr>
+                                    <tr class="row-spacing">
+                                        <td class="fs-6">Labour Cost:</td>
+                                        <td class="fs-6 text-right" id="labour_cost"></td>
+                                    </tr>
+                                    <tr class="row-spacing">
+                                        <td class="fs-6">Total Cost:</td>
+                                        <td class="fs-6 text-right"></td>
+                                    </tr>
+                                    <tr class="row-spacing">
+                                        <td class="fs-6"><strong>Total Profit:</strong></td>
+                                        <td class="fs-6 text-right"><strong></strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <!-- ------ Quarterly ----- -->
@@ -538,6 +564,8 @@
 
                         $('#filter_table_tbody').html(rows);
 
+
+
                     }
                     , error: function(xhr, status, error) {
                         console.error(error);
@@ -602,13 +630,25 @@
                             '</tr>';
                     });
                     rows += '<tr>' +
-                        '<td class="fs-6" style="text-align: left;"><strong>Total</strong></td>' +
+                        '<td class="fs-6" style="text-align: left;"><strong>Total:</strong></td>' +
                         '<td class="fs-6" style="text-align: right;"><strong>$ ' + Number(totalPriceSum).toLocaleString(undefined, {
                             minimumFractionDigits: 2
                             , maximumFractionDigits: 2
                         }) + '</strong></td>' +
                         '</tr>';
                     $('#filter_table_tbody1').html(rows);
+
+                    $('#total_income').html('$ ' + Number(totalPriceSum).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }));
+               
+                    $('#paint_cost').html('$ ' + Number(totalPriceSum * 0.30).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }));
+
+                
                 }
                 , error: function(xhr, status, error) {
                     console.error(`Error fetching data: ${error}`);
