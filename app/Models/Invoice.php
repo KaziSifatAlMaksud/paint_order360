@@ -31,5 +31,8 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoicePayment::class, 'invoice_id');
     }
- 
+    public function assignedPainterJob()
+    {
+        return $this->belongsTo('App\Models\AssignedPainterJob', 'job_id', 'job_id');
+    } 
 }

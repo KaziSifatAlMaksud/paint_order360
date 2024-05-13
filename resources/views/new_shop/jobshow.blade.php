@@ -464,7 +464,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-8 mt-3">
                             <p>
                                 @if (!$job->builder_company_name)
                                 'There Is no Description...'

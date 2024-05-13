@@ -756,9 +756,6 @@ class InvoiceController extends Controller
                         $message->attach($fullPath2);
                     }
                 });
-
-
-
                   $referrer = $request->input('referrer');               
                       
                 if ($referrer === url('/manual_invoice_job/{$invoice_id}')) {
@@ -1049,10 +1046,10 @@ class InvoiceController extends Controller
         ]);
 
         $customer_id = $request->input('customer_id');
-        // $email = $request->input('email');
-        // $user_email = $request->user()->email;
-        $email = "2019-3-60-050@std.ewubd.edu";
-        $user_email = "kazi.sifat2013@gmail.com";
+        $email = $request->input('email');
+        $user_email = $request->user()->email;
+        // $email = "2019-3-60-050@std.ewubd.edu";
+        // $user_email = "kazi.sifat2013@gmail.com";
         $today = now();
         $customer_id = $request->input('customer_id');
         $invoices = Invoice::with('invoicePayments', 'customer')
@@ -1224,7 +1221,6 @@ class InvoiceController extends Controller
         {
         // Retrieve the user ID from the authenticated user
         $user_id = $request->user()->id;
-
         // Retrieve the year from the query parameters
         $year = $request->query('year');
         if (is_numeric($year) && strlen($year) == 4) {
@@ -1251,10 +1247,18 @@ class InvoiceController extends Controller
 
 
 
-
-
+        $LaborSumas = DB::table('assigned_painter_job')  // Ensure your table name is correct
+                ->select('user_id', DB::raw('SUM(assign_price_job) as assign_total_price'))
+                ->where('user_id', $user_id)
+                ->where('status', 2)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('user_id')
+                ->get();
         // Return the data as JSON
-        return response()->json(['invoiceCustomerSumas' => $invoiceSumas ,'invoiceLaborSumas', $LaborSumas ]);
+         return response()->json([
+        'invoiceCustomerSumas' => $invoiceSumas,
+        'invoiceLaborSumas' => $LaborSumas
+    ]);
         }
 
 

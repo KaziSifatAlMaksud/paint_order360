@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Models\AssignedPainterJob;
 use App\Models\PainterJob;
@@ -14,6 +14,8 @@ class AssignedPainterController extends Controller
 {
     public function UserAssign(Request $request, $id)
     {
+        $user_id = auth()->user()->id;
+      
         // Check if the request has 'assigned_painter_name' input
         if ($request->has('assigned_painter_name')) {
             $assign_job_price = $request->input('assign_price_job');
@@ -45,6 +47,7 @@ class AssignedPainterController extends Controller
                 'assigned_painter_name' => $painterId, // Assuming this stores the painter's ID or name correctly
                 'paint_cost' => $paintCost,
                 'assign_job_description' => $extrasMessage,
+                'user_id' =>  $user_id,
                 'status' => 1,
                 'Q_1' => $ans1,
                 'Q_2' => $ans2,
@@ -52,92 +55,82 @@ class AssignedPainterController extends Controller
 
             ]);
 
-            //push notification shart
-        $users = AllowNotification::where('user_id', $painterId)->get();
-        $firebaseTokens = $users->pluck('device_token')->toArray();
+            $users = AllowNotification::where('user_id', $painterId)->get();
+            $firebaseTokens = $users->pluck('device_token')->toArray();
 
-            if (empty($firebaseTokens)) {
-                // Handle the case where there are no device tokens
-                error_log('No device tokens available.');
-                return; // Optionally return or exit depending on your application structure
-            }
-        $SERVER_API_KEY = 'AAAA-_tCmgY:APA91bGCOWTO-2jSJ_PHwatoh_ihC0sB_LBWMlRphSwgP7HCRz4vqVBuPWAIiECM9fCAQfZcnH3_Qoi3SrLghvW1V0J4qbjTgTWAKHwEhJbfTjYMXZLgXcladYR7PbxYGIKBYUODZUcn';
+                if (empty($firebaseTokens)) {
+                    // Handle the case where there are no device tokens
+                    error_log('No device tokens available.');
+                    return; // Optionally return or exit depending on your application structure
+                }
+            $SERVER_API_KEY = 'AAAA-_tCmgY:APA91bGCOWTO-2jSJ_PHwatoh_ihC0sB_LBWMlRphSwgP7HCRz4vqVBuPWAIiECM9fCAQfZcnH3_Qoi3SrLghvW1V0J4qbjTgTWAKHwEhJbfTjYMXZLgXcladYR7PbxYGIKBYUODZUcn';
 
-        $data = [
-        // "registration_ids" => [$firebaseToken], if there is single valuo.. 
-        "registration_ids" => $firebaseTokens,
+            $data = [
+            // "registration_ids" => [$firebaseToken], if there is single valuo.. 
+            "registration_ids" => $firebaseTokens,
 
-        "notification" => [
-        "title" => $request->title,
-        "body" => $request->body,
-        "content_available" => true,
-        "priority" => "high",
-        ]
-        ];
-        $dataString = json_encode($data);
+            "notification" => [
+            "title" => $request->title,
+            "body" => $request->body,
+            "content_available" => true,
+            "priority" => "high",
+            ]
+            ];
             $dataString = json_encode($data);
-            if ($dataString === false) {
-                error_log('Failed to encode data as JSON.');
-                return; // Handle error appropriately
+                $dataString = json_encode($data);
+                if ($dataString === false) {
+                    error_log('Failed to encode data as JSON.');
+                    return; // Handle error appropriately
+                }
+            $headers = [
+            'Authorization: key=' . $SERVER_API_KEY,
+            'Content-Type: application/json',
+            ];
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+            $response = curl_exec($ch);
+            if ($response === false) {
+                error_log('cURL error: ' . curl_error($ch));
             }
-        $headers = [
-        'Authorization: key=' . $SERVER_API_KEY,
-        'Content-Type: application/json',
-        ];
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-        $response = curl_exec($ch);
-        if ($response === false) {
-            error_log('cURL error: ' . curl_error($ch));
-        }
-        $response = curl_exec($ch);
+            $response = curl_exec($ch);
 
 
+         $painterInfo = User::find($painterId);
+            if (!$painterInfo) {
+                // Handle the case where the painter is not found
+                return response()->json(['message' => 'Painter not found'], 404);
+            }
+
+    
+
+            // Optionally define $extrasMessage somewhere, if it's dynamic or just hard-code in the data array if static
+            $extrasMessage = 'Some additional message if applicable';
+
+            $data = [
+                'name' => $painterInfo->first_name . ' ' . $painterInfo->last_name,
+                'address' => $painterJob->address,
+                'orderID' => 'Order360',
+                'extrasMessage' => $extrasMessage,
+                // 'send_email' => '2019-3-60-050@std.ewubd.edu',
+                'price'  => $assign_job_price,
+                'send_email' => $painterInfo->email,
+            ];
+
+            Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
+                $message->to($data['send_email'])
+                        ->subject("Order360 - You Have Received a New Job - " . $data['address']);
+            });
 
 
 
-            // $user = User::find( $painterId);
-            // if ($user) {
-            // $firebaseToken = $user->device_token; 
-            // } else {
-            // $firebaseToken = null; 
-            // }
-            // $SERVER_API_KEY = 'AAAA-_tCmgY:APA91bGCOWTO-2jSJ_PHwatoh_ihC0sB_LBWMlRphSwgP7HCRz4vqVBuPWAIiECM9fCAQfZcnH3_Qoi3SrLghvW1V0J4qbjTgTWAKHwEhJbfTjYMXZLgXcladYR7PbxYGIKBYUODZUcn';
-            // $notificationBody = isset($painterJob) ? $painterJob->address : 'New Job Available!';
-            // $data = ["registration_ids" => [$firebaseToken],
-
-            // "notification" => [
-            // "title" => "You Have Received a New Job !",
-            // "body" =>   $notificationBody,
-            // "content_available" => true,
-            // "priority" => "high",
-            // ]
-            // ];
-            // $dataString = json_encode($data);
-
-            // $headers = [
-            // 'Authorization: key=' . $SERVER_API_KEY,
-            // 'Content-Type: application/json',
-            // ];
-
-            // $ch = curl_init();
-
-            // curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-            // curl_setopt($ch, CURLOPT_POST, true);
-            // curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            // curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-
-            // $response = curl_exec($ch);
-            //push notification end
+              // send end the email to customer 
 
             // Find the painter user
             $user = User::findOrFail($painterId);

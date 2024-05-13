@@ -100,9 +100,9 @@
         @if (!$jobs->poItems->contains(function ($poItem) {
         return $poItem->price && $poItem->description && $poItem->ponumber;
         }))
-        <div class="alert alert-danger mt-5" role="alert">
+        {{-- <div class="alert alert-danger mt-5" role="alert">
             No Invoice is Available
-        </div>
+        </div> --}}
         @endif
 
 

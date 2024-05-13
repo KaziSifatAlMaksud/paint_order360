@@ -238,6 +238,27 @@
 
             <div class="px-2 border-custom"></div>
         </section>
+
+    @if (session('success'))
+            <div class="card text-start m-2"  id='alardNotification' style="background: #fffff0; ">
+            <div class="alert alert-success alert-dismissible fade show d-flex justify-content-between align-items-center">
+                    <span>{{ session('success') }}</span>
+                    <p onclick="hiddenotification()" style="cursor: pointer;">
+                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                    </p>
+                </div>
+                <div class="pb-4">
+                <p class="text-center"> <b>Notification Permission </b></p>
+                        <p class="text-center">We need your permission to send notifications. Please allow notifications to stay updated.</p>            
+                    <center>
+                        <button id="btn-nft-enable" onclick="initFirebaseMessagingRegistration()" class="btn btn-xs btn-flat" style="background: yellow;">Allow for Notification</button>
+                    </center>
+                </div>
+            </div>
+            
+        @endif
+
+
         @if($jobs->count() > 0)
         <section class="invoice-doc px-2 jobs_area" style="line-height:1;">
             @foreach($jobs->sortByDesc('created_at') as $job)
@@ -347,15 +368,50 @@
 
 
     </main>
-  {{-- @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif --}}
+ 
 
-  <center>
-      <button id="btn-nft-enable" onclick="initFirebaseMessagingRegistration()" class="btn btn-danger btn-xs btn-flat">Allow for Notification</button>
-  </center>
+
+    {{-- @if (session('success'))
+    <!-- Modal Trigger -->
+    <div class="alert alert-success" data-toggle="modal" data-target="#notificationModal">
+        {{ session('success') }}
+    </div> --}}
+
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
+
+<div class="modal fade bd-example-modal-lg show"  style=" z-index:999999; position:fixed;" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      ...
+    </div>
+  </div>
+</div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationModalLabel">Notification Permission</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>We need your permission to send notifications. Please allow notifications to stay updated.</p>
+                </div>
+                <div class="modal-footer">
+                    <center>
+                        <button id="btn-nft-enable" onclick="initFirebaseMessagingRegistration()" class="btn btn-danger btn-xs btn-flat">Allow for Notification</button>
+                    </center>
+                </div>
+            </div>
+        </div>
+    </div>
+{{-- @endif --}}
+
+
+  
     <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script>
@@ -417,10 +473,19 @@
 
     </script>
 
+<script>
+function hiddenotification() {
+    var notificationCard = document.getElementById('alardNotification');
+    
+    notificationCard.style.display = 'none';
+}
+</script>
 
 
     <script src="{{ asset('js/script.js') }}"></script>
     <div style="margin: 20px 0px 300px 0px;"></div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     {{-- push Notification start  --}}
 

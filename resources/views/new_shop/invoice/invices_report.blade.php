@@ -187,7 +187,7 @@
         <!-- card -->
         <section>
             <div class="card mx-1 shadow rounded-4" style="margin-top: 90px;">
-                <div class="card-body px-1">
+                <div class="card-body px-1 ">
                     <div class="cart-btn d-flex align-items-center justify-content-between toggle-card px-2" style="height: 60px">
                         <div class="d-flex flex-column align-items-center active" id="job">
 
@@ -204,7 +204,7 @@
                         </div>
                     </div>
                     <!-- ----- yearly------ -->
-                    <div id="job-content" class="yearly-page content active">
+                    <div id="job-content" class="yearly-page content active" >
                         <h6 class="text-center mt-4">
                             Yearly report of Profit and costs from 1st jan
 
@@ -247,7 +247,7 @@
                         </table>
 
                        <div class="mt-3 mb-3">
-                            <h6 class="mb-3">Total Expense and Profit</h6>
+                            <h6 class="mb-3 fw-bold text-center">  Total Expense and Profit</h6>
                             <table class="table  w-100">
                                 <tbody>
                                     <tr class="row-spacing">
@@ -264,11 +264,11 @@
                                     </tr>
                                     <tr class="row-spacing">
                                         <td class="fs-6">Total Cost:</td>
-                                        <td class="fs-6 text-right"></td>
+                                        <td class="fs-6 text-right" id="total_cost"></td>
                                     </tr>
                                     <tr class="row-spacing">
                                         <td class="fs-6"><strong>Total Profit:</strong></td>
-                                        <td class="fs-6 text-right"><strong></strong></td>
+                                        <td class="fs-6 text-right" ><strong id="total_pofit"></strong></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -449,8 +449,17 @@
                                         <td>{{ $job ? $job->address : '' }}</td>
                                         <td style="text-align: right;">$ {{ $job ? number_format($job->price) : '' }}</td>
                                         {{-- <td style="text-align: right;">{{ $job ? number_format($job->price * 0.3, 2) : '' }}%</td> --}}
+                            
                                         <td style="text-align: right;">{{ $job ? 30 : '' }}%</td>
-                                        <td style="text-align: right;">{{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job / $job->price * 100  , 2) : 0.00 }}%</td>
+                                        <td style="text-align: right;">
+                                                @if($job && $job->assignedJob && $job->price != 0)
+                                                    {{ number_format(($job->assignedJob->assign_price_job / $job->price) * 100, 2) }}%
+                                                @else
+                                                    0.00%
+                                                @endif
+                                            </td>
+
+                            
                                         @php
                                         $mainPrice = $job->price;
                                         $paintCost = $job->price * 0.3;
@@ -615,10 +624,15 @@
                 , success: function(response) {
                     var rows = '';
                     let totalPriceSum = 0;
-
+                    let totallaverCost = 0;
+                    let totalCost = 0;
+        
+                    if (response.invoiceLaborSumas && response.invoiceLaborSumas.length > 0) {
+                        totallaverCost = response.invoiceLaborSumas[0].assign_total_price;
+                    }
+                
                     // Update the variable names in the response handling code to match the JSON key
-                    response.invoiceCustomerSumas.forEach(function(data1) {
-
+                    response.invoiceCustomerSumas.forEach(function(data1) {                      
 
                         totalPriceSum += Number(data1.total_price);
                         rows += '<tr data-customer-id="' + (data1.customer_id || 'N/A') + '">' +
@@ -629,6 +643,10 @@
                             }) + '</td>' +
                             '</tr>';
                     });
+                    // Calculate the total cost
+                     totalCost = parseFloat(totallaverCost) + (parseFloat(totalPriceSum) * 0.30);
+                    let totalProfit = 0.00;
+                totalProfit = totalPriceSum - totalCost;
                     rows += '<tr>' +
                         '<td class="fs-6" style="text-align: left;"><strong>Total:</strong></td>' +
                         '<td class="fs-6" style="text-align: right;"><strong>$ ' + Number(totalPriceSum).toLocaleString(undefined, {
@@ -647,8 +665,22 @@
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2
                     }));
+                      $('#labour_cost').html('$ ' + Number(totallaverCost).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }));
 
+         
+                     $('#total_cost').html('$' + Number(totalCost).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }));
+                      $('#total_pofit').html('$ ' + Number(totalProfit).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }));
                 
+                                
                 }
                 , error: function(xhr, status, error) {
                     console.error(`Error fetching data: ${error}`);

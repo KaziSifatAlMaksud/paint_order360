@@ -228,6 +228,7 @@ class PainterJobController extends Controller
                 'assign_price_job' => $request->assign_price_job,
                 'assign_job_description' => $request->assign_job_description,
                 'job_id' => $painterjob->id,
+                'user_id' => $request->user_id,
             ]);
         }
         if ($request->inside) {
@@ -252,6 +253,32 @@ class PainterJobController extends Controller
             }
         }
 
+
+        //  $painterInfo = User::find($painterId);
+        //     if (!$painterInfo) {
+        //         // Handle the case where the painter is not found
+        //         return response()->json(['message' => 'Painter not found'], 404);
+        //     }
+
+    
+
+        //     // Optionally define $extrasMessage somewhere, if it's dynamic or just hard-code in the data array if static
+        //     $extrasMessage = 'Some additional message if applicable';
+
+        //     $data = [
+        //         'name' => $painterInfo->first_name . ' ' . $painterInfo->last_name,
+        //         'address' => $painterJob->address,
+        //         'orderID' => 'Order360',
+        //         'extrasMessage' => $extrasMessage,
+        //         // 'send_email' => '2019-3-60-050@std.ewubd.edu',
+        //         'price'  => $assign_job_price,
+        //         'send_email' => $painterInfo->email,
+        //     ];
+
+        //     Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
+        //         $message->to($data['send_email'])
+        //                 ->subject("Order360 - You Have Received a New Job - " . $data['address']);
+        //     });
 
           //push notification shart
             $users = AllowNotification::where('user_id',  $user_id)->get();
@@ -288,6 +315,9 @@ class PainterJobController extends Controller
 
             $response = curl_exec($ch);
         //push notification end
+
+
+        
 
 
         if ($request->po_item) {

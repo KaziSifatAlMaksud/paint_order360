@@ -604,7 +604,7 @@ class PainterController extends BaseController
                 'builders.name as builder_name',
                 'builders.brand as builder_brand',
                 'users.phone',
-                'shop.name',
+                'shop.name as shop_name',
                 'painter_jobs.*',
                 'p_job_items.*',
                 'brands.name as b_name',
@@ -613,6 +613,12 @@ class PainterController extends BaseController
         $brands = DB::table('brands')->get();
 
         $groupedOrders = $ordersdetails->groupBy('key');
+       $shopNames = DB::table('painter_jobs')
+                    ->leftJoin('shop', 'painter_jobs.shop_id', '=', 'shop.id')
+                    ->where('painter_jobs.parent_id', $jobid)
+                    ->whereNotNull('shop.name') 
+                    ->distinct()
+                    ->pluck('shop.name');
         $expjobs = PainterJob::where('parent_id', $jobid)
             ->whereNotNull('parent_id')
             // ->whereDate('start_date', '<', Carbon::now())
@@ -620,7 +626,7 @@ class PainterController extends BaseController
             ->orderBy('created_at', 'DESC')
             ->get();
 
-        return view('painter.previouse', ['expjobs' => $expjobs, 'id' => $jobid, 'ordersdetails' => $ordersdetails, 'groupedOrders' => $groupedOrders, 'brands' => $brands]);
+        return view('painter.previouse', ['expjobs' => $expjobs, 'id' => $jobid, 'shop_names'=>$shopNames, 'ordersdetails' => $ordersdetails, 'groupedOrders' => $groupedOrders, 'brands' => $brands]);
     }
 
     public function  choseShope(Request $request, PainterJob $painterjob)

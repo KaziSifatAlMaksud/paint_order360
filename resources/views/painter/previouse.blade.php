@@ -23,14 +23,13 @@ $Painter_user = Session::get('Painter_user');
     <link rel="stylesheet" href="{{ asset('css/style8.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style77.css') }}">
 
-
     <!--icon link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
 
 </head>
-<body>
+<body style="text-transform: capitalize!important;">
 
     <header>
         <div class="header-row">
@@ -54,13 +53,15 @@ $Painter_user = Session::get('Painter_user');
     <section>
         <div class="hero-card-area" style="margin-bottom: 5px">
             <div class="hero-card-row">
+
+                
                 <div class="hero-card-item">
                     <h3>See the individual orders </h3>
                     <table class="table table-inverse" id="order_table">
                         <thead>
                             <tr>
                                 <th>Job Address</th>
-                                <th class='data-ord'>Date ordered</th>
+                                <th class='data-ord' style='white-space: nowrap; '>Date Ordered</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -90,10 +91,12 @@ $Painter_user = Session::get('Painter_user');
                             @endphp
                             <tr>
                                 <td>
+                               
                                     <a class="left" href="{{ url('/view_order_new/' . $value->id) }}">
                                         {{ $value->address ?: $user->address }}
                                     </a>
                                     <span>
+                                        
                                         @if($value->type == 1)
                                         <!-- SVG for type 1 orders -->
                                         @else
@@ -104,7 +107,7 @@ $Painter_user = Session::get('Painter_user');
                                     </span>
                                 </td>
                                 <td class="middle data-ord">
-                                    {{ $value->start_date ? \Carbon\Carbon::parse($value->start_date)->format('d/m/Y') : '' }}
+                                    {{ $value->created_at ? \Carbon\Carbon::parse($value->created_at)->format('d/m/Y') : '' }}
                                 </td>
                                 <!-- If you want to show the order status, uncomment the line below -->
                                 <!-- <td class="middle">{!! $os !!}</td> -->
@@ -125,9 +128,10 @@ $Painter_user = Session::get('Painter_user');
     @php
     $hasOrders = false;
     @endphp
-
+{{-- {{$ordersdetails}} --}}
     <!-- main-area start -->
-    @foreach( $ordersdetails as $order) @endforeach
+    {{-- @foreach( $ordersdetails as $order) 
+    @endforeach --}}
     @foreach ($expjobs as $key => $value)
     @php
     $hasOrders = true;
@@ -142,9 +146,20 @@ $Painter_user = Session::get('Painter_user');
                 <div class="hero-card-item">
                     <h3>{{$value -> address}}</h3>
                     {{-- <label>Job Id :  <span><?php echo $value-> parent_id ?></span></label> --}}
-                    <label>Start date : <span><?php echo $value->start_date ? $value->start_date : $user->start_date; ?></span></label>
-                    <label class="mt10">Order at : <span>{{$order -> customer_name}}</span></label>
-                    <label>Date Ordered : <span>{{ $value->created_at ? \Carbon\Carbon::parse($value->created_at)->format('d/m/Y') : '' }}</span></label>
+                    {{-- <label>Start date : <span><?php echo $value->start_date ? $value->start_date : $user->start_date; ?></span></label> --}}
+                    {{-- <label class="mt10">Order At : <span>{{$order->customer_name}}</span></label>  --}}
+                     <label class="mt10">Order At : <span> @if($shop_names->isEmpty())
+                                            <p>No shops found.</p>
+                                        @else
+                                           <ul>
+                                                @foreach($shop_names as $index => $shop_name)
+                                                    <li>{{ $index + 1 }}. {{ $shop_name }}</li>
+                                                @endforeach
+                                            </ul>
+
+                                        @endif
+                        </span></label>
+                    {{-- <label>Date Ordered : <span>{{ $value->created_at ? \Carbon\Carbon::parse($value->created_at)->format('d/m/Y') : '' }}</span></label> --}}
                 </div>
             </div>
         </div>
@@ -155,6 +170,7 @@ $Painter_user = Session::get('Painter_user');
         <strong>Your Don't Have Any Oder</strong>
     </div>
     @endif
+
 
     @foreach($groupedOrders as $key => $orders)
     <section>
