@@ -344,7 +344,7 @@ class PainterJobController extends Controller
 
                         break;
                     case 'secondGroup':
-                        if (!is_null($request->assign_company_id)) {
+                        if (!is_null($request->assigned_painter_name)) {
                             $user_id = $request->assign_company_id; // This seems incorrect as user_id was already set. Assuming it's intentional.
                             $invoice->user_id = $request->assigned_painter_name; // This also seems potentially incorrect as it assigns a name to a user_id field.
                             $invoice->send_email = $MainPainterEmail;

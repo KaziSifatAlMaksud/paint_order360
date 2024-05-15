@@ -94,16 +94,16 @@
     });
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo MAP_API_KEY; ?>&libraries=places&callback=initAutocomplete" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo "AIzaSyCb7MpXPNGT9y6LKzg_bi8R1Q_hwmLKMgk&libraries" ?>&libraries=places&callback=initAutocomplete" async defer></script>
 <script>
     // This example displays an address form, using the autocomplete featureorder_table
     // of the Google Places API to help users fill in the information.
     // This example requires the Places library. Include the libraries=places
     // parameter when you first load the API. For example:
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
     var placeSearch, autocomplete;
     var componentForm = {
-         route: 'long_name',
+        // route: 'long_name',
         locality: 'long_name',
         administrative_area_level_1: 'short_name',
         country: 'long_name',
@@ -257,7 +257,7 @@
 
     });
 
-
+   
 
     $(document).ready(function() {
         $(".alert_msg").show().delay(30000).fadeOut();
