@@ -336,14 +336,18 @@ require public_path() . '/admin/header.blade.php';
     <div class="form-group">
         <label class="col-sm-3 control-label">A. Company Name</label>
         <div class="col-sm-9">
-            <select name="assign_company_id" id="assign_company_id" class="form-control brand2">
-                <option value="" selected>Select</option>
-                @foreach ($admin_buliders as $admin_bulider)
-                <option data-brand2="{{ $admin_bulider->brand ? $admin_bulider->brand->id : '0' }}" value="{{ $admin_bulider->id }}" {{ $assign_painter !== null && $admin_bulider->id == old('assign_company_id', $assign_painter->assign_company_id) ? 'selected' : '' }}>
-                    {{ $admin_bulider->company_name }}
-                </option>
-                @endforeach
-            </select>
+             <select name="assign_company_id" id="assign_company_id" class="form-control brand2">
+                    <option value="" selected>Select</option>
+                    @foreach ($admin_buliders as $admin_bulider)
+                        <option 
+                            data-brand2="{{ $admin_bulider->brand ? $admin_bulider->brand->id : '0' }}" 
+                            value="{{ $admin_bulider->id }}" 
+                            {{ (old('assign_company_id', $assign_painter->assign_company_id ?? '') == $admin_bulider->id) ? 'selected' : '' }}>
+                            {{ $admin_bulider->company_name }}
+                        </option>
+                    @endforeach
+                </select>
+
         </div>
     </div>
 

@@ -41,11 +41,11 @@ class ShopController extends BaseController
 		'leter_box' => 'Leter box',
 		'flashing' => 'Fashing',
 		'z_flashing' => 'Z Flashing',
-		'Extra_1' => 'Extra_1',
-		'Extra_2' => 'Extra_2',
-		'Extra_3' => 'Extra_3',
-		'Extra_4' => 'Extra_4',
-		'Extra_5' => 'Extra_5',
+		// 'Extra_1' => 'Extra_1',
+		// 'Extra_2' => 'Extra_2',
+		// 'Extra_3' => 'Extra_3',
+		// 'Extra_4' => 'Extra_4',
+		// 'Extra_5' => 'Extra_5',
 	];
 
 	private $inside = [

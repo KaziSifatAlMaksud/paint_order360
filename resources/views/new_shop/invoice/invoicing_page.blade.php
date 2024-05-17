@@ -280,6 +280,7 @@
 
         <section class="invoice-doc jobs_area InvoicePortfolio">
             @foreach ($invoices as $invoice)
+                @if($invoice && $jobs->id == $invoice->job_id  && $invoice->user_id == auth()->id())
             <a href="{{ '/manual_invoice_job/' . $invoice->id }}" style="text-decoration: none; color:black;">
                 <div class="docs_part1 docs_prt1 position-relative portfolio-item" style="line-height: 1;">
                     <div class="invoice-cart">
@@ -320,6 +321,7 @@
                     @endif
                 </div>
             </a>
+            @endif
             @endforeach
 
         </section>

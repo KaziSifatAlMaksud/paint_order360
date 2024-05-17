@@ -59,9 +59,8 @@ class AssignedPainterController extends Controller
             $firebaseTokens = $users->pluck('device_token')->toArray();
 
                 if (empty($firebaseTokens)) {
-                    // Handle the case where there are no device tokens
                     error_log('No device tokens available.');
-                    return; // Optionally return or exit depending on your application structure
+                    // return; // Optionally return or exit depending on your application structure
                 }
             $SERVER_API_KEY = 'AAAA-_tCmgY:APA91bGCOWTO-2jSJ_PHwatoh_ihC0sB_LBWMlRphSwgP7HCRz4vqVBuPWAIiECM9fCAQfZcnH3_Qoi3SrLghvW1V0J4qbjTgTWAKHwEhJbfTjYMXZLgXcladYR7PbxYGIKBYUODZUcn';
 
@@ -102,31 +101,27 @@ class AssignedPainterController extends Controller
             $response = curl_exec($ch);
 
 
-         $painterInfo = User::find($painterId);
-            if (!$painterInfo) {
-                // Handle the case where the painter is not found
-                return response()->json(['message' => 'Painter not found'], 404);
-            }
+                        $painterInfo = User::find($painterId);
 
-    
+                        if (!$painterInfo) {
+                            // Handle the case where the painter is not found
+                            return response()->json(['message' => 'Painter not found'], 404);
+                        }
 
-            // Optionally define $extrasMessage somewhere, if it's dynamic or just hard-code in the data array if static
-            $extrasMessage = 'Some additional message if applicable';
 
-            $data = [
-                'name' => $painterInfo->first_name . ' ' . $painterInfo->last_name,
-                'address' => $painterJob->address,
-                'orderID' => 'Order360',
-                'extrasMessage' => $extrasMessage,
-                // 'send_email' => '2019-3-60-050@std.ewubd.edu',
-                'price'  => $assign_job_price,
-                'send_email' => $painterInfo->email,
-            ];
+                        $data = [
+                            'name' => $painterInfo->first_name . ' ' . $painterInfo->last_name,
+                            'address' => $painterJob->address,
+                            'orderID' => '',
+                            'extrasMessage' => $extrasMessage,
+                            'price'  => $assign_job_price,
+                            'send_email' => $painterInfo->email,
+                        ];
 
-            Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
-                $message->to($data['send_email'])
-                        ->subject("Order360 - You Have Received a New Job - " . $data['address']);
-            });
+                        Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
+                            $message->to($data['send_email'])
+                                    ->subject("Order360 - You Have Received a New Job - " . $data['address']);
+                        });
 
 
 

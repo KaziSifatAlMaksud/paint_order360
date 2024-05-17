@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Mail;
 use App\Models\Shop;
 use App\Models\User;
 use App\Models\Brand;
@@ -51,11 +51,11 @@ class PainterJobController extends Controller
         'leter_box' => 'Leter box',
         'flashing' => 'Fashing',
         'z_flashing' => 'Z Flashing',
-        'Extra_1' => 'Extra_1',
-        'Extra_2' => 'Extra_2',
-        'Extra_3' => 'Extra_3',
-        'Extra_4' => 'Extra_4',
-        'Extra_5' => 'Extra_5',
+        // 'Extra_1' => 'Extra_1',
+        // 'Extra_2' => 'Extra_2',
+        // 'Extra_3' => 'Extra_3',
+        // 'Extra_4' => 'Extra_4',
+        // 'Extra_5' => 'Extra_5',
     ];
 
     private $inside = [
@@ -218,6 +218,7 @@ class PainterJobController extends Controller
         }
 
         $user_id = $request->user_id;
+        $mainPainterInfo = User::find($user_id); 
         $painterjob->fill($data)->save();
         if (!empty($request->assigned_painter_name) && !empty($request->assign_company_id) && !empty($request->assign_price_job)) {
             // if ($request->has('assigned_painter_name') && $request->has('assign_company_id')) {
@@ -230,6 +231,96 @@ class PainterJobController extends Controller
                 'job_id' => $painterjob->id,
                 'user_id' => $request->user_id,
             ]);
+
+
+          
+
+            //Email for Assign Painter ...
+
+            $AssingPainterInfo = User::find($request->assigned_painter_name);          
+    // Find the painter user
+          
+            $maxId = Invoice::max('id');
+            $nextId = $maxId + 1;
+            $maxInvoiceNumber = sprintf('INV: %04d', $nextId);
+            $data = [
+                'user_id' => $AssingPainterInfo->id,
+                'company_name' => $AssingPainterInfo->company_name,
+                'user_address' => $AssingPainterInfo->address,
+                'user_name' => $AssingPainterInfo->first_name,
+                'user_phone' => $AssingPainterInfo->phone,
+                'abn' => $AssingPainterInfo->abn,
+                'customer_id' => $mainPainterInfo->company_name,
+                'send_email' => $mainPainterInfo->email,
+                'inv_number' => $maxInvoiceNumber,
+                'date' => now()->toDateString(),
+                'purchase_order' => null,
+                'job_id' => $id,
+                'description' => $request->assign_job_description,
+                'address' => $request->address,
+                'job_details' => '',
+                'amount' =>$request->assign_price_job - ($request->assign_price_job * 0.10),
+                'gst' => $request->assign_price_job * 0.10,
+                'total_due' =>$request->assign_price_job,
+                'status' => 1,
+            ];
+
+            // Create the invoice
+            $invoice = Invoice::create($data);
+            // Return a JSON response
+            $data = [
+                'name' => $AssingPainterInfo->first_name . ' ' . $AssingPainterInfo->last_name,
+                'address' => $request->address,
+                'orderID' => 'Order360',
+                'extrasMessage' => $request->builder_company_name,
+                'price'  => $request->assign_price_job,
+                'send_email' => $AssingPainterInfo->email,
+            ];
+
+            Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
+                $message->to($data['send_email'])
+                        ->subject("Order360 - You Have Received a New Job - " . $data['address']);
+            });
+
+            //Email for Assign Painter End  ...
+
+
+            //push notification shart
+                $users = AllowNotification::where('user_id',  $request->assigned_painter_name)->get();
+                $firebaseTokens = $users->pluck('device_token')->toArray();
+                    if (empty($firebaseTokens)) {
+                    // Handle the case where there are no tokens
+                    $firebaseTokens = null;
+                }
+                    $SERVER_API_KEY = 'AAAA-_tCmgY:APA91bGCOWTO-2jSJ_PHwatoh_ihC0sB_LBWMlRphSwgP7HCRz4vqVBuPWAIiECM9fCAQfZcnH3_Qoi3SrLghvW1V0J4qbjTgTWAKHwEhJbfTjYMXZLgXcladYR7PbxYGIKBYUODZUcn';
+                    $notificationBody = isset($AssingPainterInfo) ? $AssingPainterInfo->address : 'New Job Available!';
+                    $data3 = ["registration_ids" => $firebaseTokens,
+                    "notification" => [
+                    "title" => "You Have Received a New Job !",
+                    "body" =>   $notificationBody,
+                    "content_available" => true,
+                    "priority" => "high",
+                ]
+            ];
+            $dataString = json_encode($data3);
+
+            $headers = [
+                'Authorization: key=' . $SERVER_API_KEY,
+                'Content-Type: application/json',
+            ];
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+
+            $response = curl_exec($ch);
+        //push notification end
+
         }
         if ($request->inside) {
             foreach ($request->inside as $oskey => $osvalue) {
@@ -254,31 +345,29 @@ class PainterJobController extends Controller
         }
 
 
-        //  $painterInfo = User::find($painterId);
-        //     if (!$painterInfo) {
-        //         // Handle the case where the painter is not found
-        //         return response()->json(['message' => 'Painter not found'], 404);
-        //     }
 
-    
 
-        //     // Optionally define $extrasMessage somewhere, if it's dynamic or just hard-code in the data array if static
-        //     $extrasMessage = 'Some additional message if applicable';
+            $painterInfo = User::find($user_id);
+            if (!$painterInfo) {
+                // Handle the case where the painter is not found
+                return response()->json(['message' => 'Painter not found'], 404);
+            }
 
-        //     $data = [
-        //         'name' => $painterInfo->first_name . ' ' . $painterInfo->last_name,
-        //         'address' => $painterJob->address,
-        //         'orderID' => 'Order360',
-        //         'extrasMessage' => $extrasMessage,
-        //         // 'send_email' => '2019-3-60-050@std.ewubd.edu',
-        //         'price'  => $assign_job_price,
-        //         'send_email' => $painterInfo->email,
-        //     ];
+            $data = [
+                'name' => $painterInfo->first_name . ' ' . $painterInfo->last_name,
+                'address' => $request->address,
+                'orderID' => 'Order360',
+                'extrasMessage' => $request->builder_company_name,
+                'price'  => $request->price,
+                'send_email' => $painterInfo->email,
+            ];
 
-        //     Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
-        //         $message->to($data['send_email'])
-        //                 ->subject("Order360 - You Have Received a New Job - " . $data['address']);
-        //     });
+            Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
+                $message->to($data['send_email'])
+                        ->subject("Order360 - You Have Received a New Job - " . $data['address']);
+            });
+
+        
 
           //push notification shart
             $users = AllowNotification::where('user_id',  $user_id)->get();
@@ -315,6 +404,8 @@ class PainterJobController extends Controller
 
             $response = curl_exec($ch);
         //push notification end
+
+
 
 
         
@@ -441,6 +532,7 @@ class PainterJobController extends Controller
      */
     public function update(Request $request, PainterJob $painterJob)
     {
+        DB::beginTransaction();
 
         try {
             $data = $request->only($painterJob->getFillable());
@@ -461,6 +553,7 @@ class PainterJobController extends Controller
 
 
             $painterJob->fill($data)->save();
+
             $painterJob->items()->delete();
             if ($request->inside) {
                 foreach ($request->inside as $oskey => $osvalue) {
@@ -523,10 +616,152 @@ class PainterJobController extends Controller
                 }
             }
 
+  // Update or create PO items and related invoices
+        if ($request->po_item) {
+            foreach ($request->po_item as $poKey => $poValue) {
+                $poItem = PoItems::firstOrNew(['job_id' => $painterJob->id, 'batch' => $poKey]);
+
+                $poItem->job_id = $painterJob->id;
+                $poItem->batch = $poKey;
+                $poItem->job_details = $poValue['job_details'];
+                $poItem->description = $poValue['description'];
+                $poItem->save();
+
+                $invoice = $poItem->invoice ?? new Invoice();
+
+                $invoice->amount = $poValue['price'];
+                $invoice->gst = $poValue['price'] * 0.10;
+                $invoice->total_due = $poValue['price'] * 1.10;
+                $invoice->job_details = $poValue['job_details'];
+                $invoice->description = $poValue['description'];
+
+                if ($request->hasFile("po_item.$poKey.file")) {
+                    $file = $request->file("po_item.$poKey.file");
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $attachmentPath = $file->storeAs('', $fileName, 'public');
+                    $invoice->attachment = $attachmentPath;
+                }
+
+                $invoice->save();
+            }
+        }
+
+        // Update or create the assigned painter job
+        if (!empty($request->assigned_painter_name) && !empty($request->assign_company_id) && !empty($request->assign_price_job)) {
+            $assignedPainterJob = AssignedPainterJob::firstOrNew(['job_id' => $painterJob->id]);
+            $assignedPainterJob->assigned_painter_name = $request->assigned_painter_name;
+            $assignedPainterJob->assign_company_id = $request->assign_company_id;
+            $assignedPainterJob->assigned_supervisor = $request->assigned_supervisor;
+            $assignedPainterJob->assign_price_job = $request->assign_price_job;
+            $assignedPainterJob->assign_job_description = $request->assign_job_description;
+            $assignedPainterJob->user_id = $request->user_id;
+            $assignedPainterJob->save();
+
+
+    
+
+            $AssingPainterInfo = User::find($request->assigned_painter_name);
+
+                  $matchingInvoices = Invoice::where('user_id', $AssingPainterInfo->id)
+                               ->where('job_id', $jobId)
+                               ->get();
+
+                                 if ($matchingInvoices->isNotEmpty()) {
+                        // Delete all matching invoices
+                        DB::transaction(function () use ($matchingInvoices) {
+                            foreach ($matchingInvoices as $invoice) {
+                                $invoice->delete();
+                            }
+                        });
+                    }
+
+
+             // Generate the next invoice number
+                $maxId = Invoice::max('id');
+                $nextId = $maxId + 1;
+                $maxInvoiceNumber = sprintf('INV: %04d', $nextId);
+
+                // Calculate amounts
+                $amount = $request->assign_price_job;
+                $gst = $amount * 0.10;
+                $amountAfterGst = $amount - $gst;
+
+                // Prepare the data for the new invoice
+                // $data = [
+                //     'user_id' => $AssingPainterInfo->id,
+                //     'company_name' => $AssingPainterInfo->company_name,
+                //     'user_address' => $AssingPainterInfo->address,
+                //     'user_name' => $AssingPainterInfo->first_name,
+                //     'user_phone' => $assignedPainterInfo->phone,
+                //     'abn' => $assignedPainterInfo->abn,
+                //     'customer_id' => $mainPainterInfo->company_name, // Ensure $mainPainterInfo is defined
+                //     'send_email' => $mainPainterInfo->email, // Ensure $mainPainterInfo is defined
+                //     'inv_number' => $maxInvoiceNumber,
+                //     'date' => now()->toDateString(),
+                //     'purchase_order' => null,
+                //     'job_id' => $jobId,
+                //     'description' => $request->assign_job_description,
+                //     'address' => $request->address,
+                //     'job_details' => '',
+                //     'amount' => $amountAfterGst,
+                //     'gst' => $gst,
+                //     'total_due' => $amount,
+                //     'status' => 1,
+                // ];
+
+                // Create the new invoice
+                // DB::transaction(function () use ($data) {
+                //     Invoice::create($data);
+                // });
+
+            $data = [
+                'name' => $AssingPainterInfo->first_name . ' ' . $AssingPainterInfo->last_name,
+                'address' => $request->address,
+                'orderID' => 'Order360',
+                'extrasMessage' => $request->builder_company_name,
+                'price' => $request->assign_price_job,
+                'send_email' => $AssingPainterInfo->email,
+            ];
+
+            Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
+                $message->to($data['send_email'])
+                    ->subject("Order360 - Job Updated - " . $data['address']);
+            });
+
+            $users = AllowNotification::where('user_id', $request->assigned_painter_name)->get();
+            $firebaseTokens = $users->pluck('device_token')->toArray();
+            if (!empty($firebaseTokens)) {
+                $SERVER_API_KEY = 'YOUR_SERVER_API_KEY';
+                $notificationBody = $AssingPainterInfo->address ?? 'New Job Available!';
+                $data3 = [
+                    "registration_ids" => $firebaseTokens,
+                    "notification" => [
+                        "title" => "You Have Received a New Job!",
+                        "body" => $notificationBody,
+                        "content_available" => true,
+                        "priority" => "high",
+                    ]
+                ];
+                $dataString = json_encode($data3);
+                $headers = [
+                    'Authorization: key=' . $SERVER_API_KEY,
+                    'Content-Type: application/json',
+                ];
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+                $response = curl_exec($ch);
+                curl_close($ch);
+            }
+        }
 
             // Update or Create logic for AssignedPainterJob
-            $assignedPainterJob = AssignedPainterJob::firstOrNew(['job_id' => $painterJob->id]); // Assuming 'job_id' is the correct identifier
-            $assignedPainterJob->fill($request->only(['assigned_painter_name', 'assign_company_id', 'assigned_supervisor', 'assign_price_job', 'job_description']))->save();
+            // $assignedPainterJob = AssignedPainterJob::firstOrNew(['job_id' => $painterJob->id]); // Assuming 'job_id' is the correct identifier
+            // $assignedPainterJob->fill($request->only(['assigned_painter_name', 'assign_company_id', 'assigned_supervisor', 'assign_price_job', 'job_description']))->save();
             DB::commit();
             Session::flash('message', 'PainterJob updated successfully');
             Session::flash('alert-class', 'alert-success');

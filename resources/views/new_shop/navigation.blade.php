@@ -349,66 +349,10 @@
         <div class="alert alert-success">
             <center> No jobs available.</center>
         </div>
-
         @endif
-
-      {{-- <form action="{{ route('send.notification') }}" method="POST">
-          @csrf
-          <div class="form-group">
-              <label for="title">Title</label>
-              <input type="text" class="form-control" name="title" id="title">
-          </div>
-          <div class="form-group">
-              <label for="body">Body</label>
-              <textarea class="form-control" name="body" id="body"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Send Notification</button>
-      </form> --}}
-
-
-
     </main>
  
 
-
-    {{-- @if (session('success'))
-    <!-- Modal Trigger -->
-    <div class="alert alert-success" data-toggle="modal" data-target="#notificationModal">
-        {{ session('success') }}
-    </div> --}}
-
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
-
-<div class="modal fade bd-example-modal-lg show"  style=" z-index:999999; position:fixed;" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      ...
-    </div>
-  </div>
-</div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-labelledby="notificationModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="notificationModalLabel">Notification Permission</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>We need your permission to send notifications. Please allow notifications to stay updated.</p>
-                </div>
-                <div class="modal-footer">
-                    <center>
-                        <button id="btn-nft-enable" onclick="initFirebaseMessagingRegistration()" class="btn btn-danger btn-xs btn-flat">Allow for Notification</button>
-                    </center>
-                </div>
-            </div>
-        </div>
-    </div>
-{{-- @endif --}}
 
 
   
