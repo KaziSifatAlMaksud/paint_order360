@@ -239,10 +239,22 @@
             <div class="px-2 border-custom"></div>
         </section>
 
-    @if (session('success'))
-            <div class="card text-start m-2"  id='alardNotification' style="background: #fffff0; ">
-            <div class="alert alert-success alert-dismissible fade show d-flex justify-content-between align-items-center">
+         @if (session('success'))
+            <div class="card text-start mb-3" id='alardNotification' style="background: #fffff0; ">
+            <div class="alert alert-success alert-dismissible m-0 fade show d-flex justify-content-between align-items-center">
                     <span>{{ session('success') }}</span>
+                    <p onclick="hiddenotification()" style="cursor: pointer;">
+                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
+                    </p>
+                </div>
+            </div>
+            
+        @endif
+
+    @if (session('successlogin'))
+            <div class="card text-start m-2"  id='alardNotification' style="background: #fffff0; ">
+            <div class="alert  alert-success alert-dismissible fade show d-flex justify-content-between align-items-center">
+                    <span>{{ session('successlogin') }}</span>
                     <p onclick="hiddenotification()" style="cursor: pointer;">
                         <span aria-hidden="true"><i class="fas fa-times"></i></span>
                     </p>

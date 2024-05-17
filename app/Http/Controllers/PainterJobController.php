@@ -237,7 +237,8 @@ class PainterJobController extends Controller
 
             //Email for Assign Painter ...
 
-            $AssingPainterInfo = User::find($request->assigned_painter_name);          
+            $AssingPainterInfo = User::find($request->assigned_painter_name);  
+            $jobInfo = PainterJob::find($AssingPainterInfo->job_id);   
     // Find the painter user
           
             $maxId = Invoice::max('id');
@@ -245,19 +246,15 @@ class PainterJobController extends Controller
             $maxInvoiceNumber = sprintf('INV: %04d', $nextId);
             $data = [
                 'user_id' => $AssingPainterInfo->id,
-                'company_name' => $AssingPainterInfo->company_name,
-                'user_address' => $AssingPainterInfo->address,
-                'user_name' => $AssingPainterInfo->first_name,
-                'user_phone' => $AssingPainterInfo->phone,
-                'abn' => $AssingPainterInfo->abn,
-                'customer_id' => $mainPainterInfo->company_name,
+                'customer_id' => $AssingPainterInfo->company_name,
                 'send_email' => $mainPainterInfo->email,
                 'inv_number' => $maxInvoiceNumber,
                 'date' => now()->toDateString(),
                 'purchase_order' => null,
-                'job_id' => $id,
-                'description' => $request->assign_job_description,
+                'job_id' => $painterjob->id,
                 'address' => $request->address,
+                'description' => $request->assign_job_description,
+                'attachment' => '',
                 'job_details' => '',
                 'amount' =>$request->assign_price_job - ($request->assign_price_job * 0.10),
                 'gst' => $request->assign_price_job * 0.10,
@@ -473,12 +470,6 @@ class PainterJobController extends Controller
             }
         }
 
-
-
-          
-
-
-
         Session::flash('message', 'PainterJob Added successfully');
         Session::flash('alert-class', 'alert-success');
         return redirect()->route("admins.painterJob.index");
@@ -687,32 +678,32 @@ class PainterJobController extends Controller
                 $amountAfterGst = $amount - $gst;
 
                 // Prepare the data for the new invoice
-                // $data = [
-                //     'user_id' => $AssingPainterInfo->id,
-                //     'company_name' => $AssingPainterInfo->company_name,
-                //     'user_address' => $AssingPainterInfo->address,
-                //     'user_name' => $AssingPainterInfo->first_name,
-                //     'user_phone' => $assignedPainterInfo->phone,
-                //     'abn' => $assignedPainterInfo->abn,
-                //     'customer_id' => $mainPainterInfo->company_name, // Ensure $mainPainterInfo is defined
-                //     'send_email' => $mainPainterInfo->email, // Ensure $mainPainterInfo is defined
-                //     'inv_number' => $maxInvoiceNumber,
-                //     'date' => now()->toDateString(),
-                //     'purchase_order' => null,
-                //     'job_id' => $jobId,
-                //     'description' => $request->assign_job_description,
-                //     'address' => $request->address,
-                //     'job_details' => '',
-                //     'amount' => $amountAfterGst,
-                //     'gst' => $gst,
-                //     'total_due' => $amount,
-                //     'status' => 1,
-                // ];
+                $invoiceData = [
+                    'user_id' => $AssingPainterInfo->id,
+                    'company_name' => $AssingPainterInfo->company_name,
+                    'user_address' => $AssingPainterInfo->address,
+                    'user_name' => $AssingPainterInfo->first_name,
+                    'user_phone' => $assignedPainterInfo->phone,
+                    'abn' => $assignedPainterInfo->abn,
+                    'customer_id' => $mainPainterInfo->company_name, // Ensure $mainPainterInfo is defined
+                    'send_email' => $mainPainterInfo->email, // Ensure $mainPainterInfo is defined
+                    'inv_number' => $maxInvoiceNumber,
+                    'date' => now()->toDateString(),
+                    'purchase_order' => null,
+                    'job_id' => $jobId,
+                    'description' => $request->assign_job_description,
+                    'address' => $request->address,
+                    'job_details' => '',
+                    'amount' => $amountAfterGst,
+                    'gst' => $gst,
+                    'total_due' => $amount,
+                    'status' => 1,
+                ];
 
-                // Create the new invoice
-                // DB::transaction(function () use ($data) {
-                //     Invoice::create($data);
-                // });
+                //Create the new invoice
+                DB::transaction(function () use ($invoiceData) {
+                    Invoice::create($invoiceData);
+                });
 
             $data = [
                 'name' => $AssingPainterInfo->first_name . ' ' . $AssingPainterInfo->last_name,
@@ -723,10 +714,10 @@ class PainterJobController extends Controller
                 'send_email' => $AssingPainterInfo->email,
             ];
 
-            Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
-                $message->to($data['send_email'])
-                    ->subject("Order360 - Job Updated - " . $data['address']);
-            });
+            // Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
+            //     $message->to($data['send_email'])
+            //         ->subject("Order360 - Job Updated - " . $data['address']);
+            // });
 
             $users = AllowNotification::where('user_id', $request->assigned_painter_name)->get();
             $firebaseTokens = $users->pluck('device_token')->toArray();

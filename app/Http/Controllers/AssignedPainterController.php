@@ -126,7 +126,7 @@ class AssignedPainterController extends Controller
 
 
               // send end the email to customer 
-
+            $JobInfo = PainterJob::find($jobId);
             // Find the painter user
             $user = User::findOrFail($painterId);
             $maxId = Invoice::max('id');
@@ -134,24 +134,21 @@ class AssignedPainterController extends Controller
             $maxInvoiceNumber = sprintf('INV: %04d', $nextId);
             $data = [
                 'user_id' => $painterId,
-                'company_name' => $user->company_name,
-                'user_address' => $user->address,
-                'user_name' => $user->first_name,
-                'user_phone' => $user->phone,
-                'abn' => $user->abn,
-                'customer_id' => $request->user()->company_name,
-                'send_email' => $request->user()->email,
+                'customer_id' => $user->company_name,
+                'send_email' => $user->email,
                 'inv_number' => $maxInvoiceNumber,
                 'date' => now()->toDateString(),
-                'purchase_order' => null,
-                'job_id' => $id,
-                'description' => $request->assign_job_description,
-                'address' => $painterJob->address,
-                'job_details' => $extrasMessage,
+                'purchase_order' =>'',
+                'job_id' => $JobInfo->id,
+                'address' => $JobInfo->address,
+                'description' => $extrasMessage,
+                'attachment' => '',
+                'job_details' => '',
                 'amount' => $assign_job_price - ($assign_job_price * 0.10),
                 'gst' => $assign_job_price * 0.10,
                 'total_due' => $assign_job_price,
-                'status' => 1,
+                'status' => 1,                
+               
             ];
 
             // Create the invoice
