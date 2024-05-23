@@ -21,7 +21,7 @@
             --bg: #f5f5f5;
             --body-bg: #ebebeb;
             --nav-colo: #fff;
-            --orang: orangered;
+            --orang: #ff6107;
             --bg-orang: #ffddaa;
             --newInvoice-bg: #66ff5b;
             --dueInvoice-bf: #ff7070;
@@ -186,9 +186,9 @@
 
         <!-- card -->
         <section>
-            <div class="card mx-1 shadow rounded-4" style="margin-top: 90px;">
-                <div class="card-body px-1 ">
-                    <div class="cart-btn d-flex align-items-center justify-content-between toggle-card px-2" style="height: 60px">
+            <div class="card mx-1 shadow rounded-4" style="margin-top: 90px; ">
+                <div class="card-body px-1 " style=" margin-bottom: 300px;">
+                    <div class="cart-btn d-flex align-items-center justify-content-between toggle-card px-2" style="height: 60px;">
                         <div class="d-flex flex-column align-items-center active" id="job">
 
                             <img src="/image/icon1/calendar.png" alt="calendar.png" />
@@ -204,7 +204,7 @@
                         </div>
                     </div>
                     <!-- ----- yearly------ -->
-                    <div id="job-content" class="yearly-page content active" >
+                    <div id="job-content" class="yearly-page content active"   >
                         <h6 class="text-center mt-4">
                             Yearly report of Profit and costs from 1st jan
 
@@ -213,7 +213,7 @@
                         <div class="row">
                            
                             <div class="col-12">
-                                <select id="yearFilterforCustomer" class="form-select mb-2" aria-label="Select Year" style="border-color: orange;">
+                                <select id="yearFilterforCustomer" class="form-select mb-2" aria-label="Select Year" style="border-color: #ff6107;">
                                     <option value="">Select Year</option>
                                     <option value="2024">2024</option>
                                     <option value="2023">2023</option>
@@ -273,6 +273,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        
                     </div>
 
                     <!-- ------ Quarterly ----- -->
@@ -280,7 +281,7 @@
                         <p class="mb-2 mt-3 fw-bold text-center">Income by customer</p>
                         <div class="row">
                             <div class="col-6">
-                                <select id="dateRangeFilter" class="form-select mb-2" aria-label="Default select example" style="border-color: orange;">
+                                <select id="dateRangeFilter" class="form-select mb-2" aria-label="Default select example" style="border-color: #ff6107;">
                                     <option value="">Select Range</option>
                                     <option value="Q1">Jan - Mar</option>
                                     <option value="Q2">Apr - Jun</option>
@@ -289,7 +290,7 @@
                                 </select>
                             </div>
                             <div class="col-6">
-                                <select id="yearFilter" class="form-select mb-2" aria-label="Select Year" style="border-color: orange;">
+                                <select id="yearFilter" class="form-select mb-2" aria-label="Select Year" style="border-color: #ff6107;">
                                     <option value="">Select Year</option>
                                     <option value="2024">2024</option>
                                     <option value="2023">2023</option>
@@ -351,15 +352,11 @@
                             <table class="price-content-table" style="width:100%; margin-bottom: 500px;">
 
                                 <tr>
-                                    <th style="width:50%">Job</th>
-                                    <th style="text-align: right;">Job Price</th>
-
-                                    <th style="text-align: right;">$Paint</th>
-
-                                    <th style="text-align: right;">$Labour</th>
-
-                                    <th style="text-align: right;">$Profit</th>
-
+                                    <th style="width:48%">Job</th>
+                                    <th style="text-align: right;">J.Price</th>
+                                    <th style="text-align: right;">Paint</th>
+                                    <th style="text-align: right;">Labour</th>
+                                    <th style="text-align: right;">Profit</th>
                                 </tr>
                                 <tbody id="">
                                     @php
@@ -369,57 +366,62 @@
                                     @endphp
 
                                     @foreach($jobs as $job )
+                                    
                                     <tr>
                                         <td>{{ $job ? $job->address : '' }}</td>
-                                        <td style="text-align: right;"> {{ $job ? number_format($job->price) : '' }}</td>
-                                        <td style="text-align: right;">{{ $job ? number_format($job->price * 0.3 ) : '' }}</td>
+                                        @if ($job && $job->assign_painter == auth()->user()->id)
+                                            <td style="text-align: right;">{{ $job ? number_format($job->assignedJob->assign_price_job ?? 0) : '' }}</td>
+                                            <td style="text-align: right;">{{ $job ? number_format($job->assignedJob->paint_cost ?? 0) : '' }}</td>
+                                            <td style="text-align: right;">0</td>
+                                                {{-- @php
+                                                $discountedPrice = $job->assignedJob->assign_price_job - 
+                                                $finalPrice = $discountedPrice - $assignPrice;
+                                                $assignPrice = $job && $job->assignedJob ? $job->assignedJob->assign_price_job : 0.00;
+                                                $totallabarSum += $assignPrice;
+                                                $totalfinalSum += $finalPrice;
+                                                @endphp --}}
+                                            {{-- <td style="text-align: right;">{{ number_format($finalPrice) }}</td> --}}
+                                        @else
+                                            <td style="text-align: right;">{{ $job ? number_format($job->price) : '' }}</td>
+                                            <td style="text-align: right;">{{ $job ? number_format($job->price * 0.3 ) : '' }}</td>
+                                             <td style="text-align: right;">{{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job) : 0 }}</td>
+                                          {{-- @php
+                                            $discountedPrice = $job->price * 0.7;
+                                            $assignPrice = $job->assignedJob->assign_price_job ?? 0.00;
+                                            $finalPrice = $discountedPrice - $assignPrice;
+                                            $assignPrice = $job && $job->assignedJob ? $job->assignedJob->assign_price_job : 0.00;
+                                            $totallabarSum += $assignPrice;
+                                            $totalfinalSum += $finalPrice;
+                                            @endphp --}}
+                                            {{-- <td style="text-align: right;">{{ number_format($finalPrice) }}</td> --}}
+                                        @endif                                        
 
-                                        <td style="text-align: right;">{{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job) : 0 }}</td>
-
-                                        @php
-                                        $discountedPrice = $job->price * 0.7;
-                                        $assignPrice = $job->assignedJob->assign_price_job ?? 0.00;
-                                        $finalPrice = $discountedPrice - $assignPrice;
-                                        $assignPrice = $job && $job->assignedJob ? $job->assignedJob->assign_price_job : 0.00;
-                                        $totallabarSum += $assignPrice;
-
-
-                                        $totalfinalSum += $finalPrice;
-
-
-
-                                        @endphp
-                                        <td style="text-align: right;">{{ number_format($finalPrice) }}</td>
-
-
-
-
+                                      
+                                    
                                     </tr>
-
-
                                     @endforeach
 
                                     <tr>
                                         <td>
-                                            <b style="font-size: 15px;">Sub Total: ( {{ $jobsCount ?? '' }} Houses )</b>
+                                            <b style="font-size: 13px;">{{ $jobsCount ?? '' }} Houses - </b>
                                         </td>
                                         <td style="text-align: right;">
 
-                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalPrice) ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">{{ number_format($totalPrice) ?? '' }}</b>
 
                                         </td>
                                         <td style="text-align: right;">
-                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalPrice * 0.30) ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">{{ number_format($totalPrice * 0.30) ?? '' }}</b>
                                         </td>
 
                                         <td style="text-align: right;">
-                                            <b style="font-size: 12px; text-align: right;">$ {{ number_format($totallabarSum)  ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">{{ number_format($totallabarSum)  ?? '' }}</b>
 
                                         </td>
 
 
                                         <td style="text-align: right;">
-                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalfinalSum)  ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">{{ number_format($totalfinalSum)  ?? '' }}</b>
                                         </td>
 
 
@@ -431,7 +433,7 @@
                             <table class="price-content-table" style="width:100%;margin-bottom: 200px;">
                                 <tr>
                                     <th style="width:50%">Job</th>
-                                    <th style="text-align: right;">Job Price</th>
+                                    <th style="text-align: right;">J.Price</th>
 
                                     <th style="text-align: right;">Paint</th>
 
@@ -473,25 +475,25 @@
                                     @endforeach
                                     <tr>
                                         <td>
-                                            <b style="font-size: 12px;">Sub Total: ( {{ $jobsCount ?? '' }} Houses )</b>
+                                            <b style="font-size: 12px;"> {{ $jobsCount ?? '' }} Houses -</b>
                                         </td>
                                         <td style="text-align: right;">
 
-                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalPrice) ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">{{ number_format($totalPrice) ?? '' }}</b>
 
                                         </td>
                                         <td style="text-align: right;">
-                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalPrice * 0.30) ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">{{ number_format($totalPrice * 0.30) ?? '' }}</b>
                                         </td>
 
                                         <td style="text-align: right;">
-                                            <b style="font-size: 12px; text-align: right;">$ {{ number_format($totallabarSum)  ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">{{ number_format($totallabarSum)  ?? '' }}</b>
 
                                         </td>
 
 
                                         <td style="text-align: right;">
-                                            <b style="font-size: 12px; text-align: right;">${{ number_format($totalfinalSum, 2)  ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">{{ number_format($totalfinalSum, 2)  ?? '' }}</b>
                                         </td>
 
 
@@ -522,7 +524,6 @@
 
     <script>
         function sendFilterRequest() {
-            console.log("hello sifat");
             var selectedQuarter = $('#dateRangeFilter').val();
             var selectedYear = $('#yearFilter').val();
 

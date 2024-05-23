@@ -985,18 +985,15 @@ class InvoiceController extends Controller
 
     public function report(Request $request)
     {
-        $user_id = $request->user()->id;
-
-        // $jobs = PainterJob::with('assignedJob')->where('user_id', $user_id)->distinct()->whereNull('parent_id')->get();
-
+        $user_id = auth()->user()->id;
         $jobs = PainterJob::with('assignedJob')
-            // ->where('user_id', $request->user()->id)
             ->where(function ($query) use ($user_id) {
                 $query->where('user_id', $user_id)
                     ->orWhere('assign_painter', $user_id);
             })->distinct()
             ->whereNull('parent_id')
             ->get();
+
         $jobsCount = $jobs->count();
         $totalPrice = 0;
         $totalPaintCost = 0;

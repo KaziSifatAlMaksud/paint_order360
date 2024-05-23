@@ -65,6 +65,7 @@ class HomeController extends Controller
                     ->orWhere('assign_painter', $userId);
             })
             ->whereNull('parent_id')
+            ->orderBy('updated_at', 'desc')
             ->get();
         // Counting new, started, and finished jobs
         $newCount = $jobs->where('status', 1)->count();

@@ -170,17 +170,36 @@ class AssignedPainterController extends Controller
 
         // Find the existing row in assigned_painter_job table
         $assignedPainterJob = AssignedPainterJob::where('id', $assign_painter)->first();
-        $job = PainterJob::findOrFail($jobId);
+        $assignpainterInfo = User::find($assignedPainterJob->assigned_painter_name);
+        $job = PainterJob::with('painter')->findOrFail($jobId);
         // Update the assign_job_description column content
         if ($assignedPainterJob) {
+           $mail_data = [
+                'send_email' => $assignpainterInfo->email,
+                'address' => $job->address,
+                'extrasMessage' => $request->message,
+                'date' => $request->start_date,
+                'main_painter' => $job->painter->first_name,
+                'assign_painter' => $assignpainterInfo->first_name,
+            ];
+
+            if (filter_var($mail_data['send_email'], FILTER_VALIDATE_EMAIL)) {
+                Mail::send('new_shop.email_pdf.extramess', $mail_data, function ($message) use ($mail_data) {
+                    $message->to($mail_data['send_email'])
+                            ->subject("Order360 - You Have Extra Message - " . $mail_data['address']);
+                });
             $existingDescription = $assignedPainterJob->assign_job_description;
             $updatedDescription = $existingDescription .  "\n\n"  . $request->message;
-            // Append the new message
             $job->update(['start_date' => $request->start_date]);
             $assignedPainterJob->update(['assign_job_description' => $updatedDescription]);
+
+            }
+  
+
+
+      
         } else {
             $job->update(['start_date' => $request->start_date]);
-            // If no existing row found, create a new one
             AssignedPainterJob::create([
                 'assign_painter_id' => $assign_painter,
                 'assign_job_description' => $request->message,

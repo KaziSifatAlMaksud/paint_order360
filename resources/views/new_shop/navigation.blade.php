@@ -273,7 +273,7 @@
 
         @if($jobs->count() > 0)
         <section class="invoice-doc px-2 jobs_area" style="line-height:1;">
-            @foreach($jobs->sortByDesc('created_at') as $job)
+            @foreach($jobs as $job)
             <a href="{{ route('jobs.show', ['id' => $job->id]) }}" style="text-decoration: none; color: black;" class="portfolio-item {{ $job->status == 1 ? 'filter-new' : ($job->status == 3 ? 'filter-finished' : 'filter-started') }}">
                 <div class="docs_part1  d-flex">
 

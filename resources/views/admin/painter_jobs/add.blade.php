@@ -813,8 +813,8 @@ require public_path() . '/admin/header.blade.php';
                     <p class="">Please select a order</p>
                     <select name="order_id" id="order_id" required class="form-control">
                         @foreach ($order as $user)
-<option value="{{ $user->id }}" {{ $user->id == old($user->id, $painterjob->order_id) ? 'selected' : '' }}>{{ $user->address }}</option>
-@endforeach
+                        <option value="{{ $user->id }}" {{ $user->id == old($user->id, $painterjob->order_id) ? 'selected' : '' }}>{{ $user->address }}</option>
+                        @endforeach
                     </select>
                 </div> -->
 <div class="row">

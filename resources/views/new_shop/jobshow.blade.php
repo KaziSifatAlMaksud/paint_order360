@@ -416,12 +416,9 @@
                         </div>
                         <div class="d-flex flex-column align-items-center">
 
-
-
-
-
-
                             @if(isset($assign_job_info->admin_builder) && isset($assign_job_info->assigned_painter_name) && $assign_job_info->assigned_painter_name == auth()->id())
+
+
 
                             <p> <b> Gate Code: </b> {{ $assign_job_info->admin_builder->gate }} <br>
                                 <b> Supervisor : </b>
@@ -467,7 +464,22 @@
                         <div class="col-8 mt-3">
                             <p>
                                 @if (!$job->builder_company_name)
-                                'There Is no Description...'
+                                   @if(!empty($assign_job) && !empty($assign_job->assign_job_description))
+                                    @php
+                                    $descriptionParts = explode("\n\n", $assign_job->assign_job_description);
+                                    @endphp
+
+                                    @if(!empty($descriptionParts))
+                                    <ul class="text-left mx-0" style="padding-left: 20px;">
+
+                                        @foreach($descriptionParts as $part)
+                                        @if(!empty($part))
+                                        <li>{{ $part }}</li>
+                                        @endif
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                                    @endif
                                 @else
                                 {{ $job->builder_company_name }}
                                 @endif
@@ -476,7 +488,6 @@
 
 
                         @if($assign_job ? $assign_job->painterJob->user_id == auth()->id() : '')
-
                         <div class="col-4 d-flex justify-content-end">
                             <!-- Image that triggers the modal -->
                             <img src="/image/icon1/assign_painter.png" alt="" width="35px" height="35px" data-bs-toggle="modal" data-bs-target="#uniqueModalID" style="cursor: pointer;">

@@ -12,7 +12,15 @@
     <!--icon link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
-
+    <link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+    <style>
+        .ui-autocomplete {
+            max-height: 200px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 20px;
+        }
+    </style>
     <link rel="stylesheet" href="{{ asset('css/style10.css') }}">
     <style>
         :root {
@@ -413,16 +421,8 @@
                         <div class="fw-medium">
 
                             @csrf {{-- Include CSRF token for security --}}
-                            {{-- <div class="mb-3">
-                                <label for="assigned_painter_name" class="form-label">Select Painter:<span style="color: red;">*</span></label>
-                                <select name="assigned_painter_name" id="assigned_painter_name" class="custom-input" required>
-                                    <option value="" selected>Select an option</option>
-                                    @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->first_name }} - {{ $user->company_name }}</option>
-                            @endforeach
-                            </select>
-                        </div> --}}
-                        <div class="mb-3">
+    
+                        {{-- <div class="mb-3">
                             <label for="assigned_painter_name" class="form-label">Select Painter:<span style="color: red;">*</span></label>
                             <select name="assigned_painter_name" id="assigned_painter_name" class="custom-input" required>
                                 <option value="" selected>Select an option</option>
@@ -432,7 +432,14 @@
                                 @endif
                                 @endforeach
                             </select>
+                        </div> --}}
+
+                        <div class="mb-3">
+                            <label for="assigned_painter_id" class="form-label">Assign Painter:<span style="color: red;">*</span></label>
+                            <input type="text" id="assigned_painter_id" class="custom-input" placeholder="Type to Painter Name..." required>
+                              <input type="hidden" id="assigned_painter_name" name="assigned_painter_name">
                         </div>
+
 
 
                         <div class="mb-3">
@@ -441,9 +448,9 @@
 
 
                         </div>
-                        <div class="mb-3" hidden>
+                        <div class="mb-3">
                             <label for="paintCost" class="form-label">Paint Cost</label>
-                            <input type="number" id="paintCost" name="paint_cost" placeholder="Paint Cost" class="custom-input" value="{{ old('paint_cost') }}" readonly>
+                            <input type="number" id="paintCost" name="paint_cost" placeholder="Paint Cost" class="custom-input" value="{{ old('paint_cost') }}">
                         </div>
                         <div class="mb-3">
                             <label for="extrasMessage" class="form-label">Extras Message to Painter (optional)</label>
@@ -619,6 +626,32 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+
+ <script>
+    $(document).ready(function() {
+        var users = [
+            @foreach ($users as $user)
+                { id: "{{ $user->id }}", label: "{{ $user->first_name }} - {{ $user->company_name }}" },
+            @endforeach
+        ];
+
+        $('#assigned_painter_id').autocomplete({
+            source: function(request, response) {
+                var results = $.ui.autocomplete.filter(users, request.term);
+                response(results.slice(0, 10)); // Limit the number of suggestions displayed
+            },
+            minLength: 1,
+            select: function(event, ui) {
+                // Set the selected value in the input field
+                $('#assigned_painter_id').val(ui.item.label);
+                $('#assigned_painter_name').val(ui.item.id);
+            }
+        });
+    });
+</script>
+
     <script>
         function validatePrice() {
             var price = document.getElementById("newPrice").value;
