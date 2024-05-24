@@ -230,8 +230,8 @@ require public_path() . '/admin/header.blade.php';
 </div>
 </div>
 </div> --}}
-
-
+{{-- 
+{{$painterjob->invoice}} --}}
 <div id="section1">
     @for ($i = 1; $i <= 4; $i++) <div class="container mt-3 po-wrap col-sm-12" id="card{{ $i }}" style="display: none; border: 2px solid #ff8e0a;">
         {{-- <div class="po-wrap col-sm-12"> --}}
@@ -240,9 +240,8 @@ require public_path() . '/admin/header.blade.php';
             <label class="col-sm-3 control-label">PO Number {{ $i }}: </label>
 
             <div class="col-sm-9">
-                {{-- <input name="po_item[$i][ponumber]" value="{{ count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i - 1]->ponumber : '' }}" type="text" class="form-control"> --}}
-                <input name="po_item[{{ $i }}][ponumber]" value="{{ count($painterjob->poItems) > 0 && isset($painterjob->poItems->values()[$i - 1]) ? $painterjob->poItems->values()[$i - 1]->ponumber : '' }}" type="text" class="form-control">
-
+           
+                  <input name="po_item[{{ $i }}][ponumber]" value="{{ old("po_item.$i.ponumber", count($painterjob->invoice) > 0 ? $painterjob->invoice->values()[$i-1]->purchase_order : '') }}" type="text" class="form-control">
 
             </div>
 
@@ -253,7 +252,7 @@ require public_path() . '/admin/header.blade.php';
             <label class="col-sm-3 control-label">Job description {{ $i }}:
             </label>
             <div class="col-sm-9">
-                <input name="po_item[{{ $i }}][description]" value="{{ old('po_item[$i][description]', count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i - 1]->description : '') }}" type="text" class="form-control">
+                <input name="po_item[{{ $i }}][description]" value="{{ old('po_item[$i][description]', count($painterjob->invoice) > 0 ? $painterjob->invoice->values()[$i-1]->description : '') }}" type="text" class="form-control">
 
             </div>
         </div>
@@ -265,7 +264,7 @@ require public_path() . '/admin/header.blade.php';
             <label class="col-sm-3 control-label">Long description {{ $i }}:
             </label>
             <div class="col-sm-9">
-                <input name="po_item[{{ $i }}][job_details]" value="{{ old('po_item[$i][job_details]', count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i - 1]->job_details : '') }}" type="text" class="form-control">
+                <input name="po_item[{{ $i }}][job_details]" value="{{ old('po_item[$i][job_details]', count($painterjob->invoice) > 0 ? $painterjob->invoice->values()[$i-1]->job_details : '') }}" type="text" class="form-control">
             </div>
         </div>
 
@@ -275,8 +274,8 @@ require public_path() . '/admin/header.blade.php';
             <label class="col-sm-3 control-label">P.O upload {{ $i }}:</label>
             <div class="col-sm-9">
                 <input name="po_item[{{ $i }}][file]" class="form-control form-control-lg" id="po" type="file">
-                @if (count($painterjob->poItems) > 0 && $painterjob->poItems->values()[$i - 1]->file)
-                <a href="{{ asset('/uploads/' . $painterjob->poItems->values()[$i - 1]->file) }}" download>
+                @if (count($painterjob->invoice) > 0 && $painterjob->invoice->values()[$i-1]->attachment)
+               <a href="{{ asset('uploads/' . $painterjob->invoice->values()[$i-1]->attachment) }}" download>
                     <i class="fa-solid fa-file"></i>
                 </a>
                 @endif
@@ -289,7 +288,15 @@ require public_path() . '/admin/header.blade.php';
                 {{-- inc gst --}}
             </label>
             <div class="col-sm-9">
-                <input name="po_item[{{ $i }}][price]" value="{{ old('po_item[' . $i . '][price]', count($painterjob->poItems) > 0 ? $painterjob->poItems->values()[$i - 1]->price : '') }}" min="1" max="50000000000000" type="number" step="0.01" class="form-control form-control-lg" onblur="formatPrice()">
+             <input name="po_item[{{ $i }}][price]"
+             id="price_{{ $i }}"
+             value="{{ old('po_item[' . $i . '][price]', count($painterjob->invoice) > 0 ? $painterjob->invoice->values()[$i-1]->amount : '') }}"
+             min="1"
+             max="50000000000000"
+             type="number"
+             step="0.01"
+             class="form-control form-control-lg"
+             onblur="formatPrice()">
 
             </div>
         </div>
@@ -350,27 +357,6 @@ require public_path() . '/admin/header.blade.php';
 
         </div>
     </div>
-
-
-    {{--
-    <div class="form-group">
-        <label class="col-sm-3 control-label">A. Supervisor:</label>
-        <div class="col-sm-9">
-            <select name="assigned_supervisor" id="assigned_supervisor" class="form-control">
-                <option class="empty_supervisor2" value="" selected>Select</option>
-                @foreach ($supervisors as $supervisor)
-                <option value="{{ $supervisor->id }}" class="all_supervisors supervisor_{{ $supervisor->builder_id }}" {{ $assign_painter !== null && $supervisor->id == old('assigned_supervisor', $assign_painter->assign_company_id) ? 'selected' : '' }}>
-    {{ $supervisor->name }}
-    </option>
-    @endforeach
-    </select>
-</div>
-</div> --}}
-
-
-
-
-
 {{-- Assign Painter Job Price --}}
 <div class="form-group">
     <label class="col-sm-3 control-label">Price for Job Ex Gst:
@@ -381,77 +367,19 @@ require public_path() . '/admin/header.blade.php';
 
     </div>
 </div>
-
-
-
-{{-- Here is the question will be there..  --}}
-
-{{-- <div class="form-group">
-                            <label class="col-sm-12 control-label">Does the Painter Buy the Paint?</label>
-                            <div class="col-sm-12">
-                                <div class="form-check col-sm-6">
-                                    <input {{old("stairs_stained", $painterjob->stairs_stained) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=1 id="flexRadioDefault1">
-<label class="form-check-label" for="flexRadioDefault1">
-    Yes
-</label>
-</div>
-<div class="form-check col-sm-6">
-    <input {{old("stairs_stained", $painterjob->stairs_stained) ==0? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=0 id="flexRadioDefault2">
-    <label class="form-check-label" for="flexRadioDefault2">
-        No
-    </label>
-</div>
-</div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-12 control-label">Does the Painter orders the paint or me ?</label>
-    <div class="col-sm-12">
-        <div class="form-check col-sm-6">
-            <input {{old("stairs_stained", $painterjob->stairs_stained) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=1 id="flexRadioDefault1">
-            <label class="form-check-label" for="flexRadioDefault1">
-                Yes
-            </label>
-        </div>
-        <div class="form-check col-sm-6">
-            <input {{old("stairs_stained", $painterjob->stairs_stained) ==0? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=0 id="flexRadioDefault2">
-            <label class="form-check-label" for="flexRadioDefault2">
-                No
-            </label>
-        </div>
-    </div>
-</div>
-
-<div class="form-group">
-    <label class="col-sm-12 control-label">Is Paint order is sent to me or paint shop ?</label>
-    <div class="col-sm-12">
-        <div class="form-check col-sm-6">
-            <input {{old("stairs_stained", $painterjob->stairs_stained) ==1 ? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=1 id="flexRadioDefault1">
-            <label class="form-check-label" for="flexRadioDefault1">
-                Yes
-            </label>
-        </div>
-        <div class="form-check col-sm-6">
-            <input {{old("stairs_stained", $painterjob->stairs_stained) ==0? 'checked': '' }} class="form-check-input" type="radio" name="stairs_stained" value=0 id="flexRadioDefault2">
-            <label class="form-check-label" for="flexRadioDefault2">
-                No
-            </label>
-        </div>
-    </div>
-</div> --}}
-
 <div id="section2">
     {{-- End Here is the question will be there..  --}}
     @for ($i = 1; $i <= 4; $i++) <div class="container mt-3 po-wrap col-sm-12 group-2" id="card{{ $i }}" style="display: none; border: 3px solid #ff0aba;">
 
         <div class="form-group">
             <label class="col-sm-3 control-label">PO {{ $i + 4 }}: </label>
-
-            <div class="col-sm-9">
-
-                <input name="po_item[{{ $i + 4 }}][ponumber]" value="{{ old('po_item[' . ($i + 4) . '][ponumber]', count($painterjob->poItems) > $i + 3 ? $painterjob->poItems->values()[$i + 3]->ponumber : '') }}" type="text" class="form-control">
-
+           <div class="col-sm-9">
+                <input name="po_item[{{ $i + 4 }}][ponumber]" 
+                    value="{{ old('po_item.' . ($i + 4) . '.ponumber', count($painterjob->invoice) > $i + 3 ? $painterjob->invoice->values()[$i + 3]->purchase_order : '') }}" 
+                    type="text" class="form-control">
             </div>
+
+
 
         </div>
 
@@ -459,7 +387,7 @@ require public_path() . '/admin/header.blade.php';
         <div class="form-group">
             <label class="col-sm-3 control-label">Description{{ $i + 4 }}: </label>
             <div class="col-sm-9">
-                <input name="po_item[{{ $i + 4 }}][description]" value="{{ old('po_item[' . ($i + 4) . '][description]', count($painterjob->poItems) > $i + 3 && isset($painterjob->poItems[$i + 3]) ? $painterjob->poItems->values()[$i + 3]->description : '') }}" type="text" class="form-control">
+                <input name="po_item[{{ $i + 4 }}][description]" value="{{ old('po_item[' . ($i + 4) . '][description]', count($painterjob->invoice) > $i + 3 && isset($painterjob->invoice[$i + 3]) ? $painterjob->invoice->values()[$i + 3]->description : '') }}" type="text" class="form-control">
 
             </div>
         </div>
@@ -471,28 +399,34 @@ require public_path() . '/admin/header.blade.php';
             <label class="col-sm-3 control-label">L.description{{ $i + 4 }}:
             </label>
             <div class="col-sm-9">
-                <input name="po_item[{{ $i + 4 }}][job_details]" value="{{ old('po_item[' . ($i + 4) . '][job_details]', count($painterjob->poItems) > $i + 3 && isset($painterjob->poItems[$i + 3]) ? $painterjob->poItems->values()[$i + 3]->job_details : '') }}" type="text" class="form-control">
+                <input name="po_item[{{ $i + 4 }}][job_details]" value="{{ old('po_item[' . ($i + 4) . '][job_details]', count($painterjob->invoice) > $i + 3 && isset($painterjob->invoice[$i + 3]) ? $painterjob->invoice->values()[$i + 3]->job_details : '') }}" type="text" class="form-control">
             </div>
         </div>
 
         <div class="form-group">
             <label class="col-sm-3 control-label">P.O upload{{ $i + 4 }}:</label>
+            
             <div class="col-sm-9">
-                <input name="po_item[{{ $i + 4 }}][file]" class="form-control form-control-lg" id="po" type="file">
-                @if (count($painterjob->poItems) > 0 &&
-                isset($painterjob->poItems[$i + 3]) &&
-                $painterjob->poItems->values()[$i + 3]->file)
-                <a href="{{ asset('/uploads/' . $painterjob->poItems->values()[$i + 3]->file) }}" download>
-                    <i class="fa-solid fa-file"></i>
-                </a>
+                <input name="po_item[{{ $i + 4 }}][file]"
+                    class="form-control form-control-lg"
+                    id="po_item_{{ $i + 4 }}_file"
+                    type="file">
+                @if (count($painterjob->invoice) > 0 && isset($painterjob->invoice->values()[$i + 3]->attachment))
+                    <a href="{{ asset('uploads/' . $painterjob->invoice->values()[$i + 3]->attachment) }}" download>
+                        <i class="fa-solid fa-file"></i>
+                    </a>
                 @endif
             </div>
+
+
+
+           
         </div>
 
         <div class="form-group">
             <label class="col-sm-3 control-label">Price {{ $i + 4 }}:</label>
             <div class="col-sm-9">
-                <input name="po_item[{{ $i + 4 }}][price]" value="{{ old('po_item[' . $i . '][price]', count($painterjob->poItems) > $i + 3 && isset($painterjob->poItems[$i + 3]) ? $painterjob->poItems->values()[$i + 3]->price : '') }}" min="1" max="50000000000000" type="number" step="0.01" class="form-control form-control-lg" onblur="formatPrice()">
+                <input name="po_item[{{ $i + 4 }}][price]" value="{{ old('po_item[' . ( $i + 4 ). '][price]', count($painterjob->invoice) > $i + 3 && isset($painterjob->invoice[$i + 3]) ? $painterjob->invoice->values()[$i + 3]->amount : '') }}" min="1" max="50000000000000" type="number" step="0.01" class="form-control form-control-lg" onblur="formatPrice()">
             </div>
         </div>
 

@@ -234,35 +234,13 @@ class PainterJobController extends Controller
                 'status' => 2,
             ]);
 
-            //Email for Assign Painter ...
 
-            $AssingPainterInfo = User::find($request->assigned_painter_name);  
-            $jobInfo = PainterJob::find($AssingPainterInfo->job_id);   
-            // Find the painter user
-            $maxId = Invoice::max('id');
-            $nextId = $maxId + 1;
-            $maxInvoiceNumber = sprintf('INV: %04d', $nextId);
-            $data5 = [
-                'user_id' => $AssingPainterInfo->id,
-                'customer_id' => $mainPainterInfo->company_name,
-                'send_email' => $mainPainterInfo->email,
-                'inv_number' => $maxInvoiceNumber,
-                'date' => now()->toDateString(),
-                'purchase_order' => null,
-                'job_id' => $painterjob->id,
-                'address' => $request->address,
-                'description' => $request->assign_job_description,
-                'attachment' => '',
-                'job_details' => '',
-                'amount' =>$request->assign_price_job - ($request->assign_price_job * 0.10),
-                'gst' => $request->assign_price_job * 0.10,
-                'total_due' =>$request->assign_price_job,
-                'status' => 1,
-            ];
-            $invoice = Invoice::create($data5);
-
-
-            // Return a JSON response
+              $AssingPainterInfo = User::find($request->assigned_painter_name);
+            if (!$AssingPainterInfo) {
+                // Handle the case where the painter is not found
+                return response()->json(['message' => 'AssingPainterInfo not found'], 404);
+            }
+           // Return a JSON response
             $data = [
                 'name' => $AssingPainterInfo->first_name . ' ' . $AssingPainterInfo->last_name,
                 'address' => $request->address,
@@ -270,6 +248,7 @@ class PainterJobController extends Controller
                 'extrasMessage' => $request->builder_company_name,
                 'price'  => $request->assign_price_job,
                 'send_email' => $AssingPainterInfo->email,
+                'jobid' => $painterjob->id,
             ];
 
             Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
@@ -314,7 +293,7 @@ class PainterJobController extends Controller
             curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
 
             $response = curl_exec($ch);
-        //push notification end
+       // push notification end
 
         }
         if ($request->inside) {
@@ -355,6 +334,7 @@ class PainterJobController extends Controller
                 'extrasMessage' => $request->builder_company_name,
                 'price'  => $request->price,
                 'send_email' => $painterInfo->email,
+                'jobid' => $painterjob->id,
             ];
 
             Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {
@@ -367,7 +347,7 @@ class PainterJobController extends Controller
           //push notification shart
             $users = AllowNotification::where('user_id',  $user_id)->get();
             $firebaseTokens = $users->pluck('device_token')->toArray();
-                 if (empty($firebaseTokens)) {
+                    if (empty($firebaseTokens)) {
                 // Handle the case where there are no tokens
                 $firebaseTokens = null;
             }
@@ -398,7 +378,7 @@ class PainterJobController extends Controller
             curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
 
             $response = curl_exec($ch);
-        //push notification end
+          //  push notification end
 
 
 
@@ -446,19 +426,32 @@ class PainterJobController extends Controller
                 $invoice->job_id = $painterjob->id;
                 $invoice->address = $job_address;
                 $invoice->batch = $pokey;
+                if ($request->hasFile("po_item.$pokey.file")) {
+                $file2 = $request->file("po_item.$pokey.file");
+                $fileName2 = time() . '_' . $file2->getClientOriginalName();
+                $attachmentPath2 = $file2->storeAs('', $fileName2, 'public');
+                $invoice->attachment = $attachmentPath2; // Store the file path in the invoice
+                }
                 $invoice->description = $povalue['description'] ?? '';
                 $invoice->job_details = $povalue['job_details'] ?? '';
-                $invoice->amount = $povalue['price'] ?? 0;
-                $invoice->gst = $invoice->amount * 0.30;
-                $invoice->total_due = $invoice->amount + $invoice->gst;
+              if (isset($povalue['price']) && is_numeric($povalue['price'])) {
+                    $invoice->amount = $povalue['price'];
+                    $invoice->gst = $invoice->amount * 0.30;
+                    $invoice->total_due = $invoice->amount + $invoice->gst;
+                } else {
+                    $invoice->amount = null;
+                    $invoice->gst = null;
+                    $invoice->total_due = null;
+                }
+
                 $invoice->save();
                    // Now create or update the PoItem with the invoice ID
-                $poItem = new PoItems();
-                $povalue['job_id'] = $painterjob->id;
-                $povalue['batch'] = $pokey;
-                $povalue['invoice_id'] = $invoice->id; // Linking the PoItem with the Invoice
-                $this->manageFile($request, "po_item.$pokey.file", $povalue, $poItem, 'file');
-                $poItem->fill($povalue)->save();
+                // $poItem = new PoItems();
+                // $povalue['job_id'] = $painterjob->id;
+                // $povalue['batch'] = $pokey;
+                // $povalue['invoice_id'] = $invoice->id; // Linking the PoItem with the Invoice
+                // $this->manageFile($request, "po_item.$pokey.file", $povalue, $poItem, 'file');
+                // $poItem->fill($povalue)->save();
             }
         }
         Session::flash('message', 'PainterJob Added successfully');
@@ -493,7 +486,7 @@ class PainterJobController extends Controller
         }
 
         $assign_painter = AssignedPainterJob::where('job_id', $painterJob->id)->first();
-        $painterJob->load('poItems');
+        $painterJob->load('invoice');
         $buliders =  Builder::whereNotNull('name')->orderBy('name')->get();
         $brands = Brand::all();
         $users = User::whereNotNull('first_name')->orderBy('first_name')->get();
@@ -588,62 +581,81 @@ public function update(Request $request, PainterJob $painterJob)
 
      
             // Create new invoices for PO items if provided
-            if ($request->po_item) {
-               
-                $mainPainter = User::find($user_id);
+         if ($request->po_item) {
+        // Retrieve the main painter and their email
+        $mainPainter = User::find($user_id);
+        $mainPainterEmail = $mainPainter->email;
 
-                $mainPainterEmail = $mainPainter->email;
-                $admin_company_id = $request->company_id;
-                $admin_company = BuilderModel::find($admin_company_id);
-                $admin_company_name = $admin_company->company_name;
-                $admin_company_email = $admin_company->builder_email;
-                $currentDate = Carbon::now()->format('Y-m-d');
-                $job_address = $request->address;
+        // Retrieve the admin company and its details
+        $admin_company_id = $request->company_id;
+        $admin_company = BuilderModel::find($admin_company_id);
+        $admin_company_name = $admin_company->company_name;
+        $admin_company_email = $admin_company->builder_email;
 
-              dd($mainPainter, $mainPainterEmail, $admin_company_id, $admin_company, $painterJob->id, $admin_company_name, $admin_company_email, $currentDate, $job_address);
+        // Get the current date and job address
+        $currentDate = Carbon::now()->format('Y-m-d');
+        $job_address = $request->address;
 
-                foreach ($request->po_item as $pokey => $povalue) {
-                    $category = ($pokey >= 1 && $pokey <= 4) ? 'firstGroup' : (($pokey >= 5 && $pokey <= 8) ? 'secondGroup' : '');
+        // Debugging: Print variables
+       
 
-                    // Assuming you need to find the invoice based on job_id and batch
-                    $invoice = Invoice::where('job_id', $painterJob->id)->where('batch', $pokey)->first();
+        // Process each PO item
+        foreach ($request->po_item as $pokey => $povalue) {
 
-                    if (!$invoice) {
-                        $invoice = new Invoice();
-                    }
+            
+            // Determine the category based on the index
+            $category = ($pokey >= 1 && $pokey <= 4) ? 'firstGroup' : (($pokey >= 5 && $pokey <= 8) ? 'secondGroup' : '');
 
-                    if ($category === 'firstGroup') {
-                        $invoice->user_id = $user_id;
-                        $invoice->customer_id = $admin_company_name;
-                        $invoice->send_email = $admin_company_email;
-                    } elseif ($category === 'secondGroup' && !is_null($request->assigned_painter_name)) {
-                        $invoice->user_id = $request->assign_company_id; // This might need review
-                        $invoice->send_email = $mainPainterEmail;
-                    }
+            // Find or create an invoice based on job_id and batch
+            $invoice = Invoice::where('job_id', $painterJob->id)->where('batch', $pokey)->first() ?? new Invoice();
 
-                    $inv_numbers = Invoice::max('id') ?? 0;
-                    if (!$invoice->inv_number) {
-                        $next_inv_number = $inv_numbers + 1;
-                        $formatted_number = sprintf('INV:%05d', $next_inv_number);
-                        $invoice->inv_number = $formatted_number;
-                    }
-
-                    $invoice->date = $currentDate;
-                    $invoice->purchase_order = $povalue['ponumber'] ?? '';
-                    $invoice->job_id = $painterJob->id; // Assuming this was missing
-                    $invoice->address = $job_address;
-                    $invoice->batch = $pokey; // Assuming this was missing
-                    $invoice->status = 1;
-                    $invoice->description = $povalue['description'] ?? '';
-                    $invoice->job_details = $povalue['job_details'] ?? '';
-                    $invoice->amount = $povalue['price'] ?? 0;
-                    $invoice->gst = $invoice->amount * 0.30;
-                    $invoice->total_due = $invoice->amount + $invoice->gst;
-
-                    // Save the updates
-                    $invoice->save();
-                }
+            // Set invoice details based on category
+            if ($category === 'firstGroup') {
+                $invoice->user_id = $user_id;
+                $invoice->customer_id = $admin_company_name;
+                $invoice->send_email = $admin_company_email;
+            } elseif ($category === 'secondGroup' && !is_null($request->assigned_painter_name)) {
+                $invoice->user_id = $request->assign_company_id; // Review this line as needed
+                $invoice->send_email = $mainPainterEmail;
             }
+
+            // Set the invoice number if not already set
+            if (!$invoice->inv_number) {
+                $next_inv_number = (Invoice::max('id') ?? 0) + 1;
+                $invoice->inv_number = sprintf('INV:%05d', $next_inv_number);
+            }
+
+            // Set other invoice details
+            $invoice->date = $currentDate;
+            $invoice->purchase_order = $povalue['ponumber'] ?? '';
+            $invoice->job_id = $painterJob->id; // Assuming this was missing
+            $invoice->address = $job_address;
+            if ($request->hasFile("po_item.$pokey.file")) {
+                $file2 = $request->file("po_item.$pokey.file");
+                $fileName2 = time() . '_' . $file2->getClientOriginalName();
+                $attachmentPath2 = $file2->storeAs('', $fileName2, 'public');
+                $invoice->attachment = $attachmentPath2; // Store the file path in the invoice
+            }
+            $invoice->status = 1;
+            $invoice->description = $povalue['description'] ?? '';
+            $invoice->job_details = $povalue['job_details'] ?? '';
+           if (isset($povalue['price']) && is_numeric($povalue['price'])) {
+                $invoice->amount = $povalue['price'];
+                $invoice->gst = $invoice->amount * 0.30;
+                $invoice->total_due = $invoice->amount + $invoice->gst;
+            } else {
+                $invoice->amount = null;
+                $invoice->gst = null;
+                $invoice->total_due = null;
+            }
+
+           
+
+            // Save the invoice
+            $invoice->save();
+        }
+    }
+
 
 
         DB::commit();

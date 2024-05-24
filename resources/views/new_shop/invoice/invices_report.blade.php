@@ -373,27 +373,28 @@
                                             <td style="text-align: right;">{{ $job ? number_format($job->assignedJob->assign_price_job ?? 0) : '' }}</td>
                                             <td style="text-align: right;">{{ $job ? number_format($job->assignedJob->paint_cost ?? 0) : '' }}</td>
                                             <td style="text-align: right;">0</td>
-                                                {{-- @php
-                                                $discountedPrice = $job->assignedJob->assign_price_job - 
-                                                $finalPrice = $discountedPrice - $assignPrice;
-                                                $assignPrice = $job && $job->assignedJob ? $job->assignedJob->assign_price_job : 0.00;
-                                                $totallabarSum += $assignPrice;
-                                                $totalfinalSum += $finalPrice;
-                                                @endphp --}}
-                                            {{-- <td style="text-align: right;">{{ number_format($finalPrice) }}</td> --}}
+                                              @php
+                                                    $assignPainterPrice = $job->assignedJob->assign_price_job ?? 0;
+                                                    $paintCost = $job->assignedJob->paint_cost ?? 0;
+                                                    $profitPrice = $assignPainterPrice - $paintCost;
+
+                                                    $totallabarSum += 0;
+                                                    $totalfinalSum += $profitPrice;
+                                                @endphp
+                                                <td style="text-align: right;">{{ number_format($profitPrice) }}</td>
                                         @else
                                             <td style="text-align: right;">{{ $job ? number_format($job->price) : '' }}</td>
                                             <td style="text-align: right;">{{ $job ? number_format($job->price * 0.3 ) : '' }}</td>
                                              <td style="text-align: right;">{{ $job && $job->assignedJob ? number_format($job->assignedJob->assign_price_job) : 0 }}</td>
-                                          {{-- @php
-                                            $discountedPrice = $job->price * 0.7;
-                                            $assignPrice = $job->assignedJob->assign_price_job ?? 0.00;
-                                            $finalPrice = $discountedPrice - $assignPrice;
-                                            $assignPrice = $job && $job->assignedJob ? $job->assignedJob->assign_price_job : 0.00;
-                                            $totallabarSum += $assignPrice;
-                                            $totalfinalSum += $finalPrice;
-                                            @endphp --}}
-                                            {{-- <td style="text-align: right;">{{ number_format($finalPrice) }}</td> --}}
+                                            @php
+                                                $discountedPrice = $job->price * 0.7;
+                                                $assignPrice = $job->assignedJob->assign_price_job ?? 0.00;
+                                                $finalPrice = $discountedPrice - $assignPrice;
+                                                $assignPrice = $job && $job->assignedJob ? $job->assignedJob->assign_price_job : 0.00;
+                                                $totallabarSum += $assignPrice;
+                                                $totalfinalSum += $finalPrice;
+                                                @endphp 
+                                            <td style="text-align: right;">{{ number_format($finalPrice) }}</td>
                                         @endif                                        
 
                                       
@@ -430,78 +431,94 @@
                             </table>
                         </div>
                         <div id="percentage-content" class="content-type">
-                            <table class="price-content-table" style="width:100%;margin-bottom: 200px;">
+                         <table class="price-content-table" style="width:100%;margin-bottom: 200px;">
                                 <tr>
                                     <th style="width:50%">Job</th>
                                     <th style="text-align: right;">J.Price</th>
-
                                     <th style="text-align: right;">Paint</th>
-
                                     <th style="text-align: right;">Labour</th>
-
                                     <th style="text-align: right;">Profit</th>
-
                                 </tr>
                                 <tbody id="percentageBody">
+                                    @php
+                                        $totalfinalSum = 0;
+                                        $totallabarSum = 0;
+                                        $totalPaintPercentage = 0;
+                                        $totalLabourPercentage = 0;
+                                        $totalProfitPercentage = 0;
+                                        $jobCount = count($jobs);
+                                    @endphp
 
                                     @foreach($jobs as $job )
-
-
                                     <tr>
                                         <td>{{ $job ? $job->address : '' }}</td>
-                                        <td style="text-align: right;">$ {{ $job ? number_format($job->price) : '' }}</td>
-                                        {{-- <td style="text-align: right;">{{ $job ? number_format($job->price * 0.3, 2) : '' }}%</td> --}}
-                            
-                                        <td style="text-align: right;">{{ $job ? 30 : '' }}%</td>
-                                        <td style="text-align: right;">
-                                                @if($job && $job->assignedJob && $job->price != 0)
-                                                    {{ number_format(($job->assignedJob->assign_price_job / $job->price) * 100, 2) }}%
-                                                @else
-                                                    0.00%
-                                                @endif
-                                            </td>
+                                        @if ($job && $job->assign_painter == auth()->user()->id)
+                                            <td style="text-align: right;">{{ $job ? number_format($job->assignedJob->assign_price_job ?? 0) : '' }}</td>
+                                            @php
+                                                $paintCost = $job->assignedJob->paint_cost ?? 0;
+                                                $assignPainterPrice = $job->assignedJob->assign_price_job ?? 0;
+                                                $paintPercentage = ($assignPainterPrice > 0) ? ($paintCost / $assignPainterPrice) * 100 : 0;
+                                                $totalPaintPercentage += $paintPercentage;
 
-                            
-                                        @php
-                                        $mainPrice = $job->price;
-                                        $paintCost = $job->price * 0.3;
-                                        $assignPainterPrice = $job->assignedJob->assign_price_job ?? 0.00;
-                                        $profit = $mainPrice - ($paintCost + $assignPainterPrice);
-                                        $profitPercentage = ($mainPrice > 0) ? ($profit / $mainPrice) * 100 : 0;
-                                        @endphp
+                                                $labourPercentage = 0; // Since labour is 0 for this case
+                                                $totalLabourPercentage += $labourPercentage;
 
-                                        <td style="text-align: right;">{{ number_format($profitPercentage) }} %</td>
+                                                $profitPrice = $assignPainterPrice - $paintCost;
+                                                $profitPercentage = ($assignPainterPrice > 0) ? ($profitPrice / $assignPainterPrice) * 100 : 0;
+                                                $totalProfitPercentage += $profitPercentage;
+                                            @endphp
+                                            <td style="text-align: right;">{{ number_format($paintPercentage, 2) }}%</td>
+                                            <td style="text-align: right;">{{ number_format($labourPercentage, 2) }}%</td>
+                                            <td style="text-align: right;">{{ number_format($profitPercentage, 2) }}%</td>
+                                        @else
+                                            <td style="text-align: right;">{{ $job ? number_format($job->price) : '' }}</td>
+                                            @php
+                                                $paintCost = $job->price * 0.3;
+                                                $assignPainterPrice = $job->assignedJob->assign_price_job ?? 0;
+                                                $paintPercentage = ($assignPainterPrice > 0) ? ($paintCost / $assignPainterPrice) * 100 : 0;
+                                                $totalPaintPercentage += $paintPercentage;
+
+                                                $labourPercentage = ($job->price > 0) ? ($assignPainterPrice / $job->price) * 100 : 0;
+                                                $totalLabourPercentage += $labourPercentage;
+
+                                                $profitPrice = $job->price - ($paintCost + $assignPainterPrice);
+                                                $profitPercentage = ($job->price > 0) ? ($profitPrice / $job->price) * 100 : 0;
+                                                $totalProfitPercentage += $profitPercentage;
+                                            @endphp
+                                            <td style="text-align: right;">{{ number_format($paintPercentage, 2) }}%</td>
+                                            <td style="text-align: right;">{{ number_format($labourPercentage, 2) }}%</td>
+                                            <td style="text-align: right;">{{ number_format($profitPercentage, 2) }}%</td>
+                                        @endif
                                     </tr>
                                     @endforeach
+                                    @php
+                                        $averagePaintPercentage = ($jobCount > 0) ? $totalPaintPercentage / $jobCount : 0;
+                                        $averageLabourPercentage = ($jobCount > 0) ? $totalLabourPercentage / $jobCount : 0;
+                                        $averageProfitPercentage = ($jobCount > 0) ? $totalProfitPercentage / $jobCount : 0;
+                                    @endphp
                                     <tr>
                                         <td>
-                                            <b style="font-size: 12px;"> {{ $jobsCount ?? '' }} Houses -</b>
+                                            <b style="font-size: 13px;">{{ $jobsCount ?? '' }} Houses -</b>
                                         </td>
                                         <td style="text-align: right;">
-
                                             <b style="font-size: 12px; text-align: right;">{{ number_format($totalPrice) ?? '' }}</b>
-
                                         </td>
                                         <td style="text-align: right;">
-                                            <b style="font-size: 12px; text-align: right;">{{ number_format($totalPrice * 0.30) ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">{{ number_format($averagePaintPercentage, 2) }}%</b>
                                         </td>
-
                                         <td style="text-align: right;">
-                                            <b style="font-size: 12px; text-align: right;">{{ number_format($totallabarSum)  ?? '' }}</b>
-
+                                            <b style="font-size: 12px; text-align: right;">{{ number_format($averageLabourPercentage, 2) }}%</b>
                                         </td>
-
-
                                         <td style="text-align: right;">
-                                            <b style="font-size: 12px; text-align: right;">{{ number_format($totalfinalSum, 2)  ?? '' }}</b>
+                                            <b style="font-size: 12px; text-align: right;">{{ number_format($averageProfitPercentage, 2) }}%</b>
                                         </td>
-
-
                                     </tr>
-
-
                                 </tbody>
                             </table>
+
+
+
+
 
 
                         </div>
