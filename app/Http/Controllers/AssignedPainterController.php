@@ -116,6 +116,7 @@ class AssignedPainterController extends Controller
                             'extrasMessage' => $extrasMessage,
                             'price'  => $assign_job_price,
                             'send_email' => $painterInfo->email,
+                            'jobid' => $id,
                         ];
 
                         Mail::send('new_shop.invoice.jobnotification', $data, function ($message) use ($data) {

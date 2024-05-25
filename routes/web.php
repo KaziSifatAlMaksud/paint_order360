@@ -89,8 +89,8 @@ Route::group(['middleware' => ['auth', 'multilanguage']], function () {
 
 
 
-
-	Route::get('/invoiceing/{jobs_id}/{poItem_id}/{batch}/create', [InvoiceController::class, 'invoice_send'])->name('invoice_send');
+	// i remove this stap..
+	// Route::get('/invoiceing/{jobs_id}/{poItem_id}/{batch}/create', [InvoiceController::class, 'invoice_send'])->name('invoice_send');
 
 
 	// Route::get('/invoiceing/{jobs_id}/create', [InvoiceController::class, 'invoice_send2'])->name('invoice_send2');

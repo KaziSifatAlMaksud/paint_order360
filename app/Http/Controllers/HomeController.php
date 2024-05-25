@@ -195,12 +195,20 @@ class HomeController extends Controller
     }
     public function showinvoiceing($id, Request $request)
     {
+        $user_id = Auth::user()->id;
         $jobs = PainterJob::with('assignedJob', 'users', 'admin_builders')->findOrFail($id);
         $status = Invoice::all();
-        $invoices = Invoice::where('job_id', $id)->whereNull('batch')
-            ->orderBy('updated_at', 'desc')
-            ->get();
-        return view('new_shop.invoice.invoicing_page', compact('jobs', 'status', 'invoices'));
+        $admininvoicesas = Invoice::where('job_id', $id)
+                ->whereNotNull('batch') 
+                ->orderBy('updated_at', 'desc')
+                ->get();
+        $jobinvoices =  Invoice::where('job_id', $id)
+                ->where('user_id', $user_id)
+                ->whereNull('batch') 
+                ->orderBy('updated_at', 'desc')
+                ->get();
+
+        return view('new_shop.invoice.invoicing_page', compact('jobs', 'jobinvoices', 'admininvoicesas'));
     }
 
 

@@ -23,7 +23,7 @@
     <p>Congratulations! You have received a new job assignment. The address is: <strong>{{ $address }}</strong>. <br> Please find the details below:</p>
     
     <strong>{{ $extrasMessage }}</strong>
-    <p>Price: <strong>{{ $price }}</strong></p>
+    <p>Price: <strong>$ {{ $price }}</strong></p>
 
     <a href="https://testqa.orderr360.net/{{ $jobid }}" class="button">Press the button to see the Job</a>
 

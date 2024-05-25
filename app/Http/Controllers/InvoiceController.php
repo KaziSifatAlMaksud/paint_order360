@@ -236,30 +236,6 @@ class InvoiceController extends Controller
 
 
 
-
-
-    public function invoice_send(Request $request, $jobs_id, $poItem_id)
-    {
-        $customers = Customer::all()->where('user_id', $request->user()->id);
-        $jobs = PainterJob::with('superviser', 'poitem', 'painter', 'admin_builders', 'assignedJob')
-            ->where('id', $jobs_id)
-            // ->where('user_id', $request->user()->id)
-            ->whereNull('parent_id')
-            ->first();
-        if (isset($jobs->admin_builders)) {
-            $admin_builders = BuilderModel::where('company_name', $jobs->admin_builders->name)->first();
-            $poItem = $jobs->poitem()->where('id', $poItem_id)->first();
-            $invoice = Invoice::where('id', $poItem->invoice_id)->first();
-            $invoice = Invoice::where('id', $poItem->invoice_id)
-                ->where('batch', $poItem->batch)
-                ->first();
-
-            $inv_numbers = Invoice::max('id') ?? 0;
-
-            return view('new_shop.invoice.send_invices', compact('customers', 'jobs', 'poItem', 'inv_numbers', 'admin_builders', 'invoice'));
-        }
-    }
-
     public function send_statement(Request $request)
     {
         $user_id = $request->user()->id;
@@ -1294,3 +1270,29 @@ class InvoiceController extends Controller
             return view('new_shop.invoice.outstanding_pdf', compact('invoices')); // Assuming 'pdf.view' is the name of your view file
         }
 }
+
+
+
+
+
+    // public function invoice_send(Request $request, $jobs_id, $poItem_id)
+    // {
+    //     $customers = Customer::all()->where('user_id', $request->user()->id);
+    //     $jobs = PainterJob::with('superviser', 'poitem', 'painter', 'admin_builders', 'assignedJob')
+    //         ->where('id', $jobs_id)
+    //         // ->where('user_id', $request->user()->id)
+    //         ->whereNull('parent_id')
+    //         ->first();
+    //     if (isset($jobs->admin_builders)) {
+    //         $admin_builders = BuilderModel::where('company_name', $jobs->admin_builders->name)->first();
+    //         $poItem = $jobs->poitem()->where('id', $poItem_id)->first();
+    //         $invoice = Invoice::where('id', $poItem->invoice_id)->first();
+    //         $invoice = Invoice::where('id', $poItem->invoice_id)
+    //             ->where('batch', $poItem->batch)
+    //             ->first();
+
+    //         $inv_numbers = Invoice::max('id') ?? 0;
+
+    //         return view('new_shop.invoice.send_invices', compact('customers', 'jobs', 'poItem', 'inv_numbers', 'admin_builders', 'invoice'));
+    //     }
+    // }

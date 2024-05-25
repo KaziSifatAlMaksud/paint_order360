@@ -44,7 +44,6 @@
             <h4><b>{{ $jobs->address }}</b></h4>
             <p class="text-start reduced-line-height">Here are all the in voices for this address,
                 open the ones you want to send</p>
-            {{-- <p class="text-left reduced-line-height showinline"><b>Job ID:</b> {{$jobs->id}}</p> --}}
             <p class="text-left reduced-line-height showinline">
                 <b>Company Name: </b>
                 @if(isset($jobs->admin_builders) && $jobs->users->id === auth()->user()->id && $jobs->admin_builders->company_name)
@@ -54,57 +53,11 @@
                 {{ $jobs->users->company_name }}
                 @endif
             </p>
-            {{-- <p class="text-left reduced-line-height showinline">
-                <b>Job Description: </b>
-                @if(isset($jobs->builder_company_name) && $jobs->users->id === auth()->user()->id )
-                {{ $jobs->builder_company_name }}
-            @endif
-            @if(isset($jobs->assignedJob) && $jobs->assignedJob->assigned_painter_name == auth()->user()->id)
-            {{ $jobs->builder_company_name }}
-
-            </p> --}}
-
-            {{--
-            <p class="reduced-line-height showinline"><b>Extra Message:</b>
-
-
-                @if(!empty($jobs->assignedJob) && !empty($jobs->assignedJob->assign_job_description))
-                @php
-                $descriptionParts = explode("\n\n", $jobs->assignedJob->assign_job_description);
-                @endphp
-                @if(!empty($descriptionParts))
-                <ol class="text-left mx-0" style="padding-left: 15px;">
-                    @foreach($descriptionParts as $part)
-                    @if(!empty($part))
-                    <li style="line-height: 1.2; /* Adjust this value for line spacing */">{{ $part }}</li>
-            @endif
-            @endforeach
-            </ol>
-            @endif
-            @endif
-            </p>
-
-
-            @endif --}}
-
         </div>
 
 
 
         <!-- End Card Section -->
-
-
-
-
-
-        @if (!$jobs->poItems->contains(function ($poItem) {
-        return $poItem->price && $poItem->description && $poItem->ponumber;
-        }))
-        {{-- <div class="alert alert-danger mt-5" role="alert">
-            No Invoice is Available
-        </div> --}}
-        @endif
-
 
      @if(session('success'))
         <div class="alert alert-success mt-3">
@@ -133,186 +86,134 @@
             });
         </script>
     @endif
-
-
-
-
         <section class="invoice-doc jobs_area InvoicePortfolio">
-            @if($jobs->user_id && $jobs->user_id == auth()->id())
-            @foreach ($jobs->poItems as $index => $poItem)
-            @if ( $poItem->batch <= 4 && $poItem->price && $poItem->description && $poItem->ponumber)
-
-                <a href="{{ url('/invoiceing/' . $jobs->id . '/' . $poItem->id . '/'. $poItem->batch.'/create') }}">
-
-                    <div class="docs_part1 docs_prt1 position-relative portfolio-item" style="line-height: 1;">
-                        <div class="invoice-cart">
-                            <h5 class="addressText mt-2 showinline address_text">{{ $jobs->address }}</h5>
-                            @php
-                            $priceIncludingGST = $poItem->price * 1.10; // Adding 10%
-                            @endphp
-
-                            <div class="invoice-cart-border"></div>
-                            <p class="text3 mb-1">{{ $poItem->description }} </p>
-
-
-                            <p class="docs_right jobs_right position-absolute end-0 customerInv " style="margin: -10px 10px 0px 0px;">{{ $poItem->invoice ?  $poItem->invoice->inv_number : '' }}</p>
-                            <div>
-                                <p class="text3 mb-1">${{ number_format($priceIncludingGST, 2) }}inc gst</p>
-
-                                @if($jobs && $jobs->assign_painter == auth()->id())
-
-
-                                <p class="text3 bilderName"> {{ $jobs->painter ? $jobs->painter->company_name : '' }} </p>
-                                @else
-
-                                <p class="text3 bilderName"> {{ $jobs->admin_builders ? $jobs->admin_builders->company_name : '' }} </p>
-
-                                @endif
-
-
-
-
-
-
+           @if($jobs->user_id && $jobs->user_id == auth()->id())
+                {{$jobs->ionicons}}
+                @foreach ($admininvoicesas as $index => $admininvoicesa)
+                    @if ($admininvoicesa->batch <= 4 && $admininvoicesa->amount && $admininvoicesa->description && $admininvoicesa->purchase_order)
+                        <a href="{{ '/manual_invoice_job/' . $admininvoicesa->id }}" style="text-decoration: none; color:black;">
+                        {{-- <a href="{{ url('/invoiceing/' . $jobs->id . '/' . $admininvoicesa->id . '/create') }}"> --}}
+                            <div class="docs_part1 docs_prt1 position-relative portfolio-item" style="line-height: 1;">
+                                <div class="invoice-cart">
+                                    <h5 class="addressText mt-2 showinline address_text">{{ $jobs->address }}</h5>
+                                    @php
+                                        $priceIncludingGST = $admininvoicesa->amount * 1.10; // Adding 10%
+                                    @endphp
+                                    <div class="invoice-cart-border"></div>
+                                    <p class="text3 mb-1">{{ $admininvoicesa->description }}</p>
+                                    <p class="docs_right jobs_right position-absolute end-0 customerInv" style="margin: -10px 10px 0px 0px;">
+                                        {{ $admininvoicesa ? $admininvoicesa->inv_number : '' }}
+                                    </p>
+                                    <div>
+                                        <p class="text3 mb-1">${{ number_format($priceIncludingGST, 2) }} inc GST</p>
+                                        @if($jobs && $jobs->assign_painter == auth()->id())
+                                            <p class="text3 bilderName">{{ $jobs->painter ? $jobs->painter->company_name : '' }}</p>
+                                        @else
+                                            <p class="text3 bilderName">{{ $jobs->admin_builders ? $jobs->admin_builders->company_name : '' }}</p>
+                                        @endif
+                                    </div>
+                                </div>
+                  
+                                    @if ($admininvoicesa->status == 0 || $admininvoicesa->status == 1)
+                                        <div class="status docs_right jobs_right position-absolute bottom-0 end-0">
+                                            <a class="map_btn" href="#">Ready</a>
+                                        </div>
+                                    @elseif ($admininvoicesa->status == 2 )
+                                        <div class="status-sent docs_right jobs_right position-absolute bottom-0 end-0">
+                                            <a class="map_btn" href="#">Sent</a>
+                                        </div>
+                                    @elseif ($admininvoicesa->status == 3 )
+                                        <div class="docs_right jobs_right position-absolute bottom-0 end-0">
+                                            <div class="status-paid">
+                                                <a class="map_btn" href="#">Paid</a>
+                                            </div>
+                                        </div>
+                                    @endif
                             </div>
-                        </div>
-                        @foreach ($status as $statu)
-
-                        @if ($statu->status == 0 || $statu->status == 1 && ($statu->id == $poItem->invoice_id ) )
-
-                        <div class="status docs_right jobs_right position-absolute bottom-0 end-0">
-                            <a class="map_btn" href="#">Ready</a>
-                        </div>
-                        @elseif ($statu->status == 2 && $statu->id == $poItem->invoice_id)
-                        <div class="status-sent docs_right jobs_right position-absolute bottom-0 end-0">
-                            <a class="map_btn" href="#">Sent</a>
-                        </div>
-                        @elseif ($statu->status == 3 && $statu->id == $poItem->invoice_id)
-                        <div class=" docs_right jobs_right position-absolute bottom-0 end-0">
-                            <div class="status-paid">
-                                <a class="map_btn" href="#">Paid</a>
-                            </div>
-                        </div>
-                        @endif
-                        @endforeach
-
-                    </div>
-                </a>
-                @endif
+                        </a>
+                    @endif
                 @endforeach
-
-                @endif
+            @endif
 
                 @if($jobs && $jobs->assign_painter && $jobs->assign_painter == auth()->id())
-
-                @foreach ($jobs->poItems as $index => $poItem)
-                @if ( $poItem->batch >= 5 && $poItem->price && $poItem->description && $poItem->ponumber)
-
-                <a href="{{ url('/invoiceing/' . $jobs->id . '/' . $poItem->id . '/'. $poItem->batch.'/create') }}">
-
-                    <div class="docs_part1 docs_prt1 position-relative portfolio-item" style="line-height: 1;">
-                        <div class="invoice-cart">
-                            <h5 class="addressText mt-2 showinline address_text">{{ $jobs->address }}</h5>
-                            @php
-                            $priceIncludingGST = $poItem->price * 1.10; // Adding 10%
-                            @endphp
-
-                            <div class="invoice-cart-border"></div>
-                            <p class="text3 mb-1">{{ $poItem->description }} </p>
-
-                            <p class="docs_right jobs_right position-absolute end-0 customerInv " style="margin: -18px 10px 0px 0px;">{{ $poItem->invoice ?  $poItem->invoice->inv_number : '' }}</p>
-
-
-
-
-                            <div>
-                                <p class="text3">${{ number_format($priceIncludingGST, 2) }} inc gst</p>
-                                {{-- @if(isset($jobs->users) && isset($jobs->assignedJob) && $jobs->assignedJob->assigned_painter_name == auth()->user()->id && $jobs->users->company_name)
-                                {{ $jobs->users->company_name }}
-                                @endif --}}
-
-                                @if($jobs && $jobs->assign_painter == auth()->id())
-
-
-                                <p class="text3 bilderName"> {{ $jobs->painter ? $jobs->painter->company_name : '' }} </p>
-                                @else
-
-                                <p class="text3 bilderName"> {{ $jobs->admin_builders ? $jobs->admin_builders->company_name : '' }} </p>
-
-                                @endif
-
-
-
-
-                            </div>
-                        </div>
-                        @foreach ($status as $statu)
-
-                        @if ($statu->status == 0 || $statu->status == 1 && ($statu->id == $poItem->invoice_id ) )
-
-                        <div class="status docs_right jobs_right position-absolute bottom-0 end-0">
-                            <a class="map_btn" href="#">Ready</a>
-                        </div>
-                        @elseif ($statu->status == 2 && $statu->id == $poItem->invoice_id)
-                        <div class="status-sent docs_right jobs_right position-absolute bottom-0 end-0">
-                            <a class="map_btn" href="#">Sent</a>
-                        </div>
-                        @elseif ($statu->status == 3 && $statu->id == $poItem->invoice_id)
-                        <div class=" docs_right jobs_right position-absolute bottom-0 end-0">
-                            <div class="status-paid">
-                                <a class="map_btn" href="#">Paid</a>
-                            </div>
-                        </div>
+                    @foreach ($admininvoicesas as $index => $admininvoicesa)
+                        @if ($admininvoicesa->batch >= 5 && $admininvoicesa->amount && $admininvoicesa->description && $admininvoicesa->purchase_order)
+                         <a href="{{ '/manual_invoice_job/' . $admininvoicesa->id }}" style="text-decoration: none; color:black;">    
+                        {{-- <a href="{{ url('/invoiceing/' . $jobs->id . '/' . $admininvoicesa->id . '/create') }}"> --}}
+                                <div class="docs_part1 docs_prt1 position-relative portfolio-item" style="line-height: 1;">
+                                    <div class="invoice-cart">
+                                        <h5 class="addressText mt-2 showinline address_text">{{ $jobs->address }}</h5>
+                                        @php
+                                            $priceIncludingGST = $admininvoicesa->amount * 1.10; // Adding 10%
+                                        @endphp
+                                        <div class="invoice-cart-border"></div>
+                                        <p class="text3 mb-1">{{ $admininvoicesa->description }}</p>
+                                        <p class="docs_right jobs_right position-absolute end-0 customerInv" style="margin: -18px 10px 0px 0px;">
+                                            {{ $admininvoicesa ? $admininvoicesa->inv_number : '' }}
+                                        </p>
+                                        <div>
+                                            <p class="text3">${{ number_format($priceIncludingGST, 2) }} inc GST</p>
+                                            @if($jobs && $jobs->assign_painter == auth()->id())
+                                                <p class="text3 bilderName">{{ $jobs->painter ? $jobs->painter->company_name : '' }}</p>
+                                            @else
+                                                <p class="text3 bilderName">{{ $jobs->admin_builders ? $jobs->admin_builders->company_name : '' }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                  
+                                        @if (($admininvoicesa->status == 0 || $admininvoicesa->status == 1))
+                                            <div class="status docs_right jobs_right position-absolute bottom-0 end-0">
+                                                <a class="map_btn" href="#">Ready</a>
+                                            </div>
+                                        @elseif ($admininvoicesa->status == 2 )
+                                            <div class="status-sent docs_right jobs_right position-absolute bottom-0 end-0">
+                                                <a class="map_btn" href="#">Sent</a>
+                                            </div>
+                                        @elseif ($admininvoicesa->status == 3)
+                                            <div class="docs_right jobs_right position-absolute bottom-0 end-0">
+                                                <div class="status-paid">
+                                                    <a class="map_btn" href="#">Paid</a>
+                                                </div>
+                                            </div>
+                                        @endif
+                                </div>
+                            </a>
                         @endif
-                        @endforeach
-
-                    </div>
-                </a>
+                    @endforeach
                 @endif
-                @endforeach
-
-                @endif
-
-
         </section>
 
 
 
         <section class="invoice-doc jobs_area InvoicePortfolio">
-            @foreach ($invoices as $invoice)
-                @if($invoice && $jobs->id == $invoice->job_id  && $invoice->user_id == auth()->id())
-            <a href="{{ '/manual_invoice_job/' . $invoice->id }}" style="text-decoration: none; color:black;">
+            @foreach ($jobinvoices as $jobinvoice)
+                @if($jobinvoice && $jobs->id == $jobinvoice->job_id  && $jobinvoice->user_id == auth()->id())
+            <a href="{{ '/manual_invoice_job/' . $jobinvoice->id }}" style="text-decoration: none; color:black;">
                 <div class="docs_part1 docs_prt1 position-relative portfolio-item" style="line-height: 1;">
                     <div class="invoice-cart">
-                        <h5 class="addressText mt-2 showinline address_text">{{ $invoice->address }}</h5>
+                        <h5 class="addressText mt-2 showinline address_text">{{ $jobinvoice->address }}</h5>
                         <div class="invoice-cart-border"></div>
-                        <p class="text3">{{ $invoice->description }} </p>
-                        <p class="docs_right jobs_right position-absolute end-0 customerInv" style="margin: 0px 10px 0px 0px;">{{ $invoice->inv_number }}</p>
+                        <p class="text3">{{ $jobinvoice->description }} </p>
+                        <p class="docs_right jobs_right position-absolute end-0 customerInv" style="margin: 0px 10px 0px 0px;">{{ $jobinvoice->inv_number }}</p>
                         <div>
-                            <p class="text3"> {{$jobs->assignedJob ? $jobs->assignedJob->assign_job_description : ''  }} </p>
-
-
-
-
-
-
-                            <p class=" text3 mt-1 mb-1 "> ${{ number_format($invoice->total_due, 2) }} inc gst</p>
-                            <p class="text3 bilderName"> {{ $invoice->customer_id }} </p>
+                            {{-- <p class="text3"> {{$jobs->assignedJob ? $jobs->assignedJob->assign_job_description : ''  }} </p> --}}
+                            <p class=" text3 mt-1 mb-1 "> ${{ number_format($jobinvoice->total_due, 2) }} inc gst</p>
+                            <p class="text3 bilderName"> {{ $jobinvoice->customer_id }} </p>
                         </div>
                     </div>
 
 
-                    @if ($invoice->status == 1)
+                    @if ($jobinvoice->status == 1)
                     <div class="status docs_right jobs_right position-absolute bottom-0 end-0">
                         <a class="map_btn" href="#">Ready</a>
                     </div>
                     @endif
-                    @if ($invoice->status == 2)
+                    @if ($jobinvoice->status == 2)
                     <div class="status-sent docs_right jobs_right position-absolute bottom-0 end-0">
                         <a class="map_btn" href="#">Sent</a>
                     </div>
                     @endif
-                    @if ($invoice->status == 3)
+                    @if ($jobinvoice->status == 3)
                     <div class=" docs_right jobs_right position-absolute bottom-0 end-0">
                         <div class="status-paid">
                             <a class="map_btn" href="#">Paid</a>
@@ -322,7 +223,7 @@
                 </div>
             </a>
             @endif
-            @endforeach
+            @endforeach 
 
         </section>
 

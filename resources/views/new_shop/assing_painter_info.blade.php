@@ -422,7 +422,7 @@
 
                             @csrf {{-- Include CSRF token for security --}}
     
-                        {{-- <div class="mb-3">
+                        <div class="mb-3">
                             <label for="assigned_painter_name" class="form-label">Select Painter:<span style="color: red;">*</span></label>
                             <select name="assigned_painter_name" id="assigned_painter_name" class="custom-input" required>
                                 <option value="" selected>Select an option</option>
@@ -432,13 +432,13 @@
                                 @endif
                                 @endforeach
                             </select>
-                        </div> --}}
+                        </div>
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label for="assigned_painter_id" class="form-label">Assign Painter:<span style="color: red;">*</span></label>
                             <input type="text" id="assigned_painter_id" class="custom-input" placeholder="Type to Painter Name..." required>
                               <input type="hidden" id="assigned_painter_name" name="assigned_painter_name">
-                        </div>
+                        </div> --}}
 
 
 
@@ -448,7 +448,7 @@
 
 
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3" hidden>
                             <label for="paintCost" class="form-label">Paint Cost</label>
                             <input type="number" id="paintCost" name="paint_cost" placeholder="Paint Cost" class="custom-input" value="{{ old('paint_cost') }}">
                         </div>
@@ -629,7 +629,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
 
- <script>
+ {{-- <script>
     $(document).ready(function() {
         var users = [
             @foreach ($users as $user)
@@ -650,7 +650,7 @@
             }
         });
     });
-</script>
+</script> --}}
 
     <script>
         function validatePrice() {

@@ -389,6 +389,7 @@ class PainterJobController extends Controller
         if ($request->po_item) {
           
             $MainPainter = User::find($user_id);
+            $MainPainterCompany = $MainPainter->company_name;
             $MainPainterEmail = $MainPainter->email;
             $admin_company_id = $request->company_id;
             $admin_company = BuilderModel::find($admin_company_id);
@@ -409,8 +410,8 @@ class PainterJobController extends Controller
                         break;
                     case 'secondGroup':
                         if (!is_null($request->assigned_painter_name)) {
-                            $user_id = $request->assign_company_id; // This seems incorrect as user_id was already set. Assuming it's intentional.
-                            $invoice->user_id = $request->assigned_painter_name; // This also seems potentially incorrect as it assigns a name to a user_id field.
+                            $invoice->user_id = $request->assign_company_id; 
+                            $invoice->customer_id = $MainPainterCompany;
                             $invoice->send_email = $MainPainterEmail;
                         }
                         break;
@@ -585,6 +586,7 @@ public function update(Request $request, PainterJob $painterJob)
         // Retrieve the main painter and their email
         $mainPainter = User::find($user_id);
         $mainPainterEmail = $mainPainter->email;
+        $mainPainterCompany = $mainPainter->company_name;
 
         // Retrieve the admin company and its details
         $admin_company_id = $request->company_id;
@@ -602,11 +604,7 @@ public function update(Request $request, PainterJob $painterJob)
         // Process each PO item
         foreach ($request->po_item as $pokey => $povalue) {
 
-            
-            // Determine the category based on the index
             $category = ($pokey >= 1 && $pokey <= 4) ? 'firstGroup' : (($pokey >= 5 && $pokey <= 8) ? 'secondGroup' : '');
-
-            // Find or create an invoice based on job_id and batch
             $invoice = Invoice::where('job_id', $painterJob->id)->where('batch', $pokey)->first() ?? new Invoice();
 
             // Set invoice details based on category
@@ -615,7 +613,8 @@ public function update(Request $request, PainterJob $painterJob)
                 $invoice->customer_id = $admin_company_name;
                 $invoice->send_email = $admin_company_email;
             } elseif ($category === 'secondGroup' && !is_null($request->assigned_painter_name)) {
-                $invoice->user_id = $request->assign_company_id; // Review this line as needed
+                $invoice->user_id = $request->assign_company_id;
+                $invoice->customer_id = $mainPainterCompany;
                 $invoice->send_email = $mainPainterEmail;
             }
 
@@ -648,9 +647,6 @@ public function update(Request $request, PainterJob $painterJob)
                 $invoice->gst = null;
                 $invoice->total_due = null;
             }
-
-           
-
             // Save the invoice
             $invoice->save();
         }
@@ -670,141 +666,6 @@ public function update(Request $request, PainterJob $painterJob)
     return redirect()->route("admins.painterJob.index");
 }
 
-//    public function update(Request $request, PainterJob $painterJob)
-// {
-//     DB::beginTransaction();
-//     try {
-//          AssignedPainterJob::where('job_id', $painterJob->id)->delete();
-//          Invoice::where('job_id', $painterJob->id)->delete();
-//         $data = $request->only($painterJob->getFillable());
-//         $this->manageFile($request, 'po', $data, $painterJob);
-//         $this->manageFile($request, 'colors', $data, $painterJob);
-//         $this->manageFile($request, 'plan', $data, $painterJob);
-//         $this->manageFile($request, 'colors_secound', $data, $painterJob);
-//         $this->manageFile($request, 'colors_spec', $data, $painterJob);
-//         $this->manageFile($request, 'plan_granny', $data, $painterJob);
-
-//         // Update builder and painter information if provided
-//         if ($request->has('company_id')) {
-//             $painterJob->builder_id = $request->company_id;
-//         }
-//         if ($request->has('assigned_painter_name')) {
-//             $painterJob->assign_painter = $request->assigned_painter_name;
-//         }
-//         $user_id = $request->user_id;
-//         $mainPainterInfo = User::find($user_id);
-//         $painterJob->fill($data)->save();
-
-//         // Delete existing assigned painter jobs
-       
-//         // Create new assigned painter job if provided
-//         if (!empty($request->assigned_painter_name) && !empty($request->assign_company_id) && !empty($request->assign_price_job)) {
-//             AssignedPainterJob::create([
-//                 'assigned_painter_name' => $request->assigned_painter_name,
-//                 'assign_company_id' => $request->assign_company_id,
-//                 'assigned_supervisor' => $request->assigned_supervisor,
-//                 'assign_price_job' => $request->assign_price_job,
-//                 'assign_job_description' => $request->assign_job_description,
-//                 'job_id' => $painterJob->id,
-//                 'user_id' => $request->user_id,
-//             ]);
-
-//             // Send email to assigned painter
-//             $assignedPainterInfo = User::find($request->assigned_painter_name);
-//             $jobInfo = PainterJob::find($assignedPainterInfo->job_id);
-//         }
-
-//         // Delete existing painter job items
-//         $painterJob->items()->delete();
-
-//         // Add new inside items if provided
-//         if ($request->inside) {
-//             foreach ($request->inside as $oskey => $osvalue) {
-//                 if (!empty($osvalue['product'])) {
-//                     $pjItem = new PjItem();
-//                     $osvalue['job_id'] = $painterJob->id;
-//                     $osvalue['key'] = $oskey;
-//                     $pjItem->fill($osvalue)->save();
-//                 }
-//             }
-//         }
-
-//         // Add new outside items if provided
-//         if ($request->outside) {
-//             foreach ($request->outside as $oskey => $osvalue) {
-//                 if (!empty($osvalue['product'])) {
-//                     $pjItem = new PjItem();
-//                     $osvalue['job_id'] = $painterJob->id;
-//                     $osvalue['type'] = 'outside';
-//                     $osvalue['key'] = $oskey;
-//                     $pjItem->fill($osvalue)->save();
-//                 }
-//             }
-//         }
-
-//         // Delete existing invoices related to the job
-       
-
-//         // Create new invoices for PO items if provided
-//         if ($request->po_item) {
-//             $mainPainter = User::find($user_id);
-//             $mainPainterEmail = $mainPainter->email;
-//             $admin_company_id = $request->company_id;
-//             $admin_company = BuilderModel::find($admin_company_id);
-//             $admin_company_name = $admin_company->company_name;
-//             $admin_company_email = $admin_company->builder_email;
-//             $currentDate = Carbon::now()->format('Y-m-d');
-//             $job_address = $request->address;
-
-//             foreach ($request->po_item as $pokey => $povalue) {
-//                 $category = ($pokey >= 1 && $pokey <= 4) ? 'firstGroup' : (($pokey >= 5 && $pokey <= 8) ? 'secondGroup' : '');
-//                 $invoice = new Invoice();
-
-//                 if ($category === 'firstGroup') {
-//                     $invoice->user_id = $user_id;
-//                     $invoice->customer_id = $admin_company_name;
-//                     $invoice->send_email = $admin_company_email;
-//                 } elseif ($category === 'secondGroup' && !is_null($request->assigned_painter_name)) {
-//                     $invoice->user_id = $request->assign_company_id; // This might need review
-//                     $invoice->send_email = $mainPainterEmail;
-//                 }
-
-//                 $inv_numbers = Invoice::max('id') ?? 0;
-//                 $next_inv_number = $inv_numbers + 1;
-//                 $formatted_number = sprintf('INV:%05d', $next_inv_number);
-//                 $invoice->inv_number = $formatted_number;
-//                 $invoice->date = $currentDate;
-//                 $invoice->purchase_order = $povalue['ponumber'] ?? '';
-//                 $invoice->job_id = $painterJob->id;
-//                 $invoice->address = $job_address;
-//                 $invoice->batch = $pokey;
-//                 $invoice->description = $povalue['description'] ?? '';
-//                 $invoice->job_details = $povalue['job_details'] ?? '';
-//                 $invoice->amount = $povalue['price'] ?? 0;
-//                 $invoice->gst = $invoice->amount * 0.30;
-//                 $invoice->total_due = $invoice->amount + $invoice->gst;
-//                 $invoice->save();
-//             }
-//         }
-
-//         DB::commit();
-//         Session::flash('message', 'PainterJob updated successfully');
-//         Session::flash('alert-class', 'alert-success');
-//     } catch (\Exception $e) {
-//         DB::rollBack();
-//         // Handle the exception
-//         Session::flash('message', 'Update failed: ' . $e->getMessage());
-//         Session::flash('alert-class', 'alert-danger');
-//     }
-//     return redirect()->route("admins.painterJob.index");
-// }
-
-
-    // public function PoItems()
-    // {
-    //     return $this->hasMany(PoItem::class, 'job_id');
-    // }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -815,22 +676,41 @@ public function update(Request $request, PainterJob $painterJob)
 
     public function destroy(PainterJob $painterJob)
     {
-        $painterJob->delete(); // Then deleting the painter job
 
-        // Flashing a success message
+      
+        Invoice::where('job_id', $painterJob)->delete();
+        $painterJob->delete();
+
+        // Flashing a success message and redirecting to the painter job index
         return redirect()->route("admins.painterJob.index")->with([
             'message' => 'PainterJob deleted successfully',
             'alert-class' => 'alert-success'
         ]);
     }
 
-    public function delete_painter($id)
-    {
+
+   public function delete_painter($id)
+{
+    DB::beginTransaction();
+    try {
+        Invoice::where('job_id', $id)->delete();
+
         PainterJob::where('id', $id)->delete();
-        Session::flash('Deleted Successfully.');
+        DB::commit();
+        Session::flash('message', 'Deleted Successfully.');
         Session::flash('alert-class', 'alert-success');
-        return redirect()->route("admins.painterJob.index");
+    } catch (\Exception $e) {
+        // Rollback the transaction in case of error
+        DB::rollback();
+        
+        // Flashing an error message
+        Session::flash('message', 'Deletion failed.');
+        Session::flash('alert-class', 'alert-danger');
     }
+
+    return redirect()->route("admins.painterJob.index");
+}
+
 
     public function manageFile($request, $key, &$data, $model, $db_key = null)
     {
