@@ -141,12 +141,21 @@ class PainterJobController extends Controller
     }
 
 
-    public function delete($id)
-    {
-        $job = PainterJob::find($id);
+ public function delete($id)
+{
+    DB::beginTransaction();
+    try {
+        $job = PainterJob::findOrFail($id);
         $job->delete();
+        Invoice::where('job_id', $id)->delete();
+        DB::commit();
         return redirect()->route('main')->with('success', 'Job deleted successfully.');
+    } catch (\Exception $e) {
+        DB::rollback();
+        return redirect()->route('main')->with('error', 'Failed to delete the job.');
     }
+}
+
 
     public function acceptJob($id)
     {
@@ -166,10 +175,17 @@ class PainterJobController extends Controller
         }
         $assign_job = AssignedPainterJob::where('job_id', $id)->first();
 
-        $invoice = Invoice::where('job_id', $id)->whereNull('batch')->first();
-        if ($invoice) {
-            $invoice->delete();
+        $invoices = Invoice::where('job_id', $id)
+                    ->where('user_id', $assign_job->assigned_painter_name)
+                    ->whereNull('batch')
+                    ->get();
+
+        if ($invoices->isNotEmpty()) {
+            foreach ($invoices as $invoice) {
+                $invoice->delete();
+            }
         }
+
 
 
         if ($assign_job) {
